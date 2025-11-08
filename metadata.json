@@ -1,0 +1,8 @@
+{
+  "name": "Viral Hashtag & Image AI",
+  "description": "A mobile-first app with a strategic Instagram hashtag generator and an AI-powered image editor for audio-visual artists.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
