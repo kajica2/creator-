@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to PrintCraft - Your POD Journey Begins Here</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .perk-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .progress-bar {
+            transition: width 0.5s ease-in-out;
+        }
+        .animate-bounce-slow {
+            animation: bounce 3s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Animated Background Integration */
+        .cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 20s infinite linear;
+        }
+
+        .particle:nth-child(odd) {
+            background: rgba(99, 102, 241, 0.3);
+            animation-duration: 25s;
+        }
+
+        .particle:nth-child(3n) {
+            background: rgba(139, 92, 246, 0.2);
+            animation-duration: 30s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .shimmer-overlay {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            animation: shimmer 15s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Content styling with backdrop blur */
+        .content-overlay {
+            backdrop-filter: blur(5px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .hero-section {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-gray-800">
+    <!-- Animated Background -->
+    <div class="cosmic-bg">
+        <div class="particles" id="particles"></div>
+        <div class="shimmer-overlay"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="gradient-bg text-white relative z-10">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-print text-3xl"></i>
+                    <h1 class="text-2xl font-bold">PrintCraft</h1>
+                </div>
+                <div class="hidden md:flex space-x-4">
+                    <a href="#" class="hover:text-purple-200 transition">Home</a>
+                    <a href="#" class="hover:text-purple-200 transition">Products</a>
+                    <a href="#" class="hover:text-purple-200 transition">Pricing</a>
+                    <a href="#" class="hover:text-purple-200 transition">Support</a>
+                    <a href="#photo-album" class="hover:text-purple-200 transition">Album Creator</a>
+                </div>
+                <button class="md:hidden text-2xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Onboarding Container -->
+    <main class="container mx-auto px-4 py-8 md:py-12 relative z-10">
+        <div class="max-w-4xl mx-auto">
+            <!-- Progress Bar -->
+            <div class="mb-10 content-overlay rounded-lg p-6">
+                <div class="flex justify-between mb-2">
+                    <span class="text-sm font-medium">Onboarding Progress</span>
+                    <span id="progress-text" class="text-sm font-medium">20%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="progress-bar" class="progress-bar bg-purple-600 h-2.5 rounded-full" style="width: 20%"></div>
+                </div>
+            </div>
+
+            <!-- Welcome Section -->
+            <section class="text-center mb-16 hero-section rounded-xl p-8">
+                <div class="animate-bounce-slow inline-block mb-6">
+                    <i class="fas fa-hands-helping text-6xl text-purple-600"></i>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">Welcome to PrintCraft!</h1>
+                <p class="text-xl text-gray-600 mb-8">Let's get your print-on-demand business set up in just a few easy steps.</p>
+                <button id="get-started-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full transition transform hover:scale-105">
+                    Get Started <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </section>
+
+            <!-- Perks Section -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold mb-8 text-center text-white">Your Exclusive Member Perks</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Perk 1 -->
+                    <div class="perk-card content-overlay rounded-xl shadow-md p-6 transition duration-300">
+                        <div class="text-purple-600 mb-4">
+                            <i class="fas fa-images text-4xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Photo Album Creator</h3>
+                        <p class="text-gray-600 mb-4">Transform your memories into beautiful printed photo albums with our easy-to-use designer.</p>
+                        <div class="mt-4">
+                            <button id="openAlbumCreator" class="bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition">
+                                <i class="fas fa-play mr-2"></i>Start Designing
+                            </button>
+                        </div>
+                        <div class="tooltip mt-2">
+                            <button class="text-purple-600 font-medium flex items-center">
+                                Learn More <i class="fas fa-info-circle ml-1"></i>
+                            </button>
+                            <span class="tooltip-text">Create custom layouts, add captions, and preview before printing.</span>
+                        </div>
+                    </div>
+
+                    <!-- Perk 2 -->
+                    <div class="perk-card content-overlay rounded-xl shadow-md p-6 transition duration-300">
+                        <div class="text-purple-600 mb-4">
+                            <i class="fas fa-tshirt text-4xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">T-Shirt Designer</h3>
+                        <p class="text-gray-600 mb-4">Design custom t-shirts with our drag-and-drop tool and extensive library of graphics.</p>
+                        <div class="tooltip">
+                            <button class="text-purple-600 font-medium flex items-center">
+                                Learn More <i class="fas fa-info-circle ml-1"></i>
+                            </button>
+                            <span class="tooltip-text">Access 10,000+ templates and upload your own designs with our premium tool.</span>
+                        </div>
+                    </div>
+
+                    <!-- Perk 3 -->
+                    <div class="perk-card content-overlay rounded-xl shadow-md p-6 transition duration-300">
+                        <div class="text-purple-600 mb-4">
+                            <i class="fas fa-palette text-4xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Poster Series Maker</h3>
+                        <p class="text-gray-600 mb-4">Create stunning poster collections with matching themes for your customers.</p>
+                        <div class="tooltip">
+                            <button class="text-purple-600 font-medium flex items-center">
+                                Learn More <i class="fas fa-info-circle ml-1"></i>
+                            </button>
+                            <span class="tooltip-text">Design once and generate multiple sizes automatically for different display options.</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Start Guide -->
+            <section class="content-overlay rounded-xl p-8 mb-16" style="background: rgba(139, 92, 246, 0.1);">
+                <h2 class="text-3xl font-bold mb-6 text-center">Quick Start Guide</h2>
+                <div class="space-y-6">
+                    <!-- Step 1 -->
+                    <div class="flex items-start">
+                        <div class="bg-purple-600 text-white rounded-full h-8 w-8 flex items-center justify-center flex-shrink-0 mr-4 mt-1">
+                            1
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">Upload Your Designs</h3>
+                            <p class="text-gray-700">Start by uploading your artwork or choose from our extensive library of templates and graphics.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="flex items-start">
+                        <div class="bg-purple-600 text-white rounded-full h-8 w-8 flex items-center justify-center flex-shrink-0 mr-4 mt-1">
+                            2
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">Customize Products</h3>
+                            <p class="text-gray-700">Use our design tools to create t-shirts, posters, photo albums, and more with your unique style.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="flex items-start">
+                        <div class="bg-purple-600 text-white rounded-full h-8 w-8 flex items-center justify-center flex-shrink-0 mr-4 mt-1">
+                            3
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">Set Up Your Store</h3>
+                            <p class="text-gray-700">Connect to e-commerce platforms or use our built-in store to start selling your creations.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="flex items-start">
+                        <div class="bg-purple-600 text-white rounded-full h-8 w-8 flex items-center justify-center flex-shrink-0 mr-4 mt-1">
+                            4
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">Start Selling</h3>
+                            <p class="text-gray-700">We handle printing, shipping, and fulfillment so you can focus on creating and marketing.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Call to Action -->
+            <section class="text-center content-overlay rounded-xl p-8">
+                <h2 class="text-3xl font-bold mb-6">Ready to Start Creating?</h2>
+                <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">Join thousands of creators who are already building successful POD businesses with PrintCraft.</p>
+                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <button class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full transition transform hover:scale-105">
+                        Begin Your First Design <i class="fas fa-pencil-alt ml-2"></i>
+                    </button>
+                    <button class="bg-white hover:bg-gray-100 text-purple-600 font-bold py-3 px-8 rounded-full border border-purple-600 transition transform hover:scale-105">
+                        Watch Tutorial <i class="fas fa-play-circle ml-2"></i>
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="content-overlay py-12 relative z-10">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-print mr-2 text-purple-600"></i> PrintCraft
+                    </h3>
+                    <p class="text-gray-600">Empowering creators to turn their ideas into physical products with print-on-demand technology.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600 transition">Blog</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600 transition">Tutorials</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600 transition">Design Guides</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600 transition">Success Stories</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Tools</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600 transition">T-Shirt Designer</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600 transition">Photo Album Maker</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600 transition">Poster Creator</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600 transition">Mockup Generator</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Connect</h4>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="#" class="text-gray-600 hover:text-purple-600 transition text-xl"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-600 hover:text-purple-600 transition text-xl"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-600 hover:text-purple-600 transition text-xl"><i class="fab fa-pinterest"></i></a>
+                        <a href="#" class="text-gray-600 hover:text-purple-600 transition text-xl"><i class="fab fa-youtube"></i></a>
+                    </div>
+                    <p class="text-gray-600">support@printcraft.com</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 mt-8 pt-8 text-center text-gray-500">
+                <p>© 2025 PrintCraft. All rights reserved. | Part of KaiDjuric Tools Ecosystem</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Photo Album Creator Modal -->
+    <div id="albumCreatorModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="relative w-full h-full max-w-6xl mx-auto my-8">
+            <div class="content-overlay rounded-lg shadow-xl h-full flex flex-col">
+                <div class="flex justify-between items-center border-b p-4">
+                    <h3 class="text-xl font-bold">Photo Album Creator</h3>
+                    <button id="closeAlbumCreator" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="flex-1 overflow-hidden">
+                    <div id="fpd-container" class="w-full h-full flex items-center justify-center">
+                        <div class="text-center p-8">
+                            <i class="fas fa-images text-6xl text-purple-600 mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-4">Photo Album Designer</h3>
+                            <p class="text-gray-600 mb-6">Professional photo album creation tool would be integrated here.</p>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-purple-500 transition cursor-pointer">
+                                    <i class="fas fa-plus text-2xl text-gray-400 mb-2"></i>
+                                    <p class="text-sm">Add Photos</p>
+                                </div>
+                                <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-purple-500 transition cursor-pointer">
+                                    <i class="fas fa-layout text-2xl text-gray-400 mb-2"></i>
+                                    <p class="text-sm">Choose Layout</p>
+                                </div>
+                                <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-purple-500 transition cursor-pointer">
+                                    <i class="fas fa-font text-2xl text-gray-400 mb-2"></i>
+                                    <p class="text-sm">Add Text</p>
+                                </div>
+                                <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-purple-500 transition cursor-pointer">
+                                    <i class="fas fa-palette text-2xl text-gray-400 mb-2"></i>
+                                    <p class="text-sm">Customize</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t p-4 flex justify-between">
+                    <div class="flex space-x-2">
+                        <button class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
+                            <i class="fas fa-save mr-2"></i>Save Design
+                        </button>
+                        <button class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">
+                            <i class="fas fa-undo mr-2"></i>Reset
+                        </button>
+                    </div>
+                    <button class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
+                        <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            particlesContainer.innerHTML = '';
+
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+
+                const size = Math.random() * 3 + 1;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Progress animation
+        function animateProgress() {
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            let progress = 20;
+
+            const interval = setInterval(() => {
+                progress += Math.random() * 10;
+                if (progress > 100) progress = 100;
+
+                progressBar.style.width = progress + '%';
+                progressText.textContent = Math.round(progress) + '%';
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                }
+            }, 1000);
+        }
+
+        // Modal controls
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+
+            const openAlbumCreator = document.getElementById('openAlbumCreator');
+            const closeAlbumCreator = document.getElementById('closeAlbumCreator');
+            const albumCreatorModal = document.getElementById('albumCreatorModal');
+            const getStartedBtn = document.getElementById('get-started-btn');
+
+            if(openAlbumCreator) {
+                openAlbumCreator.addEventListener('click', () => {
+                    albumCreatorModal.classList.remove('hidden');
+                });
+            }
+
+            if(closeAlbumCreator) {
+                closeAlbumCreator.addEventListener('click', () => {
+                    albumCreatorModal.classList.add('hidden');
+                });
+            }
+
+            if(getStartedBtn) {
+                getStartedBtn.addEventListener('click', animateProgress);
+            }
+
+            // Close modal when clicking outside
+            albumCreatorModal?.addEventListener('click', (e) => {
+                if(e.target === albumCreatorModal) {
+                    albumCreatorModal.classList.add('hidden');
+                }
+            });
+
+            // Responsive particle count
+            function updateParticleCount() {
+                const width = window.innerWidth;
+                if (width < 768) {
+                    createParticles(15);
+                } else {
+                    createParticles(30);
+                }
+            }
+
+            window.addEventListener('resize', updateParticleCount);
+        });
+    </script>
+</body>
+</html>

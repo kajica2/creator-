@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Hashtag, PromptHistoryItem, PromptType, RagSource, SubscriptionPlan, Page, GeneratedContentStore, ContentStorage } from './types';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { hashtagCategories, readySets } from './data/hashtags';
+import { Hashtag, HashtagSize, PromptHistoryItem, PromptType, RagSource, User, SubscriptionPlan, Page, GeneratedContentStore } from './types';
 import { SelectedTray } from './components/SelectedTray';
 import { AIStoryGenerator } from './components/AIStoryGenerator';
 import { SunoLyricsGenerator } from './components/SunoLyricsGenerator';
@@ -14,7 +15,8 @@ import { ImageEditor } from './components/ImageEditor';
 import { ContextModifier } from './components/ContextModifier';
 import { AIWebsiteGenerator } from './components/AIWebsiteGenerator';
 import { RagSourceManager } from './components/RagSourceManager';
-import { EnhancedGallery } from './components/EnhancedGallery';
+import { BatchMediaImportModal } from './components/BatchMediaImportModal';
+import { GalleryComponent } from './components/Gallery';
 import { ProductRoadmap } from './components/ProductRoadmap';
 import { Auth } from './components/Auth';
 import { Settings } from './components/Settings';
@@ -27,16 +29,10 @@ import { HashtagManager } from './components/HashtagManager';
 import { OnboardingModal } from './components/OnboardingModal';
 import { ThinkingMode } from './components/ThinkingMode';
 import { AudioTranscriber } from './components/AudioTranscriber';
-import { GamificationDashboard } from './components/GamificationDashboard';
-import PersonaTemplatesPage from './components/PersonaTemplatesPage';
-import PersonaDropdown from './components/PersonaDropdown';
-import SectionTabs from './components/SectionTabs';
-import { QuickAccessToolbar } from './components/QuickAccessToolbar';
-import { WebsiteManager } from './components/WebsiteManager';
-import { useGamification } from './hooks/useGamification';
-import { initializeContentStorage, saveContentStorage, addContent, createPersona, deletePersona } from './utils/contentStorage';
-import { useSupabaseAuth } from './hooks/useSupabaseAuth';
-import { useHashtagCategories, useReadySets } from './hooks/useHashtagCatalogue';
+import AudioAgentIntegrationExample from './components/audio/AudioAgentIntegrationExample';
+import { SentryNavigationCloud } from './components/SentryNavigationCloud';
+import SynapticSymphony from './projects/synaptic-symphony/SynapticSymphony';
+import { MediaLibrary } from './components/MediaLibrary';
 
 
 const PersonaIcon = () => (
@@ -75,44 +71,16 @@ const App: React.FC = () => {
     const [isContextModalOpen, setIsContextModalOpen] = useState(false);
     const [ragSources, setRagSources] = useState<RagSource[]>([]);
     const [isRagModalOpen, setIsRagModalOpen] = useState(false);
+    const [isBatchImportModalOpen, setIsBatchImportModalOpen] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
     const [subscriptionPlan, setSubscriptionPlan] = useState<SubscriptionPlan>('free');
     const [credits, setCredits] = useState(10);
     const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
     const [generatedContent, setGeneratedContent] = useState<GeneratedContentStore>({});
-
-    const {
-        data: hashtagCatalogue,
-        isLoading: isHashtagCatalogueLoading,
-        isFetching: isHashtagCatalogueFetching,
-        isUsingFallback: isHashtagCatalogueFallback,
-    } = useHashtagCategories();
-
-    const {
-        data: readySetsData,
-        isLoading: isReadySetsLoading,
-        isFetching: isReadySetsFetching,
-        isUsingFallback: isReadySetsFallback,
-        refetch: refetchReadySets,
-    } = useReadySets();
-
-    // Persona-based content storage
-    const [contentStorage, setContentStorage] = useState<ContentStorage>(() => initializeContentStorage());
     
-    // Current active persona
-    const [currentPersona, setCurrentPersona] = useState({
-        id: 'default',
-        name: 'Default Persona'
-    });
-    
-    // Gamification system
-    const { userProgress, recordGeneration, completeChallenge, updateStreak } = useGamification();
-    
-    const allHashtags = useMemo(
-        () => hashtagCatalogue.flatMap(c => c.hashtags),
-        [hashtagCatalogue]
-    );
+    const allHashtags = useMemo(() => hashtagCategories.flatMap(c => c.hashtags), []);
 
     useEffect(() => {
         try {
@@ -164,62 +132,12 @@ const App: React.FC = () => {
         setPromptHistory(prev => [newHistoryItem, ...prev].slice(0, 50));
     }, []);
     
-    const handleContentGenerated = useCallback((page: Page, content: any, type: PromptType, hashtags: string[] = [], metadata: Record<string, any> = {}) => {
-        // Store content with persona information
-        const updatedStorage = addContent(
-            contentStorage,
-            content,
-            page,
-            type,
-            currentPersona.id,
-            currentPersona.name,
-            hashtags,
-            metadata
-        );
-        
-        setContentStorage(updatedStorage);
-        saveContentStorage(updatedStorage);
-        
-        // Also update the legacy generatedContent for backward compatibility
+    const handleContentGenerated = useCallback((page: Page, content: any) => {
         setGeneratedContent(prev => ({
             ...prev,
             [page]: content
         }));
-    }, [contentStorage, currentPersona]);
-
-    // Update content storage when it changes
-    useEffect(() => {
-        saveContentStorage(contentStorage);
-    }, [contentStorage]);
-
-    // Handle persona creation from context modal
-    const handleCreatePersona = useCallback((name: string, context: string) => {
-        const updatedStorage = createPersona(contentStorage, name, context);
-        setContentStorage(updatedStorage);
-        setCurrentPersona({
-            id: updatedStorage.personas[updatedStorage.personas.length - 1].id,
-            name
-        });
-        setAiContext(context);
-    }, [contentStorage]);
-
-    // Handle persona deletion
-    const handleDeletePersona = useCallback((personaId: string) => {
-        const updatedStorage = deletePersona(contentStorage, personaId);
-        setContentStorage(updatedStorage);
-        
-        // If the current persona was deleted, switch to default
-        if (currentPersona.id === personaId) {
-            const defaultPersona = updatedStorage.personas.find(p => p.id === 'default');
-            if (defaultPersona) {
-                setCurrentPersona({
-                    id: defaultPersona.id,
-                    name: defaultPersona.name
-                });
-                setAiContext(defaultPersona.context);
-            }
-        }
-    }, [contentStorage, currentPersona]);
+    }, []);
 
     const handleClearHistory = useCallback(() => {
         setPromptHistory([]);
@@ -230,7 +148,15 @@ const App: React.FC = () => {
         setIsContextModalOpen(false);
     };
 
-    const { user } = useSupabaseAuth();
+    const handleAuthSuccess = useCallback((authedUser: User) => {
+        setUser(authedUser);
+        setActivePage('Media Library');
+    }, []);
+
+    const handleSignOut = useCallback(() => {
+        setUser(null);
+        setActivePage('Hashtag Manager');
+    }, []);
     
     const handleAttemptGeneration = useCallback((generationFn: () => Promise<void>, count: number = 1) => {
         if (subscriptionPlan === 'free' && credits < count) {
@@ -270,48 +196,12 @@ const App: React.FC = () => {
         setIsSidebarOpen(false);
     }
 
-    // Enhanced generation handler that includes gamification
-    const handleAttemptGenerationWithGamification = useCallback((generationFn: () => Promise<void>, count: number = 1, tool: Page) => {
-      if (subscriptionPlan === 'free' && credits < count) {
-        setIsUpgradeModalOpen(true);
-        return;
-      }
-  
-      if (subscriptionPlan === 'free') {
-        setCredits(prev => prev - count);
-      }
-  
-      // Record the generation for gamification
-      recordGeneration(tool, handleAddCredits);
-  
-      generationFn();
-    }, [subscriptionPlan, credits, recordGeneration]);
-  
-    // Handle quick access toolbar actions
-    const handleToolSelect = useCallback((tool: string) => {
-      const toolMap: Record<string, Page> = {
-        hashtag: 'Hashtag Manager',
-        story: 'AI Story',
-        image: 'Text-to-Image',
-        website: 'AI Website',
-        strategy: 'AI Strategy'
-      };
-      
-      if (toolMap[tool]) {
-        setActivePage(toolMap[tool]);
-      }
-    }, []);
-  
-    const handleQuickCreateTemplate = useCallback(() => {
-      // Open context modal with template creation
-      setIsContextModalOpen(true);
-      // Note: In a real implementation, we would set a flag to show template creation directly
-    }, []);
-  
-    const handleQuickCreatePersona = useCallback(() => {
-      // Open context modal with persona creation
-      setIsContextModalOpen(true);
-      // Note: In a real implementation, we would set a flag to show persona creation directly
+    const handleBatchImportComplete = useCallback((importedSources: RagSource[]) => {
+        setRagSources(prev => {
+            const existingIds = new Set(prev.map(source => source.id));
+            const deduped = importedSources.filter(source => !existingIds.has(source.id));
+            return [...prev, ...deduped];
+        });
     }, []);
 
     const renderContent = () => {
@@ -323,139 +213,162 @@ const App: React.FC = () => {
             case 'Subscription':
                 return <Subscription currentPlan={subscriptionPlan} onUpgradePlan={handleUpgradePlan} onAddCredits={handleAddCredits} />;
             case 'Hashtag Manager':
-                return (
-                    <HashtagManager
-                        hashtagCategories={hashtagCatalogue}
-                        readySets={readySetsData}
-                        selectedHashtags={selectedHashtags}
-                        onHashtagSelect={handleHashtagSelect}
-                        onSelectSet={handleSelectSet}
-                        isLoadingCategories={isHashtagCatalogueLoading || isHashtagCatalogueFetching}
-                        isLoadingReadySets={isReadySetsLoading || isReadySetsFetching}
-                        onRefreshReadySets={refetchReadySets}
-                        isCategoriesFallback={isHashtagCatalogueFallback}
-                        isReadySetsFallback={isReadySetsFallback}
-                    />
-                );
+                return <HashtagManager 
+                    hashtagCategories={hashtagCategories}
+                    readySets={readySets}
+                    selectedHashtags={selectedHashtags}
+                    onHashtagSelect={handleHashtagSelect}
+                    onSelectSet={handleSelectSet}
+                />;
             case 'AI Story':
-                return <AIStoryGenerator user={user} selectedHashtags={selectedHashtagObjects} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={(fn, count) => handleAttemptGenerationWithGamification(fn, count, 'AI Story')} onContentGenerated={handleContentGenerated} />;
+                return <AIStoryGenerator user={user} selectedHashtags={selectedHashtagObjects} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
             case 'AI Lyrics':
-                return <SunoLyricsGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={(fn, count) => handleAttemptGenerationWithGamification(fn, count, 'AI Lyrics')} onContentGenerated={handleContentGenerated} />;
+                return <SunoLyricsGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
             case 'AI Strategy':
-                return <WebsiteStrategyGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={(fn, count) => handleAttemptGenerationWithGamification(fn, count, 'AI Strategy')} onContentGenerated={handleContentGenerated} />;
+                return <WebsiteStrategyGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
             case 'AI Skill':
-                return <AISkillGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={(fn, count) => handleAttemptGenerationWithGamification(fn, count, 'AI Skill')} onContentGenerated={handleContentGenerated} />;
+                return <AISkillGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
             case 'AI Mutator':
-                 return <TensorMutator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={(fn, count) => handleAttemptGenerationWithGamification(fn, count, 'AI Mutator')} onContentGenerated={handleContentGenerated} />;
+                 return <TensorMutator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
             case 'AI Concept':
-                return <AIConceptGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={(fn, count) => handleAttemptGenerationWithGamification(fn, count, 'AI Concept')} onContentGenerated={handleContentGenerated} />;
+                return <AIConceptGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
             case 'Text-to-Image':
-                return <TextToImageGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={(fn, count) => handleAttemptGenerationWithGamification(fn, count, 'Text-to-Image')} onContentGenerated={handleContentGenerated} />;
+                return <TextToImageGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
             case 'Image Edit':
-                return <ImageEditor user={user} onPromptGenerated={handleAddPromptToHistory} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={(fn, count) => handleAttemptGenerationWithGamification(fn, count, 'Image Edit')} onContentGenerated={handleContentGenerated} />;
+                return <ImageEditor user={user} onPromptGenerated={handleAddPromptToHistory} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
              case 'Batch Images':
-                return <BatchImageGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={(fn, count) => handleAttemptGenerationWithGamification(fn, count, 'Batch Images')} onContentGenerated={handleContentGenerated} />;
+                return <BatchImageGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
             case 'Batch Prompts':
-                return <BatchPromptGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={(fn, count) => handleAttemptGenerationWithGamification(fn, count, 'Batch Prompts')} onContentGenerated={handleContentGenerated} />;
+                return <BatchPromptGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
             case 'AI Website':
-                return <AIWebsiteGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={(fn, count) => handleAttemptGenerationWithGamification(fn, count, 'AI Website')} generatedContent={generatedContent} />;
+                return <AIWebsiteGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} generatedContent={generatedContent} />;
             case 'Thinking Mode':
-                return <ThinkingMode user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={(fn, count) => handleAttemptGenerationWithGamification(fn, count, 'Thinking Mode')} onContentGenerated={handleContentGenerated} />;
+                return <ThinkingMode user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
             case 'Audio Transcriber':
-                return <AudioTranscriber user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={(fn, count) => handleAttemptGenerationWithGamification(fn, count, 'Audio Transcriber')} onContentGenerated={handleContentGenerated} />;
+                return <AudioTranscriber user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
+            case 'Audio Agents':
+                return <AudioAgentIntegrationExample userId={user?.id} />;
+            case 'Synaptic Symphony':
+                return <SynapticSymphony />;
+            case 'Sentry Navigation Cloud':
+                return <SentryNavigationCloud
+                    width={1200}
+                    height={700}
+                    showCategories={true}
+                    interactive={true}
+                    onItemClick={(item) => {
+                        console.log('Sentry navigation item clicked:', item);
+                        // In a real app, this would navigate to the actual page
+                        alert(`Would navigate to: ${item.name}\nURL: ${item.url}\nDescription: ${item.description}`);
+                    }}
+                />;
             case 'Gallery':
-                return <EnhancedGallery contentStorage={contentStorage} onContentStorageUpdate={setContentStorage} />;
+                return <GalleryComponent />;
+            case 'Media Library':
+                return <MediaLibrary user={user} onOpenBatchImport={() => setIsBatchImportModalOpen(true)} />;
             case 'History':
                 return <PromptHistory history={promptHistory} onClear={handleClearHistory} />;
-            case 'Gamification':
-                return <GamificationDashboard userProgress={userProgress} onAddCredits={handleAddCredits} />;
-            case 'Persona Templates':
-                return <PersonaTemplatesPage />;
-            case 'Website Manager':
-                return <WebsiteManager contentStorage={contentStorage} onContentStorageUpdate={setContentStorage} />;
             default:
                 return null;
         }
     };
 
     return (
-        <div className="bg-gray-900 text-white min-h-screen font-sans flex">
-            <Sidebar activePage={activePage} onPageChange={handlePageChange} isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-            
-            <div className="flex-1 flex flex-col">
-                <header className="bg-gray-900/80 backdrop-blur-sm sticky top-0 z-10 border-b border-gray-700">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="flex justify-between items-center py-3">
-                             <div className="flex items-center">
-                                <button
-                                    onClick={() => setIsSidebarOpen(true)}
-                                    className="md:hidden mr-3 p-1 text-gray-400 hover:text-white"
-                                    aria-label="Open sidebar"
-                                >
-                                    <MenuIcon />
-                                </button>
-                                <h1 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
-                                    AV Artist Assistant
-                                </h1>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                               <div className={`text-sm px-3 py-1.5 rounded-full ${credits < 1 && subscriptionPlan === 'free' ? 'text-red-400 bg-red-500/10' : 'text-gray-400'}`}>
-                                    Credits: {subscriptionPlan === 'free' ? credits : '∞'}
+        <div className="bg-gray-900 text-white min-h-screen font-sans">
+            {/* Main Layout Container */}
+            <div className="flex h-screen">
+                {/* Sidebar */}
+                <Sidebar
+                    activePage={activePage}
+                    onPageChange={handlePageChange}
+                    isOpen={isSidebarOpen}
+                    onClose={() => setIsSidebarOpen(false)}
+                />
+
+                {/* Main Content Area */}
+                <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
+                    {/* Header */}
+                    <header className="bg-gray-900/95 backdrop-blur-sm sticky top-0 z-30 border-b border-gray-700 shrink-0">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex justify-between items-center py-3">
+                                 <div className="flex items-center">
+                                    <button
+                                        onClick={() => setIsSidebarOpen(true)}
+                                        className="md:hidden mr-3 p-2 text-gray-400 hover:text-white rounded-md hover:bg-gray-800 transition-colors"
+                                        aria-label="Open sidebar"
+                                    >
+                                        <MenuIcon />
+                                    </button>
+                                    <h1 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
+                                        KaiDjuric AI Tools
+                                    </h1>
                                 </div>
-                               <button 
-                                    onClick={() => setIsRagModalOpen(true)}
-                                    className={`relative hidden sm:flex items-center text-sm font-semibold py-1.5 px-3 rounded-full transition-all border ${activeRagSources.length > 0 ? 'bg-green-500/20 border-green-500 text-green-300 shadow-lg shadow-green-500/10' : 'bg-gray-700 hover:bg-gray-600 border-gray-600'}`}>
-                                   <ContextIcon />
-                                   Add Context
-                                   {activeRagSources.length > 0 && (
-                                       <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-500 text-xs font-bold text-white">{activeRagSources.length}</span>
-                                   )}
-                               </button>
-                               <PersonaDropdown
-                                   currentContext={aiContext}
-                                   onSetContext={handleSetAiContext}
-                                   onPageChange={handlePageChange}
-                               />
-                               <LanguageSwitcher currentLanguage={language} onLanguageChange={setLanguage} />
-                               <Auth />
+                                <div className="flex items-center space-x-2">
+                                   <div className={`text-sm px-3 py-1.5 rounded-full ${credits < 1 && subscriptionPlan === 'free' ? 'text-red-400 bg-red-500/10' : 'text-gray-400'}`}>
+                                        Credits: {subscriptionPlan === 'free' ? credits : '∞'}
+                                    </div>
+                                   <button
+                                        onClick={() => setIsRagModalOpen(true)}
+                                        className={`relative hidden sm:flex items-center text-sm font-semibold py-1.5 px-3 rounded-full transition-all border ${activeRagSources.length > 0 ? 'bg-green-500/20 border-green-500 text-green-300 shadow-lg shadow-green-500/10' : 'bg-gray-700 hover:bg-gray-600 border-gray-600'}`}>
+                                       <ContextIcon />
+                                       Add Context
+                                       {activeRagSources.length > 0 && (
+                                           <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-500 text-xs font-bold text-white">{activeRagSources.length}</span>
+                                       )}
+                                   </button>
+                                   <button
+                                        onClick={() => setIsContextModalOpen(true)}
+                                        className={`hidden sm:flex items-center text-sm font-semibold py-1.5 px-3 rounded-full transition-all border ${aiContext ? 'bg-purple-500/20 border-purple-500 text-purple-300 shadow-lg shadow-purple-500/10' : 'bg-gray-700 hover:bg-gray-600 border-gray-600'}`}>
+                                       <PersonaIcon />
+                                       Set Persona
+                                   </button>
+                                   <button
+                                        onClick={() => handlePageChange('Media Library')}
+                                        className="hidden sm:flex items-center text-sm font-semibold py-1.5 px-3 rounded-full transition-all border bg-blue-600/20 border-blue-500 text-blue-200 hover:bg-blue-500/30 hover:text-white"
+                                    >
+                                        Media Library
+                                   </button>
+                                   <LanguageSwitcher currentLanguage={language} onLanguageChange={setLanguage} />
+                                   <Auth user={user} onAuthSuccess={handleAuthSuccess} onSignOut={handleSignOut} />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </header>
-                <SectionTabs
-                  activeSection="hashtags"
-                  onSectionChange={(section) => console.log('Section changed:', section)}
-                />
-                <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                    {renderContent()}
-                </main>
+                    </header>
+
+                    {/* Main Content */}
+                    <main className="flex-1 overflow-y-auto">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                            {renderContent()}
+                        </div>
+                    </main>
+                </div>
             </div>
+
+            {/* Selected Hashtag Tray - Fixed Position */}
             <SelectedTray
                 selectedHashtags={selectedHashtagObjects}
                 onRemove={handleHashtagSelect}
                 onClear={handleClearSelected}
             />
-            <QuickAccessToolbar
-                onToolSelect={handleToolSelect}
-                onCreateTemplate={handleQuickCreateTemplate}
-                onCreatePersona={handleQuickCreatePersona}
-            />
+
+            {/* Modals - High Z-Index */}
             <ContextModifier
                 isOpen={isContextModalOpen}
                 onClose={() => setIsContextModalOpen(false)}
                 currentContext={aiContext}
                 onSetContext={handleSetAiContext}
-                personas={contentStorage.personas}
-                currentPersona={currentPersona}
-                onPersonaChange={setCurrentPersona}
-                onCreatePersona={handleCreatePersona}
-                onDeletePersona={handleDeletePersona}
             />
             <RagSourceManager
                 isOpen={isRagModalOpen}
                 onClose={() => setIsRagModalOpen(false)}
                 sources={ragSources}
                 onSourcesChange={setRagSources}
+            />
+            <BatchMediaImportModal
+                isOpen={isBatchImportModalOpen}
+                onClose={() => setIsBatchImportModalOpen(false)}
+                onImportComplete={handleBatchImportComplete}
+                user={user}
             />
              <UpgradeModal
                 isOpen={isUpgradeModalOpen}
@@ -465,7 +378,7 @@ const App: React.FC = () => {
                     setIsUpgradeModalOpen(false);
                 }}
             />
-            <OnboardingModal 
+            <OnboardingModal
                 isOpen={isOnboardingOpen}
                 onClose={handleCloseOnboarding}
             />

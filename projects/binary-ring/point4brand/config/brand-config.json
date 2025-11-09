@@ -1,0 +1,156 @@
+{
+  "brand": {
+    "name": "point4brand",
+    "displayName": "Point4Brand",
+    "tagline": "Generative Art for Everyone",
+    "description": "Creating exclusive Binary Ring merchandise that brings mathematical beauty and algorithmic art into everyday life",
+    "founded": "2024",
+    "mission": "To make generative art accessible and wearable while supporting the creative coding community"
+  },
+  "design": {
+    "primaryColors": {
+      "brand": "#4f46e5",
+      "accent": "#7c3aed",
+      "success": "#10b981",
+      "warning": "#f59e0b",
+      "error": "#ef4444"
+    },
+    "typography": {
+      "primary": "system-ui, -apple-system, sans-serif",
+      "heading": "Inter, system-ui, sans-serif",
+      "mono": "JetBrains Mono, Consolas, monospace"
+    },
+    "spacing": {
+      "xs": "0.25rem",
+      "sm": "0.5rem",
+      "md": "1rem",
+      "lg": "1.5rem",
+      "xl": "2rem"
+    }
+  },
+  "product": {
+    "categories": {
+      "apparel": {
+        "name": "Apparel",
+        "icon": "👕",
+        "description": "Premium clothing featuring generative art designs",
+        "priority": 1
+      },
+      "drinkware": {
+        "name": "Drinkware",
+        "icon": "☕",
+        "description": "Cups, mugs, and tumblers with mathematical art",
+        "priority": 2
+      },
+      "prints": {
+        "name": "Art Prints",
+        "icon": "🖼️",
+        "description": "High-quality prints of the complete Binary Ring collection",
+        "priority": 3
+      },
+      "accessories": {
+        "name": "Accessories",
+        "icon": "✨",
+        "description": "Additional items featuring generative art",
+        "priority": 4
+      }
+    },
+    "badges": {
+      "bestseller": {
+        "label": "Bestseller",
+        "color": "#10b981",
+        "description": "Most popular items"
+      },
+      "new": {
+        "label": "New",
+        "color": "#3b82f6",
+        "description": "Recently added products"
+      },
+      "premium": {
+        "label": "Premium",
+        "color": "#f59e0b",
+        "description": "High-quality premium products"
+      },
+      "limited": {
+        "label": "Limited Edition",
+        "color": "#ef4444",
+        "description": "Limited availability items"
+      },
+      "eco": {
+        "label": "Eco-Friendly",
+        "color": "#10b981",
+        "description": "Environmentally sustainable products"
+      },
+      "special": {
+        "label": "Special Feature",
+        "color": "#8b5cf6",
+        "description": "Products with unique features"
+      }
+    }
+  },
+  "commerce": {
+    "currency": "USD",
+    "taxRate": 0.0875,
+    "shipping": {
+      "free": {
+        "threshold": 50,
+        "description": "Free worldwide shipping on orders over $50"
+      },
+      "standard": {
+        "cost": 5.99,
+        "description": "Standard shipping 7-14 business days"
+      },
+      "express": {
+        "cost": 12.99,
+        "description": "Express shipping 3-5 business days"
+      }
+    },
+    "returns": {
+      "period": 30,
+      "description": "30-day return policy, no questions asked"
+    }
+  },
+  "integration": {
+    "keywordSystem": {
+      "enabled": true,
+      "autoTag": true,
+      "recommendations": true,
+      "userCollection": true
+    },
+    "analytics": {
+      "enabled": true,
+      "trackViews": true,
+      "trackClicks": true,
+      "trackPurchases": true
+    },
+    "social": {
+      "shareEnabled": true,
+      "platforms": ["twitter", "instagram", "facebook", "pinterest"]
+    }
+  },
+  "sustainability": {
+    "commitments": [
+      "Organic cotton and sustainable materials",
+      "Carbon-neutral shipping",
+      "Minimal packaging",
+      "Support for environmental causes",
+      "Ethical production practices"
+    ],
+    "certifications": [
+      "GOTS Certified Organic",
+      "Fair Trade Certified",
+      "Carbon Neutral Shipping"
+    ]
+  },
+  "api": {
+    "version": "1.0.0",
+    "endpoints": {
+      "catalog": "/point4brand/api/catalog",
+      "products": "/point4brand/api/products",
+      "search": "/point4brand/api/search",
+      "recommendations": "/point4brand/api/recommendations"
+    }
+  },
+  "lastUpdated": "2024-11-09T00:00:00Z",
+  "version": "1.0.0"
+}

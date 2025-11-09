@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Ring - AI Frontend Generator | The Future of Web Development</title>
+    <link rel="stylesheet" href="landing-style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            500: '#4f46e5',
+                            600: '#3730a3',
+                        },
+                        secondary: {
+                            500: '#10b981',
+                            600: '#059669',
+                        },
+                        accent: {
+                            500: '#7c3aed',
+                            600: '#6d28d9',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'slide-up': 'slide-up 0.5s ease-out',
+                        'fade-in': 'fade-in 0.6s ease-out'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(79, 70, 229, 0.5); }
+            to { box-shadow: 0 0 30px rgba(124, 58, 237, 0.8), 0 0 40px rgba(79, 70, 229, 0.3); }
+        }
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .hero-bg {
+            background: radial-gradient(ellipse at center, rgba(79, 70, 229, 0.1) 0%, transparent 70%),
+                        radial-gradient(ellipse at 80% 20%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+                        radial-gradient(ellipse at 20% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="fixed w-full top-0 z-50 glass-effect">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="text-2xl font-bold gradient-text">🔮 Binary Ring</div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#features" class="text-gray-700 hover:text-primary-500 px-3 py-2 text-sm font-medium transition-colors">Features</a>
+                        <a href="#showcase" class="text-gray-700 hover:text-primary-500 px-3 py-2 text-sm font-medium transition-colors">Showcase</a>
+                        <a href="#community" class="text-gray-700 hover:text-primary-500 px-3 py-2 text-sm font-medium transition-colors">Community</a>
+                        <button onclick="startOnboarding()" class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                            Get Started
+                        </button>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button class="text-gray-700 hover:text-primary-500" onclick="toggleMobileMenu()">
+                        <i data-feather="menu"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden fixed inset-x-0 top-16 z-40 glass-effect">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+            <a href="#features" class="block px-3 py-2 text-gray-700 hover:text-primary-500">Features</a>
+            <a href="#showcase" class="block px-3 py-2 text-gray-700 hover:text-primary-500">Showcase</a>
+            <a href="#community" class="block px-3 py-2 text-gray-700 hover:text-primary-500">Community</a>
+            <button onclick="startOnboarding()" class="w-full text-left px-3 py-2 bg-primary-500 text-white rounded-lg">
+                Get Started
+            </button>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative pt-16 pb-20 hero-bg min-h-screen flex items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center">
+                <div class="animate-float mb-8">
+                    <div class="inline-block p-4 bg-white rounded-2xl shadow-2xl animate-glow">
+                        <div class="text-6xl">🔮</div>
+                    </div>
+                </div>
+
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 animate-slide-up">
+                    The Future of <span class="gradient-text">Frontend</span> Development
+                </h1>
+
+                <p class="text-xl md:text-2xl text-gray-600 mb-8 max-w-4xl mx-auto animate-fade-in">
+                    Build stunning frontends with AI-powered context windows, intelligent component generation,
+                    and dimensional database architecture.
+                </p>
+
+                <div class="flex flex-col sm:flex-row justify-center gap-4 mb-12 animate-slide-up">
+                    <button onclick="startOnboarding()" class="px-8 py-4 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-xl transition-all transform hover:scale-105 shadow-lg">
+                        <i data-feather="play" class="inline mr-2"></i>
+                        Start Building
+                    </button>
+                    <a href="index.html" class="px-8 py-4 bg-white hover:bg-gray-50 text-gray-900 font-semibold rounded-xl transition-all transform hover:scale-105 shadow-lg border">
+                        <i data-feather="code" class="inline mr-2"></i>
+                        Try Demo
+                    </a>
+                </div>
+
+                <div class="max-w-2xl mx-auto bg-gray-900 text-green-400 p-6 rounded-xl shadow-2xl font-mono text-lg animate-fade-in">
+                    <div class="flex items-center mb-2">
+                        <div class="flex space-x-2 mr-4">
+                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                            <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                        </div>
+                        <span class="text-gray-400">terminal</span>
+                    </div>
+                    <div class="typing-effect">
+                        $ npx create-binary-ring-app@latest my-app
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Background Elements -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-primary-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float"></div>
+            <div class="absolute top-3/4 right-1/4 w-64 h-64 bg-accent-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float" style="animation-delay: -2s;"></div>
+            <div class="absolute top-1/2 left-1/2 w-64 h-64 bg-secondary-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float" style="animation-delay: -4s;"></div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-6 gradient-text">Revolutionary Features</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Experience the next generation of frontend development with AI-powered tools and intelligent automation.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Context Window -->
+                <div class="bg-gray-50 p-8 rounded-2xl hover:bg-white hover:shadow-xl transition-all transform hover:-translate-y-2">
+                    <div class="text-4xl mb-4">📄</div>
+                    <h3 class="text-xl font-bold mb-4">Context Window</h3>
+                    <p class="text-gray-600 mb-4">
+                        Dimensional database architecture that maintains context across your entire development session. Add components, styles, and concepts to build intelligent specifications.
+                    </p>
+                    <div class="text-primary-500 font-medium">Smart Context Awareness</div>
+                </div>
+
+                <!-- AI Strategy Engine -->
+                <div class="bg-gray-50 p-8 rounded-2xl hover:bg-white hover:shadow-xl transition-all transform hover:-translate-y-2">
+                    <div class="text-4xl mb-4">🚀</div>
+                    <h3 class="text-xl font-bold mb-4">AI Strategy Engine</h3>
+                    <p class="text-gray-600 mb-4">
+                        Send your context to our AI strategy engine and watch as it generates evolved concepts, neural interfaces, and quantum-inspired architectures.
+                    </p>
+                    <div class="text-accent-500 font-medium">Concept Evolution</div>
+                </div>
+
+                <!-- Media Components -->
+                <div class="bg-gray-50 p-8 rounded-2xl hover:bg-white hover:shadow-xl transition-all transform hover:-translate-y-2">
+                    <div class="text-4xl mb-4">📺</div>
+                    <h3 class="text-xl font-bold mb-4">Rich Media Components</h3>
+                    <p class="text-gray-600 mb-4">
+                        Video galleries, audio players, and photo galleries built with Chadcn components. Professional-grade media handling out of the box.
+                    </p>
+                    <div class="text-secondary-500 font-medium">Media-Rich Interfaces</div>
+                </div>
+
+                <!-- Keyword System -->
+                <div class="bg-gray-50 p-8 rounded-2xl hover:bg-white hover:shadow-xl transition-all transform hover:-translate-y-2">
+                    <div class="text-4xl mb-4">🏷️</div>
+                    <h3 class="text-xl font-bold mb-4">Intelligent Keywords</h3>
+                    <p class="text-gray-600 mb-4">
+                        Collect keywords that interest you and get personalized recommendations. Our taxonomy system learns from your preferences.
+                    </p>
+                    <div class="text-primary-500 font-medium">Personalized Discovery</div>
+                </div>
+
+                <!-- Point4Brand Integration -->
+                <div class="bg-gray-50 p-8 rounded-2xl hover:bg-white hover:shadow-xl transition-all transform hover:-translate-y-2">
+                    <div class="text-4xl mb-4">🛍️</div>
+                    <h3 class="text-xl font-bold mb-4">Commerce Integration</h3>
+                    <p class="text-gray-600 mb-4">
+                        Unified Point4Brand system with smart product recommendations based on your collected keywords and interests.
+                    </p>
+                    <div class="text-accent-500 font-medium">Smart Commerce</div>
+                </div>
+
+                <!-- Generative Art -->
+                <div class="bg-gray-50 p-8 rounded-2xl hover:bg-white hover:shadow-xl transition-all transform hover:-translate-y-2">
+                    <div class="text-4xl mb-4">🎨</div>
+                    <h3 class="text-xl font-bold mb-4">Generative Art Projects</h3>
+                    <p class="text-gray-600 mb-4">
+                        36+ generative art projects including Sonic Sculptor, fractals, chaos theory visualizations, and audio-reactive systems.
+                    </p>
+                    <div class="text-secondary-500 font-medium">Creative Canvas</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Showcase Section -->
+    <section id="showcase" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-6">See It In Action</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Watch how Binary Ring transforms frontend development with intelligent context windows and AI-powered generation.
+                </p>
+            </div>
+
+            <div class="bg-white p-8 rounded-2xl shadow-2xl">
+                <div class="bg-gray-900 rounded-xl overflow-hidden">
+                    <div class="flex items-center p-4 bg-gray-800">
+                        <div class="flex space-x-2">
+                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                            <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                        </div>
+                        <div class="flex-1 text-center text-gray-400 text-sm">Binary Ring - AI Frontend Generator</div>
+                    </div>
+                    <div class="p-6 text-green-400 font-mono">
+                        <div class="mb-4">🔮 Binary Ring Frontend Generator</div>
+                        <div class="mb-2 text-gray-400">Context Window: [Video Gallery, Audio Player, Dark Theme]</div>
+                        <div class="mb-2">🚀 Sending to Strategy Engine...</div>
+                        <div class="mb-2 text-yellow-400">✨ Generated: Neural Interface Design (92% confidence)</div>
+                        <div class="mb-2 text-blue-400">✨ Generated: Quantum State Management (85% confidence)</div>
+                        <div class="text-purple-400">✨ Generated: Adaptive Morphic UI (90% confidence)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Section -->
+    <section id="community" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-6 gradient-text">Join Our Community</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Connect with developers, share your creations, and help shape the future of AI-powered frontend development.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <a href="#" class="group bg-gray-50 p-8 rounded-2xl hover:bg-primary-500 hover:text-white transition-all transform hover:scale-105">
+                    <div class="text-4xl mb-4 group-hover:animate-bounce">💬</div>
+                    <h3 class="text-xl font-bold mb-4">Discord</h3>
+                    <p class="text-gray-600 group-hover:text-white transition-colors">
+                        Join our Discord server for real-time discussions, help, and community showcases.
+                    </p>
+                </a>
+
+                <a href="#" class="group bg-gray-50 p-8 rounded-2xl hover:bg-accent-500 hover:text-white transition-all transform hover:scale-105">
+                    <div class="text-4xl mb-4 group-hover:animate-bounce">📱</div>
+                    <h3 class="text-xl font-bold mb-4">GitHub</h3>
+                    <p class="text-gray-600 group-hover:text-white transition-colors">
+                        Contribute to the project, report issues, and explore our open-source ecosystem.
+                    </p>
+                </a>
+
+                <a href="#" class="group bg-gray-50 p-8 rounded-2xl hover:bg-secondary-500 hover:text-white transition-all transform hover:scale-105">
+                    <div class="text-4xl mb-4 group-hover:animate-bounce">🐦</div>
+                    <h3 class="text-xl font-bold mb-4">Twitter</h3>
+                    <p class="text-gray-600 group-hover:text-white transition-colors">
+                        Follow us for updates, tips, and behind-the-scenes content about Binary Ring development.
+                    </p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Onboarding Modal -->
+    <div id="onboardingModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-8">
+                <!-- Step 1: Welcome -->
+                <div id="step1" class="onboarding-step">
+                    <div class="text-center mb-8">
+                        <div class="text-6xl mb-4">🔮</div>
+                        <h2 class="text-3xl font-bold mb-4 gradient-text">Welcome to Binary Ring!</h2>
+                        <p class="text-gray-600 text-lg">Let's get you started with the most advanced AI frontend generator.</p>
+                    </div>
+
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                            <div class="text-2xl mr-4">📄</div>
+                            <div>
+                                <h3 class="font-semibold">Context Window</h3>
+                                <p class="text-gray-600 text-sm">Add components to build intelligent specifications</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                            <div class="text-2xl mr-4">🚀</div>
+                            <div>
+                                <h3 class="font-semibold">AI Strategy Engine</h3>
+                                <p class="text-gray-600 text-sm">Transform your ideas into evolved concepts</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                            <div class="text-2xl mr-4">🎨</div>
+                            <div>
+                                <h3 class="font-semibold">Rich Media Components</h3>
+                                <p class="text-gray-600 text-sm">Professional video, audio, and photo galleries</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="nextStep()" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-4 rounded-lg transition-colors">
+                        Let's Start Building
+                    </button>
+                </div>
+
+                <!-- Step 2: Choose Your Path -->
+                <div id="step2" class="onboarding-step hidden">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold mb-4">Choose Your Starting Point</h2>
+                        <p class="text-gray-600">What type of frontend would you like to create?</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                        <button onclick="selectPath('ecommerce')" class="path-option p-6 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-all">
+                            <div class="text-4xl mb-3">🛍️</div>
+                            <h3 class="font-bold mb-2">E-commerce Store</h3>
+                            <p class="text-gray-600 text-sm">Product catalogs, shopping carts, payments</p>
+                        </button>
+
+                        <button onclick="selectPath('media')" class="path-option p-6 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-all">
+                            <div class="text-4xl mb-3">📺</div>
+                            <h3 class="font-bold mb-2">Media Platform</h3>
+                            <p class="text-gray-600 text-sm">Video galleries, audio players, photo collections</p>
+                        </button>
+
+                        <button onclick="selectPath('portfolio')" class="path-option p-6 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-all">
+                            <div class="text-4xl mb-3">🎨</div>
+                            <h3 class="font-bold mb-2">Creative Portfolio</h3>
+                            <p class="text-gray-600 text-sm">Showcase artwork, projects, and creativity</p>
+                        </button>
+
+                        <button onclick="selectPath('dashboard')" class="path-option p-6 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-all">
+                            <div class="text-4xl mb-3">📊</div>
+                            <h3 class="font-bold mb-2">Admin Dashboard</h3>
+                            <p class="text-gray-600 text-sm">Data visualization, analytics, management</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Customize -->
+                <div id="step3" class="onboarding-step hidden">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold mb-4">Customize Your Experience</h2>
+                        <p class="text-gray-600">Select the features that matter most to you</p>
+                    </div>
+
+                    <div class="space-y-4 mb-8">
+                        <label class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer">
+                            <input type="checkbox" class="mr-4 text-primary-500" checked>
+                            <div>
+                                <h3 class="font-semibold">AI Strategy Engine</h3>
+                                <p class="text-gray-600 text-sm">Transform context into evolved concepts</p>
+                            </div>
+                        </label>
+
+                        <label class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer">
+                            <input type="checkbox" class="mr-4 text-primary-500">
+                            <div>
+                                <h3 class="font-semibold">Keyword Collection</h3>
+                                <p class="text-gray-600 text-sm">Personalized recommendations based on interests</p>
+                            </div>
+                        </label>
+
+                        <label class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer">
+                            <input type="checkbox" class="mr-4 text-primary-500" checked>
+                            <div>
+                                <h3 class="font-semibold">Media Components</h3>
+                                <p class="text-gray-600 text-sm">Video, audio, and photo gallery components</p>
+                            </div>
+                        </label>
+
+                        <label class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer">
+                            <input type="checkbox" class="mr-4 text-primary-500">
+                            <div>
+                                <h3 class="font-semibold">Point4Brand Integration</h3>
+                                <p class="text-gray-600 text-sm">Smart commerce with product recommendations</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <button onclick="completeOnboarding()" class="w-full bg-gradient-to-r from-primary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600 text-white font-semibold py-4 rounded-lg transition-all">
+                        🚀 Launch Binary Ring
+                    </button>
+                </div>
+
+                <button onclick="closeOnboarding()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="text-2xl font-bold gradient-text mb-4">🔮 Binary Ring</div>
+                    <p class="text-gray-400">The future of AI-powered frontend development.</p>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold mb-4">Product</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">Features</a></li>
+                        <li><a href="#" class="hover:text-white">Documentation</a></li>
+                        <li><a href="#" class="hover:text-white">Templates</a></li>
+                        <li><a href="#" class="hover:text-white">API</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold mb-4">Community</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">Discord</a></li>
+                        <li><a href="#" class="hover:text-white">GitHub</a></li>
+                        <li><a href="#" class="hover:text-white">Twitter</a></li>
+                        <li><a href="#" class="hover:text-white">Blog</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold mb-4">Support</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">Help Center</a></li>
+                        <li><a href="#" class="hover:text-white">Contact</a></li>
+                        <li><a href="#" class="hover:text-white">Status</a></li>
+                        <li><a href="#" class="hover:text-white">Privacy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 Binary Ring. Built with AI for the future of frontend development.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Feather Icons
+        feather.replace();
+
+        let currentStep = 1;
+        let selectedPath = null;
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Onboarding functions
+        function startOnboarding() {
+            document.getElementById('onboardingModal').classList.remove('hidden');
+            currentStep = 1;
+            showStep(1);
+        }
+
+        function closeOnboarding() {
+            document.getElementById('onboardingModal').classList.add('hidden');
+        }
+
+        function nextStep() {
+            currentStep++;
+            showStep(currentStep);
+        }
+
+        function showStep(step) {
+            document.querySelectorAll('.onboarding-step').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`step${step}`).classList.remove('hidden');
+        }
+
+        function selectPath(path) {
+            selectedPath = path;
+            document.querySelectorAll('.path-option').forEach(el => {
+                el.classList.remove('border-primary-500', 'bg-primary-50');
+                el.classList.add('border-gray-200');
+            });
+            event.currentTarget.classList.add('border-primary-500', 'bg-primary-50');
+            event.currentTarget.classList.remove('border-gray-200');
+
+            setTimeout(() => nextStep(), 500);
+        }
+
+        function completeOnboarding() {
+            // Simulate setup completion
+            const button = event.currentTarget;
+            button.innerHTML = '⏳ Setting up your workspace...';
+            button.disabled = true;
+
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 2000);
+        }
+
+        // Typing effect for terminal
+        function typeWriter(element, text, speed = 50) {
+            let i = 0;
+            element.innerHTML = '';
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Initialize typing effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const terminalText = document.querySelector('.typing-effect');
+            if (terminalText) {
+                typeWriter(terminalText, '$ npx create-binary-ring-app@latest my-app');
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.animate-slide-up, .animate-fade-in').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>

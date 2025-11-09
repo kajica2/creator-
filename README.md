@@ -45,6 +45,35 @@ View your app in AI Studio: https://ai.studio/apps/drive/1WnQEJuk1lYs_egkuF_GN3-
 - Authenticated requests automatically refresh the session and expose the Supabase user via the global auth context (`useSupabaseAuth`).
 - Serverless API routes (e.g. `/api/scrape-url`) require a valid `Authorization: Bearer <access_token>` header. The client-side helper in `api/generate-hashtags-from-url.ts` injects the token from the current session.
 
+## Batch Media Context Import
+
+The `Batch Import` button in the app header opens a new workflow that accepts a `.zip` bundle of media assets (images, documents, audio, video) and converts them into RAG-ready context entries.
+
+### How it works
+
+1. Upload an archive containing hundreds of creatives—images, mockups, marketing PDFs, etc.
+2. (Optional) Provide a company URL, collection name, and notes. These are added to the AI prompt and stored alongside every asset.
+3. On upload the serverless route `/api/batch-media-import`:
+   - Validates the session via Supabase and streams the archive.
+   - Extracts each file, infers content type, and computes checksums and dimensions.
+   - Sends supported assets (currently images and text-based documents) to Gemini for structured tagging (summary, logos, objects, on-image text, dominant colours).
+   - Builds a plain-text context block for each asset so the generators can immediately consume them.
+   - Persists metadata in the new `media_assets` Supabase table for future retrieval.
+4. The UI receives the processed sources, previews the first few results, and injects them into the active RAG context.
+
+### Requirements
+
+- Set `GEMINI_API_KEY` (or `VITE_GEMINI_API_KEY`) so the analyzer can call Gemini.
+- Run `npm install` after pulling to pick up the new dependencies:
+  - `formidable`, `file-type`, `image-size`, `mime-types`.
+- Apply the migration `supabase/migrations/007_create_media_assets.sql` to add the storage table.
+
+### Limitations & roadmap
+
+- Non-image binary formats (audio/video) are currently catalogued but skipped from AI tagging; future iterations will add transcription hooks.
+- Images larger than 1 MB are imported without embedding the base64 preview to keep the UI performant.
+- Adjustable concurrency and retry behaviour can be configured later if we observe Gemini rate limits.
+
 ## Manual Test Plan
 
 1. Start the dev server and sign in via the header `Sign in with Google` button. Confirm the avatar and name appear.

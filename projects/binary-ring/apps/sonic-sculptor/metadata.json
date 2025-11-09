@@ -1,0 +1,7 @@
+{
+  "name": "Sonic Sculptor",
+  "description": "A modular creative sandbox to sculpt real-time visuals driven by audio. Upload your own audio or use a microphone to generate mesmerizing particle effects that react to bass, mids, and treble frequencies.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "name": "binary-ring-neural-connections",
+  "version": "1.0.0",
+  "description": "Intelligent neural connection system for Binary Ring generative art projects",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js start",
+    "dev": "NODE_ENV=development node --inspect index.js start",
+    "analyze": "node index.js analyze",
+    "export": "node index.js export",
+    "test": "node --test",
+    "build": "echo 'No build step required for Node.js project'",
+    "lint": "eslint *.js",
+    "format": "prettier --write *.js"
+  },
+  "keywords": [
+    "neural-networks",
+    "machine-learning",
+    "generative-art",
+    "recommendation-system",
+    "graph-analysis",
+    "tensorflow",
+    "similarity-analysis",
+    "ai"
+  ],
+  "author": "Binary Ring Collective",
+  "license": "MIT",
+  "dependencies": {
+    "@tensorflow/tfjs": "^4.15.0",
+    "@tensorflow/tfjs-node": "^4.15.0",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5",
+    "compression": "^1.7.4",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.55.0",
+    "prettier": "^3.1.0",
+    "@types/node": "^20.10.4"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/binaryring/neural-connections.git"
+  },
+  "bugs": {
+    "url": "https://github.com/binaryring/neural-connections/issues"
+  },
+  "homepage": "https://binaryring.art",
+  "directories": {
+    "test": "tests",
+    "doc": "docs"
+  },
+  "config": {
+    "api_port": 3001,
+    "min_similarity_threshold": 0.3,
+    "max_connections_per_project": 10,
+    "neural_network_epochs": 100,
+    "feature_vector_size": 64
+  },
+  "binary-ring": {
+    "system": "neural-connections",
+    "version": "1.0.0",
+    "ml_model": "autoencoder",
+    "features": [
+      "similarity-analysis",
+      "project-recommendations",
+      "dynamic-collections",
+      "network-analytics",
+      "graph-export",
+      "api-endpoints",
+      "real-time-updates",
+      "user-feedback-learning"
+    ],
+    "algorithms": [
+      "mathematical-concept-analysis",
+      "visual-aesthetics-analysis",
+      "technical-complexity-analysis",
+      "user-interaction-analysis",
+      "neural-feature-extraction",
+      "clustering",
+      "collaborative-filtering"
+    ]
+  }
+}

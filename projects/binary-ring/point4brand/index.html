@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Point4Brand - Binary Ring Merchandise</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 3rem 0;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(79, 70, 229, 0.2);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #b0b0b0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .nav-card {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-5px);
+            border-color: #4f46e5;
+            background: rgba(79, 70, 229, 0.1);
+        }
+
+        .nav-card .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .nav-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #e0e0e0;
+        }
+
+        .nav-card p {
+            color: #b0b0b0;
+            font-size: 0.95rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .stat-card {
+            background: rgba(26, 26, 26, 0.6);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+        }
+
+        .stat-label {
+            color: #b0b0b0;
+            margin-top: 0.5rem;
+        }
+
+        .features {
+            background: rgba(26, 26, 26, 0.6);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #e0e0e0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature {
+            padding: 1.5rem;
+            background: rgba(42, 42, 42, 0.5);
+            border-radius: 8px;
+            border: 1px solid #404040;
+        }
+
+        .feature h3 {
+            color: #4f46e5;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .feature p {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid #333;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏷️ Point4Brand</h1>
+            <p>Unified merchandise catalog with intelligent keyword tagging and personalized recommendations for the Binary Ring ecosystem</p>
+        </div>
+
+        <div class="navigation">
+            <a href="catalog.json" class="nav-card" onclick="event.preventDefault(); viewCatalog()">
+                <span class="icon">📦</span>
+                <h3>Product Catalog</h3>
+                <p>Browse the complete point4brand merchandise collection with detailed product information and assets</p>
+            </a>
+
+            <a href="keywords/taxonomy.json" class="nav-card" onclick="event.preventDefault(); viewKeywords()">
+                <span class="icon">🏷️</span>
+                <h3>Keyword Taxonomy</h3>
+                <p>Explore the standardized keyword system for consistent product tagging and discovery</p>
+            </a>
+
+            <a href="../keyword-system/standalone-demo.html" class="nav-card">
+                <span class="icon">🔍</span>
+                <h3>Keyword Collection</h3>
+                <p>Interactive system for collecting user interests and generating personalized recommendations</p>
+            </a>
+
+            <a href="../store/index.html" class="nav-card">
+                <span class="icon">🛍️</span>
+                <h3>Store Interface</h3>
+                <p>Visit the full Binary Ring store with integrated point4brand merchandise</p>
+            </a>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-number">6</span>
+                <div class="stat-label">Total Products</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">3</span>
+                <div class="stat-label">Collections</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">36</span>
+                <div class="stat-label">Unique Designs</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">7</span>
+                <div class="stat-label">Keyword Categories</div>
+            </div>
+        </div>
+
+        <div class="features">
+            <h2>Unified Point4Brand System Features</h2>
+            <div class="features-grid">
+                <div class="feature">
+                    <h3>🏷️ Smart Keyword Tagging</h3>
+                    <p>Every product is tagged with relevant keywords from standardized categories like Mathematical Art, Network Systems, and Nature Inspired patterns.</p>
+                </div>
+                <div class="feature">
+                    <h3>🔍 Intelligent Search</h3>
+                    <p>Find products based on interests, themes, and concepts rather than just product names or categories.</p>
+                </div>
+                <div class="feature">
+                    <h3>🎯 Personalized Recommendations</h3>
+                    <p>AI-powered recommendations based on collected keywords and user preferences across the Binary Ring ecosystem.</p>
+                </div>
+                <div class="feature">
+                    <h3>📊 Consistent Data Structure</h3>
+                    <p>Unified JSON format for products, keywords, and metadata enabling seamless integration across platforms.</p>
+                </div>
+                <div class="feature">
+                    <h3>🌱 Sustainability Focus</h3>
+                    <p>All products emphasize eco-friendly materials, ethical production, and support for environmental causes.</p>
+                </div>
+                <div class="feature">
+                    <h3>🔗 Cross-Platform Integration</h3>
+                    <p>Seamlessly integrated with the Binary Ring keyword collection system and community features.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2024 Point4Brand - Part of the Binary Ring ecosystem</p>
+            <p>Unified merchandise system with intelligent keyword organization</p>
+        </div>
+    </div>
+
+    <script>
+        function viewCatalog() {
+            window.open('catalog.json', '_blank');
+        }
+
+        function viewKeywords() {
+            window.open('keywords/taxonomy.json', '_blank');
+        }
+
+        // Add some interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.nav-card');
+
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 150);
+            });
+        });
+    </script>
+</body>
+</html>

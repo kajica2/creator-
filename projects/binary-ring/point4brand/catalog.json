@@ -1,0 +1,192 @@
+{
+  "brand": "point4brand",
+  "description": "Exclusive Binary Ring merchandise featuring generative art designs",
+  "collections": {
+    "tshirts": {
+      "name": "T-Shirts",
+      "description": "Premium apparel featuring generative art designs",
+      "items": [
+        {
+          "id": "buddhabrot-tee",
+          "name": "Buddhabrot Fractal Tee",
+          "description": "Mathematical art meets wearable design with the iconic Buddhabrot fractal pattern",
+          "price": 29.99,
+          "badges": ["bestseller"],
+          "keywords": ["fractal", "mathematical-art", "buddhist-imagery", "complex-systems", "visualization", "meditation"],
+          "colors": ["black", "white", "gray"],
+          "sizes": ["S", "M", "L", "XL"],
+          "category": "apparel",
+          "collection": "fractals",
+          "assets": {
+            "primary": "assets/tshirt-buddhabrot-black.jpg",
+            "secondary": "assets/tshirt-buddhabrot-white.jpg"
+          }
+        },
+        {
+          "id": "node-garden-tee",
+          "name": "Node Garden Network Tee",
+          "description": "Interactive network visualization brought to life on premium fabric",
+          "price": 29.99,
+          "badges": ["new"],
+          "keywords": ["network-visualization", "graph-theory", "connectivity", "algorithms", "data-structures", "interactive"],
+          "colors": ["navy", "black", "forest"],
+          "sizes": ["S", "M", "L", "XL"],
+          "category": "apparel",
+          "collection": "networks",
+          "assets": {
+            "primary": "assets/tshirt-node-garden-navy.jpg",
+            "secondary": "assets/tshirt-node-garden-black.jpg"
+          }
+        },
+        {
+          "id": "substrate-tee",
+          "name": "Substrate Cracks Premium Tee",
+          "description": "Organic crack patterns inspired by natural substrate formations",
+          "price": 34.99,
+          "originalPrice": 39.99,
+          "badges": ["premium"],
+          "keywords": ["organic-patterns", "crack-formation", "substrate-simulation", "nature-inspired", "procedural", "textures"],
+          "colors": ["cream", "charcoal", "rust"],
+          "sizes": ["S", "M", "L", "XL"],
+          "category": "apparel",
+          "collection": "organic",
+          "assets": {
+            "primary": "assets/tshirt-substrate-cream.jpg",
+            "secondary": "assets/tshirt-substrate-charcoal.jpg"
+          }
+        }
+      ]
+    },
+    "cups": {
+      "name": "Cups & Mugs",
+      "description": "Drinkware featuring beautiful generative art designs",
+      "items": [
+        {
+          "id": "lorenz-mug",
+          "name": "Deep Lorenz Coffee Mug",
+          "description": "Start your day with the beauty of chaos theory and the Lorenz attractor",
+          "price": 18.99,
+          "badges": ["bestseller"],
+          "keywords": ["chaos-theory", "lorenz-attractor", "dynamical-systems", "coffee-culture", "mathematics", "visualization"],
+          "variants": [
+            {"size": "11oz", "price": 18.99},
+            {"size": "15oz", "price": 21.99}
+          ],
+          "category": "drinkware",
+          "collection": "chaos",
+          "assets": {
+            "primary": "assets/mug-lorenz-white.jpg",
+            "secondary": "assets/mug-lorenz-black.jpg"
+          }
+        },
+        {
+          "id": "orbitals-tumbler",
+          "name": "Orbitals Travel Tumbler",
+          "description": "Insulated tumbler featuring orbital mechanics visualizations",
+          "price": 24.99,
+          "badges": ["eco"],
+          "keywords": ["orbital-mechanics", "space-visualization", "eco-friendly", "travel", "insulated", "astronomy"],
+          "features": ["Insulated", "20oz"],
+          "category": "drinkware",
+          "collection": "space",
+          "assets": {
+            "primary": "assets/tumbler-orbitals-steel.jpg",
+            "secondary": "assets/tumbler-orbitals-black.jpg"
+          }
+        },
+        {
+          "id": "happy-place-cup",
+          "name": "Happy Place Wellness Cup",
+          "description": "Heat-reactive ceramic cup that reveals hidden patterns when heated",
+          "price": 16.99,
+          "badges": ["special"],
+          "keywords": ["heat-reactive", "wellness", "mindfulness", "color-change", "therapeutic", "meditation"],
+          "features": ["Color Change", "Wellness Design"],
+          "category": "drinkware",
+          "collection": "wellness",
+          "assets": {
+            "primary": "assets/cup-happy-place-ceramic.jpg",
+            "secondary": "assets/cup-happy-place-reactive.jpg"
+          }
+        }
+      ]
+    },
+    "prints": {
+      "name": "Art Prints",
+      "description": "High-quality prints of the complete Binary Ring collection",
+      "items": [
+        {
+          "id": "complete-collection",
+          "name": "Complete Collection Prints",
+          "description": "All 36 Binary Ring designs in high-quality print format",
+          "price": 49.99,
+          "originalPrice": 89.99,
+          "badges": ["limited"],
+          "keywords": ["complete-set", "museum-quality", "generative-art", "collection", "mathematical-art", "algorithmic"],
+          "features": ["36 Unique Designs", "Museum Quality", "Multiple Sizes"],
+          "sizes": [
+            {"dimension": "8x10", "price": 49.99},
+            {"dimension": "11x14", "price": 79.99},
+            {"dimension": "16x20", "price": 119.99}
+          ],
+          "category": "prints",
+          "collection": "complete",
+          "assets": {
+            "primary": "assets/print-collection-preview.jpg"
+          }
+        }
+      ]
+    }
+  },
+  "featured": {
+    "substrate-collection": {
+      "name": "Substrate Collection",
+      "description": "Organic crack patterns on premium apparel",
+      "keywords": ["organic", "crack-patterns", "substrate-simulation", "nature-inspired"],
+      "assets": {
+        "hero": "assets/featured-substrate-collection.jpg"
+      }
+    }
+  },
+  "stats": {
+    "totalProducts": 6,
+    "totalCollections": 3,
+    "uniqueDesigns": 36,
+    "sustainability": "100%",
+    "shipping": "Free Worldwide"
+  },
+  "keywords": {
+    "categories": [
+      {
+        "name": "Mathematical Art",
+        "keywords": ["fractal", "mathematical-art", "chaos-theory", "lorenz-attractor", "dynamical-systems", "algorithmic"]
+      },
+      {
+        "name": "Network & Systems",
+        "keywords": ["network-visualization", "graph-theory", "connectivity", "algorithms", "data-structures", "complex-systems"]
+      },
+      {
+        "name": "Nature Inspired",
+        "keywords": ["organic-patterns", "crack-formation", "substrate-simulation", "nature-inspired", "procedural", "textures"]
+      },
+      {
+        "name": "Interactive & Visual",
+        "keywords": ["interactive", "visualization", "generative-art", "color-change", "heat-reactive"]
+      },
+      {
+        "name": "Wellness & Mindfulness",
+        "keywords": ["wellness", "mindfulness", "meditation", "therapeutic", "buddhist-imagery"]
+      },
+      {
+        "name": "Science & Space",
+        "keywords": ["orbital-mechanics", "space-visualization", "astronomy", "physics"]
+      },
+      {
+        "name": "Lifestyle & Culture",
+        "keywords": ["coffee-culture", "travel", "eco-friendly", "sustainable", "premium"]
+      }
+    ]
+  },
+  "lastUpdated": "2024-11-09T00:00:00Z",
+  "version": "1.0.0"
+}

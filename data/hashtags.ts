@@ -1,6 +1,15 @@
 import { HashtagCategory, HashtagSize, ReadySet } from '../types';
 import { generateSetId } from '../utils/hashtagStorage';
 
+export interface MediaHashtagTemplate {
+  id: string;
+  title: string;
+  description: string;
+  primary: string[];
+  secondary: string[];
+  niche: string[];
+}
+
 export const hashtagCategories: HashtagCategory[] = [
   {
     category: 'Core Artform',
@@ -55,7 +64,64 @@ export const hashtagCategories: HashtagCategory[] = [
   }
 ];
 
+export const mediaLibraryTemplates: MediaHashtagTemplate[] = [
+  {
+    id: 'template-urban-shredder',
+    title: 'The Urban Shredder',
+    description: 'Captures the raw energy and grit of street skateboarding in city environments.',
+    primary: ['#skateboarding', '#streetwear', '#urban', '#skatelife', '#thrasher', '#skate'],
+    secondary: ['#streetskating', '#skateordie', '#skateeverydamnday', '#skateanddestroy', '#skateculture', '#berrics', '#skategram', '#metrogrammed'],
+    niche: ['#skatespot', '#hellaclips', '#skateboardingisfun', '#iloveskateboarding', '#skatevideos', '#skateclips', '#thankyouskateboarding', '#skatetricks', '#ollie', '#kickflip', '#shredtillyouredead', '#boardcontrol', '#ledgefiend'],
+  },
+  {
+    id: 'template-bowl-rider',
+    title: 'The Bowl Rider',
+    description: 'Celebrates fluid motion, airs, and lines in transition and park skating.',
+    primary: ['#skatepark', '#bowlskating', '#skateboarding', '#skatelife', '#skater', '#actionsports'],
+    secondary: ['#transitionskating', '#vertbiking', '#skatebowl', '#poolskating', '#skateeverydamnday', '#thankyouskateboarding', '#skateanddestroy', '#skateordie'],
+    niche: ['#concretesurfing', '#bowlsesh', '#skateforfun', '#vertigo', '#airtime', '#copinggrind', '#carvegrind', '#frontsideair', '#backsidedisaster', '#indygrab', '#methodair', '#emptybowls', '#diyskate'],
+  },
+  {
+    id: 'template-longboard-cruiser',
+    title: 'The Longboard Cruiser',
+    description: 'Leans into the laid-back, scenic cruising lifestyle of longboarding.',
+    primary: ['#longboarding', '#cruising', '#longboard', '#skate', '#lifestyle', '#travel'],
+    secondary: ['#longboarddancing', '#longboardlife', '#downhillskateboarding', '#landyachtz', '#sector9', '#loadedboards', '#skateandexplore', '#boardlife', '#cruiserboard'],
+    niche: ['#longboardfreestyle', '#boardwalking', '#slidegloves', '#longdistanceskateboarding', '#longboardcommute', '#dancingonwheels', '#skatetravel', '#roadtriplife', '#scenicskate', '#getoutsideandskate', '#hillbomb', '#coleman-slide', '#pintail'],
+  },
+];
+
+export const synapticSymphonyHashtags = [
+  { name: '#SynapticSymphony', count: '∞', size: HashtagSize.Mega, description: 'Neural-inspired music generation', tags: ['neural', 'music', 'AI'], popularityScore: 100, relatedHashtags: ['#NeuralBeats', '#AIComposer'] },
+  { name: '#NeuralBeats', count: '5M+', size: HashtagSize.Large, description: 'AI-generated rhythms', tags: ['beats', 'AI'], popularityScore: 90 },
+  { name: '#AIComposer', count: '3M+', size: HashtagSize.Large, description: 'Artificial intelligence composition', tags: ['composer', 'AI'], popularityScore: 85 },
+  { name: '#BrainwaveMusic', count: '2M+', size: HashtagSize.Medium, description: 'Music from brainwaves', tags: ['brain', 'music'], popularityScore: 80 },
+  { name: '#QuantumHarmony', count: '1M+', size: HashtagSize.Medium, description: 'Quantum-inspired harmonies', tags: ['quantum', 'harmony'], popularityScore: 75 },
+  { name: '#CognitiveRhythm', count: '800K+', size: HashtagSize.Medium, description: 'Cognitive rhythm patterns', tags: ['cognitive', 'rhythm'], popularityScore: 70 },
+  { name: '#MindMelody', count: '600K+', size: HashtagSize.Small, description: 'Melodies from the mind', tags: ['mind', 'melody'], popularityScore: 65 },
+  { name: '#SynapseSound', count: '400K+', size: HashtagSize.Small, description: 'Sounds of synapses', tags: ['synapse', 'sound'], popularityScore: 60 },
+  { name: '#NeuronNotes', count: '200K+', size: HashtagSize.Small, description: 'Musical neurons', tags: ['neuron', 'notes'], popularityScore: 55 },
+  { name: '#ConsciousnessCode', count: '100K+', size: HashtagSize.Micro, description: 'Coded consciousness', tags: ['consciousness', 'code'], popularityScore: 50 },
+];
+
+// Add Synaptic Symphony category to hashtagCategories
+hashtagCategories.push({
+  category: 'Synaptic Symphony',
+  hashtags: synapticSymphonyHashtags,
+});
+
 export const readySets: ReadySet[] = [
+    {
+        id: 'set_synaptic_symphony',
+        title: '🧠 Synaptic Symphony Project',
+        hashtags: ['#SynapticSymphony', '#NeuralBeats', '#AIComposer', '#BrainwaveMusic', '#QuantumHarmony', '#CognitiveRhythm', '#MindMelody'],
+        category: 'Synaptic Symphony',
+        description: 'Neural-inspired music and media generation with floating hashtag visualization',
+        size: HashtagSize.Mega,
+        isFavorite: true,
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+    },
     {
         id: 'set_cyberpunk_vj',
         title: 'Cyberpunk VJ Loop Set',
@@ -81,6 +147,52 @@ export const readySets: ReadySet[] = [
         title: 'Interactive Installation Promo',
         hashtags: ['#InteractiveArt', '#NewMediaArt', '#ProjectionMapping', '#MadMapper', '#ArtInstallation', '#ExperienceDesign', '#ImmersiveArt'],
         category: 'Core Artform',
+        size: HashtagSize.Medium,
+        isFavorite: false,
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+    }
+    },
+    {
+        id: generateSetId('template_urban_shredder'),
+        title: 'The Urban Shredder',
+        hashtags: [
+            ...mediaLibraryTemplates[0].primary,
+            ...mediaLibraryTemplates[0].secondary,
+            ...mediaLibraryTemplates[0].niche.slice(0, 6)
+        ],
+        category: 'Skate Templates',
+        description: mediaLibraryTemplates[0].description,
+        size: HashtagSize.Large,
+        isFavorite: true,
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+    },
+    {
+        id: generateSetId('template_bowl_rider'),
+        title: 'The Bowl Rider',
+        hashtags: [
+            ...mediaLibraryTemplates[1].primary,
+            ...mediaLibraryTemplates[1].secondary,
+            ...mediaLibraryTemplates[1].niche.slice(0, 6)
+        ],
+        category: 'Skate Templates',
+        description: mediaLibraryTemplates[1].description,
+        size: HashtagSize.Medium,
+        isFavorite: false,
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+    },
+    {
+        id: generateSetId('template_longboard_cruiser'),
+        title: 'The Longboard Cruiser',
+        hashtags: [
+            ...mediaLibraryTemplates[2].primary,
+            ...mediaLibraryTemplates[2].secondary,
+            ...mediaLibraryTemplates[2].niche.slice(0, 6)
+        ],
+        category: 'Skate Templates',
+        description: mediaLibraryTemplates[2].description,
         size: HashtagSize.Medium,
         isFavorite: false,
         createdAt: Date.now(),

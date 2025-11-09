@@ -1,0 +1,400 @@
+{
+  "catalog": {
+    "title": "Binary Ring - Artist & Experience Catalog",
+    "version": "1.0.0",
+    "lastUpdated": "2024-11-09",
+    "description": "Comprehensive catalog of generative art projects, artist information, and interactive experiences",
+    "metadata": {
+      "totalProjects": 36,
+      "newProjects": 10,
+      "categories": 10,
+      "interactiveExperiences": 8,
+      "audioReactiveProjects": 6
+    }
+  },
+
+  "artist": {
+    "collective": "Binary Ring",
+    "founded": "2024",
+    "location": "Digital Realm",
+    "philosophy": "Exploring the intersection of mathematics, computation, and visual aesthetics through algorithmic art",
+    "medium": "JavaScript, WebGL, HTML5 Canvas, Generative Algorithms",
+    "influences": [
+      "Casey Reas & Ben Fry (Processing)",
+      "Jared Tarbell (Complexification)",
+      "Paul Bourke (Mathematical Visualizations)",
+      "Nature patterns and organic growth",
+      "Digital glitch aesthetics",
+      "Minimalist geometric art"
+    ],
+    "techniques": [
+      "Strange Attractors",
+      "Cellular Automata",
+      "L-Systems",
+      "Particle Systems",
+      "Reaction-Diffusion",
+      "Voronoi Diagrams",
+      "Fractal Mathematics",
+      "Organic Growth Simulation"
+    ],
+    "statement": "Binary Ring represents the convergence of mathematical precision and artistic expression, where algorithms become brushes and equations become color palettes. Each work explores the emergent beauty that arises from simple computational rules, revealing the hidden patterns that govern both digital and natural worlds.",
+    "contact": {
+      "email": "contact@binaryring.art",
+      "website": "https://binaryring.art",
+      "social": "@binaryring",
+      "repository": "github.com/binaryring/algorithms"
+    }
+  },
+
+  "experiences": [
+    {
+      "id": "buddhabrot",
+      "title": "Buddhabrot",
+      "category": "fractals",
+      "type": "static_generative",
+      "isNew": false,
+      "description": "Fractal path tracing in the Mandelbrot set creating organic, Buddha-like silhouettes",
+      "longDescription": "The Buddhabrot is a fractal rendering technique that reveals the hidden paths taken by points escaping the Mandelbrot set. Unlike traditional Mandelbrot visualizations, this algorithm traces and accumulates the trajectories of escaping points, creating flowing, organic forms reminiscent of Buddhist iconography.",
+      "technicalDetails": {
+        "algorithm": "Mandelbrot trajectory accumulation",
+        "complexity": "O(n²) with Monte Carlo sampling",
+        "interactivity": "Parameter adjustment, zoom navigation",
+        "renderTime": "2-30 seconds depending on resolution"
+      },
+      "parameters": {
+        "iterations": {"min": 1000, "max": 10000, "default": 5000},
+        "samples": {"min": 1000000, "max": 100000000, "default": 10000000},
+        "zoom": {"min": 1, "max": 1000, "default": 1},
+        "center": {"x": -0.7, "y": 0}
+      },
+      "outputs": {
+        "formats": ["PNG", "SVG", "WebM"],
+        "maxResolution": "8K (7680x4320)",
+        "colorModes": ["monochrome", "spectral", "custom"]
+      },
+      "experience": {
+        "duration": "5-30 minutes",
+        "interactionLevel": "medium",
+        "contemplative": true,
+        "audioReactive": false
+      },
+      "files": {
+        "demo": "buddhabrot/index.html",
+        "source": "buddhabrot/src/main.js",
+        "documentation": "buddhabrot/README.md"
+      }
+    },
+
+    {
+      "id": "node.garden",
+      "title": "Node Garden",
+      "category": "networks",
+      "type": "real_time_interactive",
+      "isNew": true,
+      "description": "Dynamic network visualization with organic growth patterns and interactive nodes",
+      "longDescription": "Node Garden simulates a living ecosystem of interconnected nodes that grow, connect, and evolve over time. Users can interact with the system by spawning new nodes, adjusting growth parameters, and observing emergent network behaviors. The system demonstrates principles of complex adaptive systems and network theory.",
+      "technicalDetails": {
+        "algorithm": "Force-directed graph with organic growth rules",
+        "complexity": "O(n²) for connection calculations",
+        "interactivity": "Real-time parameter control, click interaction",
+        "frameRate": "60 FPS with up to 300 nodes"
+      },
+      "parameters": {
+        "maxNodes": {"min": 50, "max": 500, "default": 150},
+        "connectionDistance": {"min": 50, "max": 300, "default": 120},
+        "growthRate": {"min": 0.001, "max": 0.1, "default": 0.02},
+        "nodeLifespan": {"min": 100, "max": 1000, "default": 300}
+      },
+      "outputs": {
+        "formats": ["PNG", "WebM", "Real-time"],
+        "maxResolution": "4K (3840x2160)",
+        "colorModes": ["neon", "organic", "minimal"]
+      },
+      "experience": {
+        "duration": "Open-ended",
+        "interactionLevel": "high",
+        "contemplative": true,
+        "audioReactive": true,
+        "collaborative": true
+      },
+      "files": {
+        "demo": "node.garden/index.html",
+        "source": "node.garden/src/main.js",
+        "documentation": "node.garden/README.md"
+      }
+    },
+
+    {
+      "id": "substrate",
+      "title": "Substrate",
+      "category": "organic",
+      "type": "growth_simulation",
+      "isNew": true,
+      "description": "Crack growth simulation inspired by bacterial colonies and material decomposition",
+      "longDescription": "Substrate explores the beauty of natural crack formation through computational simulation. The algorithm mimics the growth patterns found in bacterial colonies, dried earth, and material stress fractures. Cracks grow across the surface, spawning new cracks at intersections and creating complex organic networks.",
+      "technicalDetails": {
+        "algorithm": "Jared Tarbell-inspired crack growth with collision detection",
+        "complexity": "O(n) for crack propagation",
+        "interactivity": "Initial conditions, growth parameters",
+        "renderTime": "Real-time growth, 30-120 seconds completion"
+      },
+      "parameters": {
+        "initialCracks": {"min": 1, "max": 20, "default": 5},
+        "growthRate": {"min": 0.5, "max": 5, "default": 2},
+        "spawnChance": {"min": 0, "max": 1, "default": 0.3},
+        "turnFactor": {"min": 0, "max": 1, "default": 0.1}
+      },
+      "outputs": {
+        "formats": ["PNG", "SVG", "WebM"],
+        "maxResolution": "8K (7680x4320)",
+        "colorModes": ["monochrome", "aged", "colorized"]
+      },
+      "experience": {
+        "duration": "2-5 minutes",
+        "interactionLevel": "low",
+        "contemplative": true,
+        "audioReactive": false,
+        "meditative": true
+      },
+      "files": {
+        "demo": "substrate/index.html",
+        "source": "substrate/src/main.js",
+        "documentation": "substrate/README.md"
+      }
+    },
+
+    {
+      "id": "deep.lorenz",
+      "title": "Deep Lorenz",
+      "category": "attractors",
+      "type": "mathematical_visualization",
+      "isNew": false,
+      "description": "Extended exploration of Lorenz attractor dynamics with phase space visualization",
+      "longDescription": "Deep Lorenz provides an immersive journey through the famous Lorenz attractor's phase space. This chaotic system, originally used to model atmospheric convection, creates beautiful butterfly-like patterns. The visualization allows deep exploration of parameter space and reveals the sensitive dependence on initial conditions.",
+      "technicalDetails": {
+        "algorithm": "Runge-Kutta integration of Lorenz equations",
+        "complexity": "O(n) for trajectory calculation",
+        "interactivity": "Parameter adjustment, 3D navigation",
+        "precision": "Double-precision floating point"
+      },
+      "parameters": {
+        "sigma": {"min": 1, "max": 50, "default": 10},
+        "rho": {"min": 1, "max": 50, "default": 28},
+        "beta": {"min": 0.1, "max": 10, "default": 2.67},
+        "timeStep": {"min": 0.001, "max": 0.1, "default": 0.01}
+      },
+      "outputs": {
+        "formats": ["PNG", "WebM", "3D models"],
+        "maxResolution": "4K with stereo option",
+        "colorModes": ["velocity", "time", "position"]
+      },
+      "experience": {
+        "duration": "10-60 minutes",
+        "interactionLevel": "high",
+        "contemplative": true,
+        "audioReactive": true,
+        "educational": true
+      },
+      "files": {
+        "demo": "deep.lorenz/index.html",
+        "source": "deep.lorenz/src/main.js",
+        "documentation": "deep.lorenz/README.md"
+      }
+    },
+
+    {
+      "id": "happy.place",
+      "title": "Happy Place",
+      "category": "emotional",
+      "type": "emotion_driven",
+      "isNew": true,
+      "description": "Emotion-driven pattern generation creating positive, uplifting visual experiences",
+      "longDescription": "Happy Place generates visual patterns designed to evoke positive emotions and create calming, uplifting experiences. The algorithm responds to color psychology principles and creates flowing, organic forms that promote relaxation and well-being.",
+      "technicalDetails": {
+        "algorithm": "Emotion-based parameter mapping with color psychology",
+        "complexity": "O(n) for particle systems",
+        "interactivity": "Mood selection, environmental response",
+        "biofeedback": "Optional heart rate monitoring integration"
+      },
+      "parameters": {
+        "mood": {"options": ["calm", "energetic", "peaceful", "joyful"], "default": "peaceful"},
+        "intensity": {"min": 0.1, "max": 2, "default": 1},
+        "warmth": {"min": 0, "max": 1, "default": 0.7},
+        "flow": {"min": 0.1, "max": 3, "default": 1.5}
+      },
+      "outputs": {
+        "formats": ["PNG", "WebM", "Live wallpaper"],
+        "maxResolution": "4K (3840x2160)",
+        "colorModes": ["warm", "cool", "natural", "vibrant"]
+      },
+      "experience": {
+        "duration": "Open-ended",
+        "interactionLevel": "medium",
+        "contemplative": true,
+        "audioReactive": true,
+        "therapeutic": true,
+        "biofeedback": true
+      },
+      "files": {
+        "demo": "happy.place/index.html",
+        "source": "happy.place/src/main.js",
+        "documentation": "happy.place/README.md"
+      }
+    },
+
+    {
+      "id": "orbitals",
+      "title": "Orbitals",
+      "category": "particles",
+      "type": "scientific_visualization",
+      "isNew": true,
+      "description": "Quantum-inspired particle dynamics visualizing atomic orbital structures",
+      "longDescription": "Orbitals creates beautiful visualizations inspired by quantum mechanical atomic orbitals. The system simulates electron probability clouds and their interactions, creating ethereal, glowing forms that dance in three-dimensional space.",
+      "technicalDetails": {
+        "algorithm": "Quantum harmonic oscillator with probability distributions",
+        "complexity": "O(n log n) for spatial hashing",
+        "interactivity": "Quantum number adjustment, 3D navigation",
+        "scientificAccuracy": "Simplified but physically inspired"
+      },
+      "parameters": {
+        "principalQuantumNumber": {"min": 1, "max": 7, "default": 3},
+        "angularMomentum": {"min": 0, "max": 3, "default": 1},
+        "magneticQuantumNumber": {"min": -3, "max": 3, "default": 0},
+        "electronCount": {"min": 100, "max": 10000, "default": 2000}
+      },
+      "outputs": {
+        "formats": ["PNG", "WebM", "VR compatible"],
+        "maxResolution": "4K with stereo support",
+        "colorModes": ["quantum", "energy", "probability"]
+      },
+      "experience": {
+        "duration": "5-30 minutes",
+        "interactionLevel": "high",
+        "contemplative": true,
+        "audioReactive": true,
+        "educational": true,
+        "vrCompatible": true
+      },
+      "files": {
+        "demo": "orbitals/index.html",
+        "source": "orbitals/src/main.js",
+        "documentation": "orbitals/README.md"
+      }
+    }
+  ],
+
+  "collections": [
+    {
+      "id": "new_releases",
+      "title": "New Releases",
+      "description": "Latest additions to the Binary Ring collection",
+      "projects": [
+        "box.fitting.img", "guts", "happy.place", "henon.phase.deep",
+        "inter.aggregate", "inter.momentary", "node.garden",
+        "orbitals", "sand.traveler", "substrate"
+      ],
+      "curated": true,
+      "featured": true
+    },
+    {
+      "id": "interactive_experiences",
+      "title": "Interactive Experiences",
+      "description": "Projects with real-time user interaction capabilities",
+      "projects": [
+        "node.garden", "inter.aggregate", "inter.momentary",
+        "happy.place", "orbitals", "deep.lorenz", "mcp"
+      ],
+      "curated": true,
+      "featured": false
+    },
+    {
+      "id": "contemplative",
+      "title": "Contemplative Works",
+      "description": "Meditative and calming visual experiences",
+      "projects": [
+        "substrate", "happy.place", "buddhabrot", "deep.lorenz",
+        "tree.garden.ii", "moonlight.soyuz", "sand.dollar"
+      ],
+      "curated": true,
+      "featured": false
+    },
+    {
+      "id": "mathematical",
+      "title": "Mathematical Explorations",
+      "description": "Pure mathematical visualizations and attractors",
+      "projects": [
+        "buddhabrot", "deep.lorenz", "henon.phase", "henon.phase.deep",
+        "peter.de.jong", "cubic.attractor", "invader.fractal", "trema.disk", "trema.spike"
+      ],
+      "curated": true,
+      "featured": false
+    },
+    {
+      "id": "organic",
+      "title": "Organic Forms",
+      "description": "Nature-inspired growth and biological patterns",
+      "projects": [
+        "substrate", "bone.piles", "guts", "tree.garden.ii",
+        "stitches", "limb.sand.stroke", "limb.strat", "limb.stroke"
+      ],
+      "curated": true,
+      "featured": false
+    }
+  ],
+
+  "exhibitions": [
+    {
+      "id": "launch_2024",
+      "title": "Binary Ring: Algorithmic Genesis",
+      "date": "2024-11-09",
+      "type": "virtual_launch",
+      "description": "Inaugural exhibition featuring all 36 works from the Binary Ring collection",
+      "featured_works": ["buddhabrot", "substrate", "node.garden", "deep.lorenz", "happy.place", "orbitals"],
+      "duration": "Permanent",
+      "interactive": true,
+      "virtual_reality": true
+    }
+  ],
+
+  "technical_specifications": {
+    "system_requirements": {
+      "browser": "Modern browser with WebGL 2.0 support",
+      "memory": "4GB RAM minimum, 8GB recommended",
+      "graphics": "Dedicated GPU recommended for 4K rendering",
+      "storage": "50MB for offline caching"
+    },
+    "supported_formats": {
+      "images": ["PNG", "JPEG", "SVG", "WebP"],
+      "video": ["WebM", "MP4"],
+      "audio": ["WebM", "MP3", "WAV"],
+      "3d": ["OBJ", "STL", "GLTF"]
+    },
+    "accessibility": {
+      "keyboard_navigation": true,
+      "screen_reader_support": true,
+      "color_blind_friendly": true,
+      "motion_reduced_options": true
+    }
+  },
+
+  "licensing": {
+    "code": "MIT License",
+    "artwork": "Creative Commons BY-NC-SA 4.0",
+    "commercial_licensing": "Available upon request",
+    "educational_use": "Free for educational institutions",
+    "source_code_access": "Available for all projects"
+  },
+
+  "api": {
+    "base_url": "https://api.binaryring.art/v1",
+    "endpoints": {
+      "projects": "/projects",
+      "experiences": "/experiences",
+      "generate": "/generate/{project_id}",
+      "export": "/export/{project_id}",
+      "analytics": "/analytics"
+    },
+    "authentication": "API key required for generation and export",
+    "rate_limits": "1000 requests per hour per API key"
+  }
+}

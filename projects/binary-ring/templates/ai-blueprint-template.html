@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <!-- Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI Blueprint - Intelligent design system for generative art workflows and creative automation">
+    <meta name="theme-color" content="#7c3aed">
+    <meta name="color-scheme" content="light dark">
+
+    <!-- Title -->
+    <title>AI Blueprint - Creative Workflow Designer | Binary Ring</title>
+
+    <!-- Structured Data (Schema.org) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "AI Blueprint",
+      "description": "Intelligent design system for creating automated generative art workflows",
+      "url": "https://binaryring.art/tools/ai-blueprint",
+      "applicationCategory": "ProductivityApplication",
+      "creator": {
+        "@type": "Person",
+        "name": "Melvinmw",
+        "url": "https://binaryring.art/users/melvinmw"
+      },
+      "featureList": [
+        "Visual Workflow Designer",
+        "AI-Powered Automation",
+        "Template Management",
+        "Real-time Collaboration",
+        "Export & Deployment",
+        "Performance Analytics"
+      ],
+      "screenshot": "https://binaryring.art/screenshots/ai-blueprint.jpg",
+      "operatingSystem": "Web Browser",
+      "browserRequirements": "Modern browser with ES2020 support"
+    }
+    </script>
+
+    <!-- Preconnects -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/templates/huggingface-theme.css">
+    <link rel="stylesheet" href="/templates/ai-blueprint.css">
+
+    <!-- Configuration (inspired by ai-blue-print patterns) -->
+    <script>
+        window.blueprintConfig = {
+            appId: 'ai-blueprint',
+            version: '3.0.0',
+            creator: 'Melvinmw',
+
+            // Theme system (inspired by ai-blue-print implementation)
+            theme: {
+                autoDetect: true,
+                cookieName: 'ai-blueprint-theme',
+                systemDarkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
+                transitions: {
+                    enabled: true,
+                    duration: 300,
+                    easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+                }
+            },
+
+            // Blueprint designer settings
+            designer: {
+                gridSize: 20,
+                snapToGrid: true,
+                maxZoom: 3,
+                minZoom: 0.25,
+                autoSave: true,
+                autosaveInterval: 30000, // 30 seconds
+                maxUndoSteps: 50
+            },
+
+            // AI automation features
+            ai: {
+                modelEndpoint: '/api/ai/suggestions',
+                autoOptimize: true,
+                suggestionDelay: 500,
+                learningEnabled: true,
+                confidenceThreshold: 0.75,
+                maxSuggestions: 5
+            },
+
+            // Workflow execution
+            execution: {
+                parallelProcessing: true,
+                maxWorkers: 4,
+                timeoutMs: 60000,
+                retryAttempts: 3,
+                cachingEnabled: true
+            },
+
+            // Collaboration features
+            collaboration: {
+                realTime: false, // Set to true for collaborative editing
+                shareableLinks: true,
+                versionControl: true,
+                commentSystem: true,
+                userPresence: false
+            },
+
+            // Node types for workflow designer
+            nodeTypes: {
+                input: {
+                    category: 'sources',
+                    icon: '📥',
+                    color: '#3b82f6',
+                    maxOutputs: 1
+                },
+                process: {
+                    category: 'transforms',
+                    icon: '⚙️',
+                    color: '#8b5cf6',
+                    maxInputs: 3,
+                    maxOutputs: 2
+                },
+                ai: {
+                    category: 'intelligence',
+                    icon: '🧠',
+                    color: '#f59e0b',
+                    requiresModel: true
+                },
+                output: {
+                    category: 'destinations',
+                    icon: '📤',
+                    color: '#10b981',
+                    maxInputs: 1
+                }
+            },
+
+            // Analytics (like HF implementation)
+            analytics: {
+                enabled: true,
+                provider: 'plausible',
+                domain: 'binaryring.art',
+                respectDNT: true,
+                events: {
+                    workflow: 'Workflow Created',
+                    execution: 'Workflow Executed',
+                    ai_suggestion: 'AI Suggestion Used',
+                    collaboration: 'Collaboration Started',
+                    template: 'Template Applied'
+                }
+            }
+        };
+
+        // Enhanced theme detection (inspired by ai-blueprint)
+        function initializeBlueprintTheme() {
+            const config = window.blueprintConfig.theme;
+
+            // Check for saved theme preference
+            const themeRegex = new RegExp(`${config.cookieName}=([^;]+)`);
+            const cookieMatch = document.cookie.match(themeRegex);
+            const savedTheme = cookieMatch ? cookieMatch[1] : null;
+
+            // Determine theme: saved preference > system preference > light
+            let theme = savedTheme;
+            if (!theme) {
+                theme = config.systemDarkMode ? 'dark' : 'light';
+            }
+
+            // Apply theme
+            applyBlueprintTheme(theme);
+
+            // Listen for system theme changes
+            if (!savedTheme && config.autoDetect) {
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                    applyBlueprintTheme(e.matches ? 'dark' : 'light');
+                });
+            }
+        }
+
+        function applyBlueprintTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.classList.toggle('dark', theme === 'dark');
+
+            // Update CSS custom properties for canvas
+            updateCanvasTheme(theme);
+        }
+
+        function updateCanvasTheme(theme) {
+            const root = document.documentElement;
+            if (theme === 'dark') {
+                root.style.setProperty('--canvas-bg', '#0f0f0f');
+                root.style.setProperty('--grid-color', '#2a2a2a');
+                root.style.setProperty('--node-shadow', 'rgba(0, 0, 0, 0.8)');
+            } else {
+                root.style.setProperty('--canvas-bg', '#fafafa');
+                root.style.setProperty('--grid-color', '#e5e5e5');
+                root.style.setProperty('--node-shadow', 'rgba(0, 0, 0, 0.1)');
+            }
+        }
+
+        // Initialize theme immediately
+        initializeBlueprintTheme();
+    </script>
+</head>
+<body class="ai-blueprint">
+    <!-- Skip Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="blueprint-header" role="banner">
+        <div class="header-container">
+            <!-- Branding -->
+            <div class="header-brand">
+                <a href="/" class="brand-link">
+                    <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                    <span class="brand-text">Binary Ring</span>
+                </a>
+                <div class="app-info">
+                    <h1 class="app-title">AI Blueprint</h1>
+                    <span class="app-version">v3.0</span>
+                </div>
+            </div>
+
+            <!-- Workflow Controls -->
+            <div class="workflow-controls">
+                <button class="workflow-btn save-btn" onclick="saveWorkflow()" title="Save Workflow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                        <polyline points="17,21 17,13 7,13 7,21"/>
+                        <polyline points="7,3 7,8 15,8"/>
+                    </svg>
+                    Save
+                </button>
+
+                <button class="workflow-btn load-btn" onclick="loadWorkflow()" title="Load Workflow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14,2 14,8 20,8"/>
+                    </svg>
+                    Load
+                </button>
+
+                <div class="workflow-separator"></div>
+
+                <button class="workflow-btn execute-btn primary" onclick="executeWorkflow()" title="Execute Workflow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <polygon points="5,3 19,12 5,21"/>
+                    </svg>
+                    Execute
+                </button>
+
+                <button class="workflow-btn stop-btn" onclick="stopWorkflow()" title="Stop Execution" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <rect x="6" y="6" width="12" height="12"/>
+                    </svg>
+                    Stop
+                </button>
+            </div>
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+                <!-- AI Assistant Toggle -->
+                <button class="ai-assistant-btn action-btn" onclick="toggleAI()" title="AI Assistant">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386L8.464 15.5z"/>
+                    </svg>
+                    <span class="ai-indicator" id="aiIndicator"></span>
+                </button>
+
+                <!-- Collaboration -->
+                <button class="collab-btn action-btn" onclick="startCollaboration()" title="Start Collaboration">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </button>
+
+                <!-- Theme Toggle -->
+                <button class="theme-toggle action-btn" onclick="toggleBlueprintTheme()" title="Toggle Theme">
+                    <span class="theme-icon theme-icon-light">☀️</span>
+                    <span class="theme-icon theme-icon-dark">🌙</span>
+                </button>
+
+                <!-- Settings -->
+                <button class="settings-btn action-btn" onclick="openBlueprintSettings()" title="Settings">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Workflow Status Bar -->
+        <div class="status-bar">
+            <div class="status-info">
+                <span class="status-item">
+                    <span class="status-label">Nodes:</span>
+                    <span class="status-value" id="nodeCount">0</span>
+                </span>
+                <span class="status-item">
+                    <span class="status-label">Connections:</span>
+                    <span class="status-value" id="connectionCount">0</span>
+                </span>
+                <span class="status-item">
+                    <span class="status-label">Status:</span>
+                    <span class="status-value" id="workflowStatus">Ready</span>
+                </span>
+            </div>
+
+            <div class="execution-progress" id="executionProgress" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <span class="progress-text" id="progressText">Initializing...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="blueprint-main" role="main">
+        <div class="blueprint-layout">
+            <!-- Node Library Panel -->
+            <aside class="node-library" role="complementary">
+                <div class="library-header">
+                    <h2>Node Library</h2>
+                    <div class="library-search">
+                        <input
+                            type="search"
+                            placeholder="Search nodes..."
+                            class="search-input"
+                            oninput="filterNodes(this.value)"
+                        >
+                    </div>
+                </div>
+
+                <div class="library-content">
+                    <!-- Node Categories -->
+                    <div class="node-category" data-category="sources">
+                        <div class="category-header">
+                            <h3>📥 Data Sources</h3>
+                            <button class="category-toggle" onclick="toggleCategory('sources')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="6,9 12,15 18,9"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="category-nodes">
+                            <div class="node-item" draggable="true" data-node-type="file-input">
+                                <div class="node-icon">📁</div>
+                                <div class="node-info">
+                                    <h4>File Input</h4>
+                                    <p>Import images or data files</p>
+                                </div>
+                            </div>
+                            <div class="node-item" draggable="true" data-node-type="camera-input">
+                                <div class="node-icon">📷</div>
+                                <div class="node-info">
+                                    <h4>Camera Input</h4>
+                                    <p>Capture from webcam</p>
+                                </div>
+                            </div>
+                            <div class="node-item" draggable="true" data-node-type="random-generator">
+                                <div class="node-icon">🎲</div>
+                                <div class="node-info">
+                                    <h4>Random Generator</h4>
+                                    <p>Generate random values</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="node-category" data-category="transforms">
+                        <div class="category-header">
+                            <h3>⚙️ Transforms</h3>
+                            <button class="category-toggle" onclick="toggleCategory('transforms')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="6,9 12,15 18,9"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="category-nodes">
+                            <div class="node-item" draggable="true" data-node-type="image-filter">
+                                <div class="node-icon">🎨</div>
+                                <div class="node-info">
+                                    <h4>Image Filter</h4>
+                                    <p>Apply visual effects</p>
+                                </div>
+                            </div>
+                            <div class="node-item" draggable="true" data-node-type="math-operation">
+                                <div class="node-icon">➕</div>
+                                <div class="node-info">
+                                    <h4>Math Operation</h4>
+                                    <p>Mathematical calculations</p>
+                                </div>
+                            </div>
+                            <div class="node-item" draggable="true" data-node-type="color-transform">
+                                <div class="node-icon">🌈</div>
+                                <div class="node-info">
+                                    <h4>Color Transform</h4>
+                                    <p>Adjust colors and palettes</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="node-category" data-category="intelligence">
+                        <div class="category-header">
+                            <h3>🧠 AI Nodes</h3>
+                            <button class="category-toggle" onclick="toggleCategory('intelligence')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="6,9 12,15 18,9"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="category-nodes">
+                            <div class="node-item" draggable="true" data-node-type="style-transfer">
+                                <div class="node-icon">🎭</div>
+                                <div class="node-info">
+                                    <h4>Style Transfer</h4>
+                                    <p>AI-powered style application</p>
+                                </div>
+                            </div>
+                            <div class="node-item" draggable="true" data-node-type="object-detection">
+                                <div class="node-icon">👁️</div>
+                                <div class="node-info">
+                                    <h4>Object Detection</h4>
+                                    <p>Identify objects in images</p>
+                                </div>
+                            </div>
+                            <div class="node-item" draggable="true" data-node-type="text-generation">
+                                <div class="node-icon">📝</div>
+                                <div class="node-info">
+                                    <h4>Text Generation</h4>
+                                    <p>AI-generated descriptions</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="node-category" data-category="destinations">
+                        <div class="category-header">
+                            <h3>📤 Outputs</h3>
+                            <button class="category-toggle" onclick="toggleCategory('destinations')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="6,9 12,15 18,9"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="category-nodes">
+                            <div class="node-item" draggable="true" data-node-type="image-output">
+                                <div class="node-icon">🖼️</div>
+                                <div class="node-info">
+                                    <h4>Image Output</h4>
+                                    <p>Export as image file</p>
+                                </div>
+                            </div>
+                            <div class="node-item" draggable="true" data-node-type="video-output">
+                                <div class="node-icon">🎬</div>
+                                <div class="node-info">
+                                    <h4>Video Output</h4>
+                                    <p>Export as video sequence</p>
+                                </div>
+                            </div>
+                            <div class="node-item" draggable="true" data-node-type="web-publish">
+                                <div class="node-icon">🌐</div>
+                                <div class="node-info">
+                                    <h4>Web Publish</h4>
+                                    <p>Publish to gallery</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Templates -->
+                <div class="quick-templates">
+                    <h3>Quick Templates</h3>
+                    <div class="template-grid">
+                        <button class="template-btn" onclick="loadTemplate('basic-filter')" data-template="basic">
+                            <div class="template-preview">🎨</div>
+                            <span>Basic Filter</span>
+                        </button>
+                        <button class="template-btn" onclick="loadTemplate('ai-enhance')" data-template="ai">
+                            <div class="template-preview">🧠</div>
+                            <span>AI Enhancement</span>
+                        </button>
+                        <button class="template-btn" onclick="loadTemplate('batch-process')" data-template="batch">
+                            <div class="template-preview">⚙️</div>
+                            <span>Batch Process</span>
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Canvas Area -->
+            <section class="canvas-section" role="main">
+                <div class="canvas-container">
+                    <!-- Canvas Toolbar -->
+                    <div class="canvas-toolbar">
+                        <div class="toolbar-group">
+                            <button class="toolbar-btn" onclick="undo()" title="Undo" id="undoBtn" disabled>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M3 7v6h6"/>
+                                    <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/>
+                                </svg>
+                            </button>
+                            <button class="toolbar-btn" onclick="redo()" title="Redo" id="redoBtn" disabled>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M21 7v6h-6"/>
+                                    <path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l3 2.7"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="toolbar-separator"></div>
+
+                        <div class="toolbar-group">
+                            <button class="toolbar-btn" onclick="selectAll()" title="Select All">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <path d="M9 9h6v6H9z"/>
+                                </svg>
+                            </button>
+                            <button class="toolbar-btn" onclick="deleteSelected()" title="Delete Selected">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="3,6 5,6 21,6"/>
+                                    <path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="toolbar-separator"></div>
+
+                        <div class="toolbar-group">
+                            <button class="toolbar-btn" onclick="centerCanvas()" title="Center View">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="12" y1="8" x2="12" y2="16"/>
+                                    <line x1="8" y1="12" x2="16" y2="12"/>
+                                </svg>
+                            </button>
+                            <button class="toolbar-btn" onclick="fitToScreen()" title="Fit to Screen">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M16 21h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="zoom-controls">
+                            <button class="zoom-btn" onclick="zoomOut()" title="Zoom Out">−</button>
+                            <span class="zoom-display" id="zoomDisplay">100%</span>
+                            <button class="zoom-btn" onclick="zoomIn()" title="Zoom In">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Main Canvas -->
+                    <div class="workflow-canvas" id="workflowCanvas">
+                        <!-- Canvas grid background -->
+                        <div class="canvas-grid"></div>
+
+                        <!-- Nodes and connections will be rendered here -->
+                        <svg class="connections-layer" id="connectionsLayer"></svg>
+                        <div class="nodes-layer" id="nodesLayer"></div>
+
+                        <!-- Selection box -->
+                        <div class="selection-box" id="selectionBox" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <!-- Mini Map -->
+                <div class="mini-map" id="miniMap">
+                    <div class="mini-map-content">
+                        <div class="mini-map-viewport"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Properties Panel -->
+            <aside class="properties-panel" role="complementary">
+                <div class="panel-header">
+                    <h2>Properties</h2>
+                    <button class="panel-toggle" onclick="togglePropertiesPanel()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="18,9 12,15 6,9"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="panel-content" id="propertiesContent">
+                    <div class="no-selection">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        <p>Select a node to edit properties</p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- AI Assistant Panel -->
+        <div class="ai-assistant" id="aiAssistant" style="display: none;">
+            <div class="ai-header">
+                <h3>🧠 AI Assistant</h3>
+                <button class="ai-close" onclick="toggleAI()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="ai-content">
+                <div class="ai-suggestions" id="aiSuggestions">
+                    <div class="suggestion-item">
+                        <div class="suggestion-icon">💡</div>
+                        <div class="suggestion-text">Try adding a color transform after your image input for more vibrant results</div>
+                        <button class="apply-suggestion" onclick="applySuggestion('color-transform')">Apply</button>
+                    </div>
+                </div>
+
+                <div class="ai-chat">
+                    <div class="chat-messages" id="chatMessages"></div>
+                    <div class="chat-input-container">
+                        <input
+                            type="text"
+                            class="chat-input"
+                            placeholder="Ask me about your workflow..."
+                            onkeypress="handleChatInput(event)"
+                        >
+                        <button class="send-btn" onclick="sendChatMessage()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <line x1="22" y1="2" x2="11" y2="13"/>
+                                <polygon points="22,2 15,22 11,13 2,9 22,2"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="/templates/huggingface-config.js"></script>
+    <script src="/templates/ai-blueprint-engine.js"></script>
+    <script src="/templates/ai-blueprint-nodes.js"></script>
+    <script src="/templates/ai-blueprint-ai.js"></script>
+
+    <!-- Initialize -->
+    <script>
+        // Theme toggle function (inspired by ai-blueprint)
+        function toggleBlueprintTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+
+            applyBlueprintTheme(newTheme);
+
+            // Save preference
+            document.cookie = `${window.blueprintConfig.theme.cookieName}=${newTheme}; path=/; max-age=31536000; SameSite=Lax`;
+
+            // Track theme change
+            if (window.BinaryRing) {
+                BinaryRing.trackEvent('Theme Toggle', {
+                    theme: newTheme,
+                    app: 'ai-blueprint'
+                });
+            }
+        }
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeBlueprint();
+
+            // Track application launch
+            if (window.BinaryRing) {
+                BinaryRing.trackEvent('Blueprint Launch', {
+                    app: 'ai-blueprint',
+                    timestamp: Date.now()
+                });
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 's':
+                        e.preventDefault();
+                        saveWorkflow();
+                        break;
+                    case 'o':
+                        e.preventDefault();
+                        loadWorkflow();
+                        break;
+                    case 'z':
+                        e.preventDefault();
+                        if (e.shiftKey) {
+                            redo();
+                        } else {
+                            undo();
+                        }
+                        break;
+                    case 'a':
+                        e.preventDefault();
+                        selectAll();
+                        break;
+                }
+            } else if (e.key === 'Delete' || e.key === 'Backspace') {
+                deleteSelected();
+            }
+        });
+    </script>
+</body>
+</html>

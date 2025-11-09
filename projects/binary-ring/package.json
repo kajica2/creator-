@@ -1,0 +1,30 @@
+{
+  "name": "binary-ring-credits-system",
+  "version": "1.0.0",
+  "description": "Advanced Credits & XP System for Binary Ring AI Frontend Generator",
+  "main": "credits-system.html",
+  "scripts": {
+    "deploy": "vercel --prod",
+    "deploy:dev": "vercel",
+    "serve": "python3 -m http.server 3000",
+    "start": "npm run serve"
+  },
+  "keywords": [
+    "credits",
+    "xp-system",
+    "gamification",
+    "ai",
+    "frontend-generator",
+    "binary-ring"
+  ],
+  "author": "Binary Ring Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/binary-ring/credits-system"
+  },
+  "homepage": "https://binary-ring-credits.vercel.app"
+}

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto" class="theme-auto">
+<head>
+    <!-- Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Binary Ring - AI-powered generative art platform with neural connections and community features">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="color-scheme" content="light dark">
+
+    <!-- Title -->
+    <title>Binary Ring - Generative Art Platform</title>
+
+    <!-- Structured Data (JSON-LD) inspired by Hugging Face -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Binary Ring",
+      "description": "AI-powered generative art platform with neural connections and community features",
+      "url": "https://binaryring.art",
+      "applicationCategory": "CreativeWorkApplication",
+      "operatingSystem": "Web Browser",
+      "creator": {
+        "@type": "Organization",
+        "name": "Binary Ring Collective",
+        "url": "https://binaryring.art"
+      },
+      "featureList": [
+        "Generative Art Creation",
+        "Neural Network Visualization",
+        "Community Gallery",
+        "AI-Powered Project Connections",
+        "Interactive Learning Platform",
+        "E-commerce Store"
+      ],
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      },
+      "screenshot": "https://binaryring.art/assets/screenshot.jpg",
+      "datePublished": "2024-11-09",
+      "dateModified": "2024-11-09",
+      "version": "2.0.0",
+      "browserRequirements": "Requires modern browser with WebGL support"
+    }
+    </script>
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://plausible.io">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="/templates/huggingface-theme.css">
+
+    <!-- Configuration Script (must load first) -->
+    <script src="/templates/huggingface-config.js"></script>
+
+    <!-- Critical CSS for theme switching -->
+    <style>
+        /* Critical theme styles to prevent flash */
+        :root {
+            --bg-primary: #ffffff;
+            --text-primary: #1a1a1a;
+            --accent-primary: #4f46e5;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --text-primary: #ffffff;
+            --accent-primary: #6366f1;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Loading screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--accent-primary);
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Skip to content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header with HuggingFace-inspired design -->
+    <header class="app-header" role="banner">
+        <nav class="navbar" aria-label="Main navigation">
+            <div class="navbar-container">
+                <!-- Brand -->
+                <div class="navbar-brand">
+                    <a href="/" class="brand-link" aria-label="Binary Ring Home">
+                        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/>
+                        </svg>
+                        <span class="brand-text">Binary Ring</span>
+                    </a>
+                </div>
+
+                <!-- Navigation Links -->
+                <ul class="navbar-nav" role="menubar">
+                    <li role="none">
+                        <a href="/showcase" class="nav-link" role="menuitem">
+                            <span class="nav-icon">🎨</span>
+                            <span>Gallery</span>
+                        </a>
+                    </li>
+                    <li role="none">
+                        <a href="/community" class="nav-link" role="menuitem">
+                            <span class="nav-icon">👥</span>
+                            <span>Community</span>
+                        </a>
+                    </li>
+                    <li role="none">
+                        <a href="/store" class="nav-link" role="menuitem">
+                            <span class="nav-icon">🛍️</span>
+                            <span>Store</span>
+                        </a>
+                    </li>
+                    <li role="none">
+                        <a href="/study" class="nav-link" role="menuitem">
+                            <span class="nav-icon">📚</span>
+                            <span>Study</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- User Actions -->
+                <div class="navbar-actions">
+                    <!-- Theme Toggle (inspired by HuggingFace) -->
+                    <button
+                        class="theme-toggle btn-icon"
+                        onclick="BinaryRing.toggleTheme()"
+                        aria-label="Toggle theme"
+                        title="Toggle between light and dark themes"
+                    >
+                        <span class="theme-icon theme-icon-light">☀️</span>
+                        <span class="theme-icon theme-icon-dark">🌙</span>
+                        <span class="theme-icon theme-icon-auto">🌓</span>
+                    </button>
+
+                    <!-- Search -->
+                    <button
+                        class="search-toggle btn-icon"
+                        onclick="toggleSearch()"
+                        aria-label="Search"
+                        title="Search projects and content"
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                    </button>
+
+                    <!-- Mobile Menu Toggle -->
+                    <button
+                        class="mobile-menu-toggle btn-icon"
+                        onclick="toggleMobileMenu()"
+                        aria-label="Toggle navigation menu"
+                        aria-expanded="false"
+                    >
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search Overlay -->
+            <div class="search-overlay" id="searchOverlay">
+                <div class="search-container">
+                    <input
+                        type="search"
+                        class="search-input"
+                        placeholder="Search projects, artists, techniques..."
+                        aria-label="Search"
+                    >
+                    <div class="search-suggestions" id="searchSuggestions">
+                        <!-- Dynamic search suggestions -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div class="mobile-menu" id="mobileMenu">
+                <ul class="mobile-nav" role="menu">
+                    <li><a href="/showcase" class="mobile-nav-link" role="menuitem">🎨 Gallery</a></li>
+                    <li><a href="/community" class="mobile-nav-link" role="menuitem">👥 Community</a></li>
+                    <li><a href="/store" class="mobile-nav-link" role="menuitem">🛍️ Store</a></li>
+                    <li><a href="/study" class="mobile-nav-link" role="menuitem">📚 Study</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main-content" role="main">
+        <!-- Hero Section -->
+        <section class="hero-section" aria-labelledby="hero-title">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <h1 id="hero-title" class="hero-title">
+                        Binary Ring
+                        <span class="hero-subtitle">Generative Art Platform</span>
+                    </h1>
+
+                    <p class="hero-description">
+                        Explore the intersection of AI, mathematics, and creativity through
+                        interactive generative art experiences with neural-powered connections.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="/showcase" class="btn btn-primary">
+                            <span>Explore Gallery</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+
+                        <a href="/community" class="btn btn-secondary">
+                            <span>Join Community</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="hero-stats" aria-label="Platform statistics">
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="36">0</span>
+                            <span class="stat-label">Projects</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="1240">0</span>
+                            <span class="stat-label">Community Members</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="15600">0</span>
+                            <span class="stat-label">Artworks Generated</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Background -->
+                <div class="hero-visual" aria-hidden="true">
+                    <canvas id="heroCanvas" class="hero-canvas"></canvas>
+                    <div class="hero-overlay"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feature Showcase -->
+        <section class="features-section" aria-labelledby="features-title">
+            <div class="container">
+                <h2 id="features-title" class="section-title">Platform Features</h2>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🧠</div>
+                        <h3 class="feature-title">Neural Connections</h3>
+                        <p class="feature-description">
+                            AI-powered project relationships that discover hidden patterns
+                            and connections between generative artworks.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🎨</div>
+                        <h3 class="feature-title">Interactive Gallery</h3>
+                        <p class="feature-description">
+                            Explore 36+ generative art projects with real-time parameter
+                            controls and export capabilities.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🌐</div>
+                        <h3 class="feature-title">Community Platform</h3>
+                        <p class="feature-description">
+                            Vote, comment, and collaborate with artists and developers
+                            in a vibrant creative community.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">📚</div>
+                        <h3 class="feature-title">Learning Resources</h3>
+                        <p class="feature-description">
+                            Comprehensive educational content covering mathematics,
+                            algorithms, and creative coding techniques.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🛍️</div>
+                        <h3 class="feature-title">Exclusive Merchandise</h3>
+                        <p class="feature-description">
+                            Support the platform with premium merchandise by point4brand
+                            featuring your favorite generative designs.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">💫</div>
+                        <h3 class="feature-title">Wellness Integration</h3>
+                        <p class="feature-description">
+                            Therapeutic generative experiences designed for mental
+                            health and emotional well-being.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-content">
+                    <h2 class="cta-title">Ready to explore generative art?</h2>
+                    <p class="cta-description">
+                        Join thousands of artists, developers, and enthusiasts discovering
+                        the beauty of algorithmic creativity.
+                    </p>
+                    <a href="/showcase" class="btn btn-primary btn-large">
+                        Start Exploring
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">Binary Ring</h3>
+                    <p class="footer-description">
+                        AI-powered generative art platform exploring the intersection
+                        of mathematics, creativity, and technology.
+                    </p>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="/showcase">Gallery</a></li>
+                        <li><a href="/community">Community</a></li>
+                        <li><a href="/store">Store</a></li>
+                        <li><a href="/study">Study</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="/docs">Documentation</a></li>
+                        <li><a href="/api">API</a></li>
+                        <li><a href="/help">Help Center</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Connect</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="GitHub">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p class="footer-copyright">
+                    © 2024 Binary Ring. Open source and community driven.
+                </p>
+                <p class="footer-version">
+                    Version <span id="versionNumber">2.0.0</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification System -->
+    <div class="notification-container" id="notificationContainer" aria-live="polite" aria-atomic="true">
+        <!-- Notifications will be inserted here -->
+    </div>
+
+    <!-- Scripts -->
+    <script src="/scripts/main.js" defer></script>
+    <script src="/templates/huggingface-features.js" defer></script>
+
+    <!-- Analytics (conditional loading based on configuration) -->
+    <script>
+        // Analytics will be loaded by configuration system
+        document.addEventListener('DOMContentLoaded', () => {
+            // Track page view
+            if (window.BinaryRing) {
+                BinaryRing.trackEvent('Page View', {
+                    page: 'home',
+                    timestamp: Date.now()
+                });
+            }
+
+            // Hide loading screen
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (loadingScreen) {
+                loadingScreen.classList.add('hidden');
+                setTimeout(() => {
+                    loadingScreen.remove();
+                }, 500);
+            }
+
+            // Initialize features
+            initializeTemplate();
+        });
+    </script>
+</body>
+</html>

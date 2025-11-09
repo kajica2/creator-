@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Recording Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .recording-indicator {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8 text-center">Audio Recording Test Suite</h1>
+
+        <!-- Test Results -->
+        <div id="testResults" class="mb-8 p-4 bg-white rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Test Results</h2>
+            <div id="results"></div>
+        </div>
+
+        <!-- Simple Recording Test -->
+        <div class="bg-white p-6 rounded-lg shadow mb-6">
+            <h2 class="text-xl font-semibold mb-4">Simple Recording Test</h2>
+
+            <div class="flex gap-4 mb-4">
+                <button id="startSimple" class="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
+                    Start Recording
+                </button>
+                <button id="stopSimple" class="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors" disabled>
+                    Stop Recording
+                </button>
+                <div id="simpleStatus" class="px-4 py-3 bg-gray-100 rounded-lg">
+                    Status: Ready
+                </div>
+            </div>
+
+            <div id="simpleRecording" class="mt-4 hidden">
+                <audio controls class="w-full mb-4"></audio>
+                <button id="downloadSimple" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                    Download Recording
+                </button>
+            </div>
+        </div>
+
+        <!-- Audio Visualization Test -->
+        <div class="bg-white p-6 rounded-lg shadow mb-6">
+            <h2 class="text-xl font-semibold mb-4">Audio Visualization Test</h2>
+
+            <div class="flex gap-4 mb-4">
+                <button id="startViz" class="px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors">
+                    Start Visualization
+                </button>
+                <button id="stopViz" class="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors" disabled>
+                    Stop Visualization
+                </button>
+                <select id="vizStyle" class="px-4 py-3 border rounded-lg">
+                    <option value="bars">Frequency Bars</option>
+                    <option value="circle">Circular</option>
+                    <option value="wave">Waveform</option>
+                </select>
+            </div>
+
+            <canvas id="visualizationCanvas" width="800" height="300" class="border border-gray-300 rounded-lg w-full" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></canvas>
+        </div>
+
+        <!-- Shruti Box Sample Test -->
+        <div class="bg-white p-6 rounded-lg shadow mb-6">
+            <h2 class="text-xl font-semibold mb-4">Shruti Box Sample Test</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button onclick="playSample('SHRUTI_DRONE_C2.wav')" class="px-4 py-3 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors">
+                    Play Drone C2
+                </button>
+                <button onclick="playSample('SHRUTI_MANTRA_A2.wav')" class="px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
+                    Play Mantra A2
+                </button>
+                <button onclick="playSample('SHRUTI_MOTOPERP_G2_DYN1_RR1.wav')" class="px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                    Play Motoperp G2
+                </button>
+            </div>
+
+            <div id="sampleStatus" class="mt-4 p-3 bg-gray-100 rounded-lg">
+                Click a button to test Shruti Box samples
+            </div>
+        </div>
+
+        <!-- Service Worker Test -->
+        <div class="bg-white p-6 rounded-lg shadow mb-6">
+            <h2 class="text-xl font-semibold mb-4">Service Worker Test</h2>
+
+            <div class="flex gap-4 mb-4">
+                <button id="testServiceWorker" class="px-6 py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors">
+                    Test Service Worker
+                </button>
+                <div id="swStatus" class="px-4 py-3 bg-gray-100 rounded-lg">
+                    Status: Not tested
+                </div>
+            </div>
+
+            <div id="swMessages" class="mt-4 p-3 bg-gray-50 rounded-lg min-h-[100px] overflow-y-auto text-sm">
+                Service worker messages will appear here...
+            </div>
+        </div>
+
+        <!-- Performance Monitor -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Performance Monitor</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="p-3 bg-gray-50 rounded-lg">
+                    <div class="text-sm text-gray-600">Audio Context</div>
+                    <div id="audioContextState" class="font-semibold">-</div>
+                </div>
+                <div class="p-3 bg-gray-50 rounded-lg">
+                    <div class="text-sm text-gray-600">Sample Rate</div>
+                    <div id="sampleRate" class="font-semibold">-</div>
+                </div>
+                <div class="p-3 bg-gray-50 rounded-lg">
+                    <div class="text-sm text-gray-600">Buffer Size</div>
+                    <div id="bufferSize" class="font-semibold">-</div>
+                </div>
+                <div class="p-3 bg-gray-50 rounded-lg">
+                    <div class="text-sm text-gray-600">Latency</div>
+                    <div id="latency" class="font-semibold">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Test suite state
+        const testState = {
+            audioContext: null,
+            mediaRecorder: null,
+            audioChunks: [],
+            stream: null,
+            analyser: null,
+            animationId: null,
+            serviceWorkerReady: false
+        };
+
+        // Initialize audio context
+        async function initAudioContext() {
+            try {
+                testState.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                updatePerformanceMonitor();
+                addTestResult('✅ Audio Context initialized successfully');
+                return true;
+            } catch (error) {
+                addTestResult('❌ Failed to initialize Audio Context: ' + error.message);
+                return false;
+            }
+        }
+
+        // Test results helper
+        function addTestResult(message) {
+            const results = document.getElementById('results');
+            const timestamp = new Date().toLocaleTimeString();
+            results.innerHTML += `<div class="mb-2 p-2 bg-gray-50 rounded text-sm">[${timestamp}] ${message}</div>`;
+            results.scrollTop = results.scrollHeight;
+        }
+
+        // Simple recording test
+        document.getElementById('startSimple').addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                testState.stream = stream;
+                testState.audioChunks = [];
+
+                testState.mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'audio/webm;codecs=opus'
+                });
+
+                testState.mediaRecorder.ondataavailable = (event) => {
+                    testState.audioChunks.push(event.data);
+                };
+
+                testState.mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(testState.audioChunks, { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+
+                    const audioElement = document.querySelector('#simpleRecording audio');
+                    audioElement.src = audioUrl;
+
+                    document.getElementById('simpleRecording').classList.remove('hidden');
+
+                    // Setup download
+                    document.getElementById('downloadSimple').onclick = () => {
+                        const a = document.createElement('a');
+                        a.href = audioUrl;
+                        a.download = 'test-recording.webm';
+                        a.click();
+                    };
+
+                    addTestResult('✅ Simple recording completed successfully');
+                };
+
+                testState.mediaRecorder.start();
+
+                document.getElementById('startSimple').disabled = true;
+                document.getElementById('stopSimple').disabled = false;
+                document.getElementById('simpleStatus').innerHTML = '<span class="recording-indicator text-red-500">● Recording...</span>';
+
+                addTestResult('🎤 Simple recording started');
+            } catch (error) {
+                addTestResult('❌ Simple recording failed: ' + error.message);
+            }
+        });
+
+        document.getElementById('stopSimple').addEventListener('click', () => {
+            if (testState.mediaRecorder && testState.mediaRecorder.state === 'recording') {
+                testState.mediaRecorder.stop();
+                testState.stream.getTracks().forEach(track => track.stop());
+
+                document.getElementById('startSimple').disabled = false;
+                document.getElementById('stopSimple').disabled = true;
+                document.getElementById('simpleStatus').innerHTML = 'Status: Stopped';
+            }
+        });
+
+        // Visualization test
+        document.getElementById('startViz').addEventListener('click', async () => {
+            try {
+                if (!testState.audioContext) {
+                    await initAudioContext();
+                }
+
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                const source = testState.audioContext.createMediaStreamSource(stream);
+
+                testState.analyser = testState.audioContext.createAnalyser();
+                testState.analyser.fftSize = 256;
+                source.connect(testState.analyser);
+
+                const canvas = document.getElementById('visualizationCanvas');
+                const ctx = canvas.getContext('2d');
+
+                const draw = () => {
+                    const bufferLength = testState.analyser.frequencyBinCount;
+                    const dataArray = new Uint8Array(bufferLength);
+                    testState.analyser.getByteFrequencyData(dataArray);
+
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    const style = document.getElementById('vizStyle').value;
+
+                    if (style === 'bars') {
+                        drawBars(ctx, dataArray, canvas.width, canvas.height);
+                    } else if (style === 'circle') {
+                        drawCircle(ctx, dataArray, canvas.width, canvas.height);
+                    } else if (style === 'wave') {
+                        drawWave(ctx, dataArray, canvas.width, canvas.height);
+                    }
+
+                    testState.animationId = requestAnimationFrame(draw);
+                };
+
+                draw();
+
+                document.getElementById('startViz').disabled = true;
+                document.getElementById('stopViz').disabled = false;
+
+                addTestResult('🎨 Audio visualization started');
+            } catch (error) {
+                addTestResult('❌ Visualization failed: ' + error.message);
+            }
+        });
+
+        document.getElementById('stopViz').addEventListener('click', () => {
+            if (testState.animationId) {
+                cancelAnimationFrame(testState.animationId);
+                testState.animationId = null;
+            }
+
+            document.getElementById('startViz').disabled = false;
+            document.getElementById('stopViz').disabled = true;
+
+            addTestResult('⏹️ Audio visualization stopped');
+        });
+
+        // Visualization drawing functions
+        function drawBars(ctx, dataArray, width, height) {
+            const barWidth = width / dataArray.length;
+
+            for (let i = 0; i < dataArray.length; i++) {
+                const barHeight = (dataArray[i] / 255) * height;
+
+                const hue = (i / dataArray.length) * 360;
+                ctx.fillStyle = `hsl(${hue}, 70%, 60%)`;
+                ctx.fillRect(i * barWidth, height - barHeight, barWidth - 1, barHeight);
+            }
+        }
+
+        function drawCircle(ctx, dataArray, width, height) {
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const radius = Math.min(width, height) / 4;
+
+            for (let i = 0; i < dataArray.length; i++) {
+                const angle = (i / dataArray.length) * Math.PI * 2;
+                const amplitude = (dataArray[i] / 255) * 80;
+
+                const x1 = centerX + Math.cos(angle) * radius;
+                const y1 = centerY + Math.sin(angle) * radius;
+                const x2 = centerX + Math.cos(angle) * (radius + amplitude);
+                const y2 = centerY + Math.sin(angle) * (radius + amplitude);
+
+                const hue = (i / dataArray.length) * 360;
+                ctx.strokeStyle = `hsl(${hue}, 70%, 60%)`;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.stroke();
+            }
+        }
+
+        function drawWave(ctx, dataArray, width, height) {
+            ctx.strokeStyle = '#00ffff';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+
+            const sliceWidth = width / dataArray.length;
+            let x = 0;
+
+            for (let i = 0; i < dataArray.length; i++) {
+                const v = (dataArray[i] / 255) * height;
+                const y = height - v;
+
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+
+                x += sliceWidth;
+            }
+
+            ctx.stroke();
+        }
+
+        // Shruti Box sample test
+        function playSample(filename) {
+            try {
+                const audio = new Audio(`/audio/shruti-box-samples/${filename}`);
+
+                audio.onloadstart = () => {
+                    document.getElementById('sampleStatus').innerHTML = `Loading ${filename}...`;
+                };
+
+                audio.oncanplay = () => {
+                    document.getElementById('sampleStatus').innerHTML = `Playing ${filename}`;
+                    addTestResult(`🎵 Playing Shruti Box sample: ${filename}`);
+                };
+
+                audio.onended = () => {
+                    document.getElementById('sampleStatus').innerHTML = `Finished playing ${filename}`;
+                };
+
+                audio.onerror = (error) => {
+                    document.getElementById('sampleStatus').innerHTML = `Error loading ${filename}`;
+                    addTestResult(`❌ Failed to play sample: ${filename}`);
+                };
+
+                audio.play();
+            } catch (error) {
+                addTestResult(`❌ Sample playback error: ${error.message}`);
+            }
+        }
+
+        // Service Worker test
+        document.getElementById('testServiceWorker').addEventListener('click', async () => {
+            try {
+                if ('serviceWorker' in navigator) {
+                    const registration = await navigator.serviceWorker.register('/sw-audio.js');
+
+                    document.getElementById('swStatus').innerHTML = 'Status: Registering...';
+
+                    registration.addEventListener('updatefound', () => {
+                        addTestResult('🔄 Service Worker update found');
+                    });
+
+                    if (registration.active) {
+                        document.getElementById('swStatus').innerHTML = 'Status: Active';
+                        addTestResult('✅ Service Worker is active');
+
+                        // Test messaging
+                        navigator.serviceWorker.controller?.postMessage({
+                            type: 'PROCESS_AUDIO',
+                            data: { test: true }
+                        });
+                    }
+
+                    navigator.serviceWorker.addEventListener('message', (event) => {
+                        const messages = document.getElementById('swMessages');
+                        const timestamp = new Date().toLocaleTimeString();
+                        messages.innerHTML += `<div>[${timestamp}] ${event.data.type}: ${JSON.stringify(event.data.data)}</div>`;
+                        messages.scrollTop = messages.scrollHeight;
+                    });
+
+                } else {
+                    addTestResult('❌ Service Workers not supported');
+                }
+            } catch (error) {
+                addTestResult('❌ Service Worker test failed: ' + error.message);
+            }
+        });
+
+        // Performance monitor
+        function updatePerformanceMonitor() {
+            if (testState.audioContext) {
+                document.getElementById('audioContextState').textContent = testState.audioContext.state;
+                document.getElementById('sampleRate').textContent = testState.audioContext.sampleRate + ' Hz';
+                document.getElementById('bufferSize').textContent = testState.audioContext.baseLatency ?
+                    (testState.audioContext.baseLatency * 1000).toFixed(2) + ' ms' : 'N/A';
+                document.getElementById('latency').textContent = testState.audioContext.outputLatency ?
+                    (testState.audioContext.outputLatency * 1000).toFixed(2) + ' ms' : 'N/A';
+            }
+        }
+
+        // Auto-run basic tests on load
+        window.addEventListener('load', async () => {
+            addTestResult('🚀 Starting audio test suite...');
+
+            // Test browser compatibility
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                addTestResult('✅ getUserMedia API supported');
+            } else {
+                addTestResult('❌ getUserMedia API not supported');
+            }
+
+            if (window.AudioContext || window.webkitAudioContext) {
+                addTestResult('✅ Web Audio API supported');
+            } else {
+                addTestResult('❌ Web Audio API not supported');
+            }
+
+            if (window.MediaRecorder) {
+                addTestResult('✅ MediaRecorder API supported');
+            } else {
+                addTestResult('❌ MediaRecorder API not supported');
+            }
+
+            // Initialize audio context
+            await initAudioContext();
+
+            // Update performance monitor every second
+            setInterval(updatePerformanceMonitor, 1000);
+
+            addTestResult('✅ Test suite initialization complete');
+        });
+    </script>
+</body>
+</html>

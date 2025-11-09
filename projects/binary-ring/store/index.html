@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Ring Store - point4brand Collection</title>
+    <link rel="stylesheet" href="styles/store.css">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="store-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="../index.html">
+                        <h1>BINARY RING</h1>
+                        <span class="subtitle">Store</span>
+                    </a>
+                </div>
+
+                <nav class="store-nav">
+                    <a href="#featured" class="nav-link">Featured</a>
+                    <a href="#tshirts" class="nav-link">T-Shirts</a>
+                    <a href="#cups" class="nav-link">Cups</a>
+                    <a href="#prints" class="nav-link">Prints</a>
+                    <a href="#accessories" class="nav-link">Accessories</a>
+                </nav>
+
+                <div class="store-actions">
+                    <button class="search-btn" onclick="toggleStoreSearch()">
+                        <i data-feather="search"></i>
+                    </button>
+                    <button class="cart-btn" onclick="toggleCart()">
+                        <i data-feather="shopping-cart"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </button>
+                    <a href="../index.html" class="back-btn">
+                        <i data-feather="arrow-left"></i>
+                        Back to Site
+                    </a>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="store-search" id="storeSearch">
+                <input type="text" placeholder="Search products..." id="storeSearchInput">
+                <div class="search-filters">
+                    <select id="priceFilter">
+                        <option value="">All Prices</option>
+                        <option value="0-20">Under $20</option>
+                        <option value="20-30">$20 - $30</option>
+                        <option value="30-50">$30 - $50</option>
+                        <option value="50+">Over $50</option>
+                    </select>
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                        <option value="tshirts">T-Shirts</option>
+                        <option value="cups">Cups & Mugs</option>
+                        <option value="prints">Art Prints</option>
+                        <option value="accessories">Accessories</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <section class="store-hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Binary Ring Collection</h1>
+                    <p>Exclusive merchandise featuring generative art designs by <strong><a href="../point4brand/index.html" style="color: #4f46e5;">point4brand</a></strong></p>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="number">36</span>
+                            <span class="label">Unique Designs</span>
+                        </div>
+                        <div class="stat">
+                            <span class="number">100%</span>
+                            <span class="label">Sustainable</span>
+                        </div>
+                        <div class="stat">
+                            <span class="number">Free</span>
+                            <span class="label">Worldwide Shipping</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="featured-products">
+                        <img src="assets/hero-tshirt.jpg" alt="Featured T-Shirt" class="hero-product">
+                        <img src="assets/hero-mug.jpg" alt="Featured Mug" class="hero-product">
+                        <img src="assets/hero-print.jpg" alt="Featured Print" class="hero-product">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Collection -->
+    <section class="featured-collection" id="featured">
+        <div class="container">
+            <div class="section-header">
+                <h2>Featured Collection</h2>
+                <p>Limited edition designs inspired by our most popular generative art projects</p>
+            </div>
+
+            <div class="featured-grid">
+                <div class="featured-item large">
+                    <div class="item-image">
+                        <img src="assets/featured-substrate-collection.jpg" alt="Substrate Collection">
+                        <div class="item-overlay">
+                            <div class="overlay-content">
+                                <h3>Substrate Collection</h3>
+                                <p>Organic crack patterns on premium apparel</p>
+                                <button class="shop-collection" data-collection="substrate">Shop Collection</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="featured-item medium">
+                    <div class="item-image">
+                        <img src="assets/featured-buddhabrot-tee.jpg" alt="Buddhabrot T-Shirt">
+                        <div class="item-overlay">
+                            <div class="overlay-content">
+                                <h3>Buddhabrot Fractal Tee</h3>
+                                <p>$29.99</p>
+                                <button class="quick-shop" data-product="buddhabrot-tee">Quick Shop</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="featured-item medium">
+                    <div class="item-image">
+                        <img src="assets/featured-lorenz-mug.jpg" alt="Lorenz Mug">
+                        <div class="item-overlay">
+                            <div class="overlay-content">
+                                <h3>Deep Lorenz Coffee Mug</h3>
+                                <p>$18.99</p>
+                                <button class="quick-shop" data-product="lorenz-mug">Quick Shop</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Categories -->
+    <section class="product-categories">
+        <div class="container">
+            <div class="categories-nav">
+                <button class="category-btn active" data-category="all">All Products</button>
+                <button class="category-btn" data-category="tshirts">T-Shirts</button>
+                <button class="category-btn" data-category="cups">Cups & Mugs</button>
+                <button class="category-btn" data-category="prints">Art Prints</button>
+                <button class="category-btn" data-category="accessories">Accessories</button>
+            </div>
+
+            <div class="products-container">
+                <!-- T-Shirts Section -->
+                <div class="product-section" id="tshirts">
+                    <h3 class="section-title">T-Shirts</h3>
+                    <div class="products-grid">
+                        <div class="product-card" data-category="tshirts" data-id="buddhabrot-tee">
+                            <div class="product-image">
+                                <img src="assets/tshirt-buddhabrot-black.jpg" alt="Buddhabrot T-Shirt Black" class="primary-image">
+                                <img src="assets/tshirt-buddhabrot-white.jpg" alt="Buddhabrot T-Shirt White" class="secondary-image">
+                                <div class="product-badges">
+                                    <span class="badge bestseller">Bestseller</span>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="wishlist-btn" onclick="toggleWishlist('buddhabrot-tee')">
+                                        <i data-feather="heart"></i>
+                                    </button>
+                                    <button class="quick-view-btn" onclick="quickView('buddhabrot-tee')">
+                                        <i data-feather="eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="product-info">
+                                <h4>Buddhabrot Fractal Tee</h4>
+                                <p class="product-brand">by <a href="../point4brand/index.html" style="color: #4f46e5;">point4brand</a></p>
+                                <div class="product-price">
+                                    <span class="current-price">$29.99</span>
+                                </div>
+                                <div class="product-colors">
+                                    <button class="color-option active" data-color="black" style="background: #000"></button>
+                                    <button class="color-option" data-color="white" style="background: #fff"></button>
+                                    <button class="color-option" data-color="gray" style="background: #666"></button>
+                                </div>
+                                <div class="product-sizes">
+                                    <button class="size-option" data-size="S">S</button>
+                                    <button class="size-option" data-size="M">M</button>
+                                    <button class="size-option active" data-size="L">L</button>
+                                    <button class="size-option" data-size="XL">XL</button>
+                                </div>
+                                <button class="add-to-cart-btn" onclick="addToCart('buddhabrot-tee')">Add to Cart</button>
+                            </div>
+                        </div>
+
+                        <div class="product-card" data-category="tshirts" data-id="node-garden-tee">
+                            <div class="product-image">
+                                <img src="assets/tshirt-node-garden-navy.jpg" alt="Node Garden T-Shirt Navy" class="primary-image">
+                                <img src="assets/tshirt-node-garden-black.jpg" alt="Node Garden T-Shirt Black" class="secondary-image">
+                                <div class="product-badges">
+                                    <span class="badge new">New</span>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="wishlist-btn" onclick="toggleWishlist('node-garden-tee')">
+                                        <i data-feather="heart"></i>
+                                    </button>
+                                    <button class="quick-view-btn" onclick="quickView('node-garden-tee')">
+                                        <i data-feather="eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="product-info">
+                                <h4>Node Garden Network Tee</h4>
+                                <p class="product-brand">by <a href="../point4brand/index.html" style="color: #4f46e5;">point4brand</a></p>
+                                <div class="product-price">
+                                    <span class="current-price">$29.99</span>
+                                </div>
+                                <div class="product-colors">
+                                    <button class="color-option active" data-color="navy" style="background: #1e3a8a"></button>
+                                    <button class="color-option" data-color="black" style="background: #000"></button>
+                                    <button class="color-option" data-color="forest" style="background: #166534"></button>
+                                </div>
+                                <div class="product-sizes">
+                                    <button class="size-option" data-size="S">S</button>
+                                    <button class="size-option" data-size="M">M</button>
+                                    <button class="size-option active" data-size="L">L</button>
+                                    <button class="size-option" data-size="XL">XL</button>
+                                </div>
+                                <button class="add-to-cart-btn" onclick="addToCart('node-garden-tee')">Add to Cart</button>
+                            </div>
+                        </div>
+
+                        <div class="product-card" data-category="tshirts" data-id="substrate-tee">
+                            <div class="product-image">
+                                <img src="assets/tshirt-substrate-cream.jpg" alt="Substrate T-Shirt Cream" class="primary-image">
+                                <img src="assets/tshirt-substrate-charcoal.jpg" alt="Substrate T-Shirt Charcoal" class="secondary-image">
+                                <div class="product-badges">
+                                    <span class="badge premium">Premium</span>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="wishlist-btn" onclick="toggleWishlist('substrate-tee')">
+                                        <i data-feather="heart"></i>
+                                    </button>
+                                    <button class="quick-view-btn" onclick="quickView('substrate-tee')">
+                                        <i data-feather="eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="product-info">
+                                <h4>Substrate Cracks Premium Tee</h4>
+                                <p class="product-brand">by <a href="../point4brand/index.html" style="color: #4f46e5;">point4brand</a></p>
+                                <div class="product-price">
+                                    <span class="current-price">$34.99</span>
+                                    <span class="original-price">$39.99</span>
+                                </div>
+                                <div class="product-colors">
+                                    <button class="color-option active" data-color="cream" style="background: #fef3c7"></button>
+                                    <button class="color-option" data-color="charcoal" style="background: #374151"></button>
+                                    <button class="color-option" data-color="rust" style="background: #92400e"></button>
+                                </div>
+                                <div class="product-sizes">
+                                    <button class="size-option" data-size="S">S</button>
+                                    <button class="size-option" data-size="M">M</button>
+                                    <button class="size-option active" data-size="L">L</button>
+                                    <button class="size-option" data-size="XL">XL</button>
+                                </div>
+                                <button class="add-to-cart-btn" onclick="addToCart('substrate-tee')">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cups & Mugs Section -->
+                <div class="product-section" id="cups">
+                    <h3 class="section-title">Cups & Mugs</h3>
+                    <div class="products-grid">
+                        <div class="product-card" data-category="cups" data-id="lorenz-mug">
+                            <div class="product-image">
+                                <img src="assets/mug-lorenz-white.jpg" alt="Deep Lorenz Coffee Mug" class="primary-image">
+                                <img src="assets/mug-lorenz-black.jpg" alt="Deep Lorenz Coffee Mug Black" class="secondary-image">
+                                <div class="product-badges">
+                                    <span class="badge bestseller">Bestseller</span>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="wishlist-btn" onclick="toggleWishlist('lorenz-mug')">
+                                        <i data-feather="heart"></i>
+                                    </button>
+                                    <button class="quick-view-btn" onclick="quickView('lorenz-mug')">
+                                        <i data-feather="eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="product-info">
+                                <h4>Deep Lorenz Coffee Mug</h4>
+                                <p class="product-brand">by <a href="../point4brand/index.html" style="color: #4f46e5;">point4brand</a></p>
+                                <div class="product-price">
+                                    <span class="current-price">$18.99</span>
+                                </div>
+                                <div class="product-variants">
+                                    <button class="variant-option active" data-size="11oz">11oz</button>
+                                    <button class="variant-option" data-size="15oz">15oz (+$3)</button>
+                                </div>
+                                <button class="add-to-cart-btn" onclick="addToCart('lorenz-mug')">Add to Cart</button>
+                            </div>
+                        </div>
+
+                        <div class="product-card" data-category="cups" data-id="orbitals-tumbler">
+                            <div class="product-image">
+                                <img src="assets/tumbler-orbitals-steel.jpg" alt="Orbitals Travel Tumbler" class="primary-image">
+                                <img src="assets/tumbler-orbitals-black.jpg" alt="Orbitals Travel Tumbler Black" class="secondary-image">
+                                <div class="product-badges">
+                                    <span class="badge eco">Eco-Friendly</span>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="wishlist-btn" onclick="toggleWishlist('orbitals-tumbler')">
+                                        <i data-feather="heart"></i>
+                                    </button>
+                                    <button class="quick-view-btn" onclick="quickView('orbitals-tumbler')">
+                                        <i data-feather="eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="product-info">
+                                <h4>Orbitals Travel Tumbler</h4>
+                                <p class="product-brand">by <a href="../point4brand/index.html" style="color: #4f46e5;">point4brand</a></p>
+                                <div class="product-price">
+                                    <span class="current-price">$24.99</span>
+                                </div>
+                                <div class="product-features">
+                                    <span class="feature">
+                                        <i data-feather="thermometer"></i>
+                                        Insulated
+                                    </span>
+                                    <span class="feature">
+                                        <i data-feather="droplet"></i>
+                                        20oz
+                                    </span>
+                                </div>
+                                <button class="add-to-cart-btn" onclick="addToCart('orbitals-tumbler')">Add to Cart</button>
+                            </div>
+                        </div>
+
+                        <div class="product-card" data-category="cups" data-id="happy-place-cup">
+                            <div class="product-image">
+                                <img src="assets/cup-happy-place-ceramic.jpg" alt="Happy Place Wellness Cup" class="primary-image">
+                                <img src="assets/cup-happy-place-reactive.jpg" alt="Happy Place Heat Reactive" class="secondary-image">
+                                <div class="product-badges">
+                                    <span class="badge special">Heat Reactive</span>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="wishlist-btn" onclick="toggleWishlist('happy-place-cup')">
+                                        <i data-feather="heart"></i>
+                                    </button>
+                                    <button class="quick-view-btn" onclick="quickView('happy-place-cup')">
+                                        <i data-feather="eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="product-info">
+                                <h4>Happy Place Wellness Cup</h4>
+                                <p class="product-brand">by <a href="../point4brand/index.html" style="color: #4f46e5;">point4brand</a></p>
+                                <div class="product-price">
+                                    <span class="current-price">$16.99</span>
+                                </div>
+                                <div class="product-features">
+                                    <span class="feature">
+                                        <i data-feather="sun"></i>
+                                        Color Change
+                                    </span>
+                                    <span class="feature">
+                                        <i data-feather="heart"></i>
+                                        Wellness Design
+                                    </span>
+                                </div>
+                                <button class="add-to-cart-btn" onclick="addToCart('happy-place-cup')">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Art Prints Section -->
+                <div class="product-section" id="prints">
+                    <h3 class="section-title">Art Prints</h3>
+                    <div class="products-grid">
+                        <div class="product-card large" data-category="prints" data-id="complete-collection">
+                            <div class="product-image">
+                                <img src="assets/print-collection-preview.jpg" alt="Complete Collection Prints" class="primary-image">
+                                <div class="product-badges">
+                                    <span class="badge limited">Limited Edition</span>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="wishlist-btn" onclick="toggleWishlist('complete-collection')">
+                                        <i data-feather="heart"></i>
+                                    </button>
+                                    <button class="quick-view-btn" onclick="quickView('complete-collection')">
+                                        <i data-feather="eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="product-info">
+                                <h4>Complete Collection Prints</h4>
+                                <p class="product-brand">by <a href="../point4brand/index.html" style="color: #4f46e5;">point4brand</a></p>
+                                <div class="product-description">
+                                    <p>All 36 Binary Ring designs in high-quality print format</p>
+                                </div>
+                                <div class="product-price">
+                                    <span class="current-price">$49.99</span>
+                                    <span class="original-price">$89.99</span>
+                                    <span class="savings">Save 44%</span>
+                                </div>
+                                <div class="product-features">
+                                    <span class="feature">36 Unique Designs</span>
+                                    <span class="feature">Museum Quality</span>
+                                    <span class="feature">Multiple Sizes</span>
+                                </div>
+                                <div class="product-options">
+                                    <select class="size-select">
+                                        <option value="8x10">8"×10" - $49.99</option>
+                                        <option value="11x14">11"×14" - $79.99</option>
+                                        <option value="16x20">16"×20" - $119.99</option>
+                                    </select>
+                                </div>
+                                <button class="add-to-cart-btn featured" onclick="addToCart('complete-collection')">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Store Information -->
+    <section class="store-info">
+        <div class="container">
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i data-feather="truck"></i>
+                    </div>
+                    <h3>Free Worldwide Shipping</h3>
+                    <p>Free shipping on all orders over $50. Express delivery available.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i data-feather="refresh-cw"></i>
+                    </div>
+                    <h3>Easy Returns</h3>
+                    <p>30-day return policy. No questions asked if you're not satisfied.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i data-feather="award"></i>
+                    </div>
+                    <h3>Premium Quality</h3>
+                    <p>Sustainable materials and ethical production practices.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i data-feather="heart"></i>
+                    </div>
+                    <h3>Support Artists</h3>
+                    <p>Proceeds support generative art research and development.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shopping Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Shopping Cart</h3>
+            <button class="close-cart" onclick="toggleCart()">
+                <i data-feather="x"></i>
+            </button>
+        </div>
+
+        <div class="cart-content" id="cartContent">
+            <div class="empty-cart">
+                <i data-feather="shopping-cart"></i>
+                <p>Your cart is empty</p>
+                <button class="continue-shopping" onclick="toggleCart()">Continue Shopping</button>
+            </div>
+        </div>
+
+        <div class="cart-footer" id="cartFooter" style="display: none;">
+            <div class="cart-total">
+                <div class="subtotal">
+                    <span>Subtotal: </span>
+                    <span id="cartSubtotal">$0.00</span>
+                </div>
+                <div class="shipping">
+                    <span>Shipping: </span>
+                    <span id="cartShipping">Free</span>
+                </div>
+                <div class="total">
+                    <span>Total: </span>
+                    <span id="cartTotal">$0.00</span>
+                </div>
+            </div>
+            <button class="checkout-btn" onclick="goToCheckout()">
+                Secure Checkout
+                <i data-feather="lock"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Quick View Modal -->
+    <div class="quick-view-modal" id="quickViewModal">
+        <div class="modal-overlay" onclick="closeQuickView()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeQuickView()">
+                <i data-feather="x"></i>
+            </button>
+            <div class="modal-body" id="quickViewContent">
+                <!-- Quick view content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="store-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Binary Ring Store</h3>
+                    <p>Exclusive merchandise by point4brand featuring generative art designs.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i data-feather="instagram"></i></a>
+                        <a href="#" class="social-link"><i data-feather="twitter"></i></a>
+                        <a href="#" class="social-link"><i data-feather="youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Customer Service</h3>
+                    <ul>
+                        <li><a href="#help">Help Center</a></li>
+                        <li><a href="#shipping">Shipping Info</a></li>
+                        <li><a href="#returns">Returns</a></li>
+                        <li><a href="#sizing">Size Guide</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>About</h3>
+                    <ul>
+                        <li><a href="../index.html">Binary Ring Project</a></li>
+                        <li><a href="../community/index.html">Community</a></li>
+                        <li><a href="../content/adminInterface.html">Artists</a></li>
+                        <li><a href="#sustainability">Sustainability</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Newsletter</h3>
+                    <p>Get notified about new releases and exclusive designs.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Enter your email">
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 Binary Ring Store by point4brand. All rights reserved.</p>
+                <div class="payment-methods">
+                    <span>Accepted payments:</span>
+                    <div class="payment-icons">
+                        <i class="payment-icon visa"></i>
+                        <i class="payment-icon mastercard"></i>
+                        <i class="payment-icon paypal"></i>
+                        <i class="payment-icon stripe"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="scripts/store.js"></script>
+    <script src="scripts/cart.js"></script>
+    <script src="scripts/products.js"></script>
+    <script>
+        // Initialize store
+        feather.replace();
+        initializeStore();
+    </script>
+</body>
+</html>

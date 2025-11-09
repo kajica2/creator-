@@ -4,6 +4,7 @@ import { HashtagFilters } from './HashtagFilters';
 import { HashtagCategoryComponent } from './HashtagCategory';
 import { ReadySetsComponent } from './ReadySets';
 import UrlHashtagGenerator from './UrlHashtagGenerator';
+import HashtagCloud from './HashtagCloud';
 
 interface HashtagManagerProps {
     hashtagCategories: HashtagCategory[];
@@ -30,7 +31,8 @@ export const HashtagManager: React.FC<HashtagManagerProps> = ({
     isCategoriesFallback = false,
     isReadySetsFallback = false,
 }) => {
-    const [activeView, setActiveView] = useState<'explore' | 'sets' | 'url-generator'>('explore');
+    const [activeView, setActiveView] = useState<'explore' | 'cloud' | 'sets' | 'url-generator'>('explore');
+    const [cloudViewMode, setCloudViewMode] = useState<'all' | 'trending'>('all');
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSizes, setSelectedSizes] = useState<Set<HashtagSize>>(new Set(Object.values(HashtagSize)));
 
@@ -62,14 +64,20 @@ export const HashtagManager: React.FC<HashtagManagerProps> = ({
 
     return (
         <div className="space-y-6">
-            <div className="bg-gray-800/50 border border-gray-700 p-1 rounded-xl flex items-center space-x-1 max-w-md mx-auto">
+            <div className="bg-gray-800/50 border border-gray-700 p-1 rounded-xl flex items-center space-x-1 max-w-2xl mx-auto">
                 <button
                     onClick={() => setActiveView('explore')}
                     className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors ${activeView === 'explore' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:bg-gray-700/50'}`}
                 >
                     Explore
                 </button>
-                 <button
+                <button
+                    onClick={() => setActiveView('cloud')}
+                    className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors ${activeView === 'cloud' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:bg-gray-700/50'}`}
+                >
+                    Cloud View
+                </button>
+                <button
                     onClick={() => setActiveView('sets')}
                     className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors ${activeView === 'sets' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:bg-gray-700/50'}`}
                 >
@@ -110,6 +118,59 @@ export const HashtagManager: React.FC<HashtagManagerProps> = ({
                             />
                         ))
                     )}
+                </div>
+            )}
+
+            {activeView === 'cloud' && (
+                <div className="space-y-6">
+                    {/* Cloud view controls */}
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="flex-1">
+                            <HashtagFilters
+                                searchTerm={searchTerm}
+                                onSearchChange={setSearchTerm}
+                                selectedSizes={selectedSizes}
+                                onSizeToggle={handleSizeToggle}
+                            />
+                        </div>
+                        <div className="bg-gray-800/50 border border-gray-700 p-4 rounded-xl sm:max-w-xs">
+                            <label className="text-sm font-semibold text-gray-400 block mb-2">View Mode:</label>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => setCloudViewMode('all')}
+                                    className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${
+                                        cloudViewMode === 'all'
+                                            ? 'bg-purple-600 text-white'
+                                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                                    }`}
+                                >
+                                    All
+                                </button>
+                                <button
+                                    onClick={() => setCloudViewMode('trending')}
+                                    className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${
+                                        cloudViewMode === 'trending'
+                                            ? 'bg-purple-600 text-white'
+                                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                                    }`}
+                                >
+                                    Trending
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Hashtag Cloud */}
+                    <HashtagCloud
+                        selectedHashtags={selectedHashtags}
+                        onHashtagSelect={onHashtagSelect}
+                        searchTerm={searchTerm}
+                        selectedSizes={selectedSizes}
+                        showTrendingOnly={cloudViewMode === 'trending'}
+                        maxHashtags={150}
+                        sortBy="trending"
+                        className="min-h-96"
+                    />
                 </div>
             )}
 

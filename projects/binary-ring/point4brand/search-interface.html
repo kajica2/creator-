@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Point4Brand - Smart Search & Discovery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #b0b0b0;
+            font-size: 1.1rem;
+        }
+
+        .search-section {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-controls {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            padding: 1rem 1.5rem;
+            background: #2a2a2a;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #4f46e5;
+        }
+
+        .search-button {
+            padding: 1rem 2rem;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .search-button:hover {
+            background: #3730a3;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            color: #b0b0b0;
+        }
+
+        .filter-select {
+            padding: 0.8rem;
+            background: #2a2a2a;
+            border: 1px solid #404040;
+            border-radius: 6px;
+            color: #ffffff;
+            outline: none;
+        }
+
+        .active-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .filter-tag {
+            background: #4f46e5;
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-tag .remove {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .results-section {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 1rem;
+            color: #e0e0e0;
+        }
+
+        .keyword-categories {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .category-section {
+            border: 1px solid #404040;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .category-header {
+            background: #2a2a2a;
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-header h4 {
+            color: #e0e0e0;
+            font-size: 0.9rem;
+        }
+
+        .category-content {
+            padding: 1rem;
+            background: #1a1a1a;
+            display: none;
+        }
+
+        .category-content.expanded {
+            display: block;
+        }
+
+        .keyword-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .keyword-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: #2a2a2a;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .keyword-name {
+            color: #e0e0e0;
+        }
+
+        .keyword-count {
+            color: #b0b0b0;
+            font-size: 0.7rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: #4f46e5;
+        }
+
+        .product-image {
+            height: 200px;
+            background: linear-gradient(135deg, #2a2a2a 0%, #404040 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+        }
+
+        .product-badges {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            padding: 0.3rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .badge.bestseller { background: #10b981; color: white; }
+        .badge.new { background: #3b82f6; color: white; }
+        .badge.premium { background: #f59e0b; color: white; }
+        .badge.limited { background: #ef4444; color: white; }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #e0e0e0;
+        }
+
+        .product-brand {
+            color: #4f46e5;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-description {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 1rem;
+        }
+
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #10b981;
+            margin-bottom: 1rem;
+        }
+
+        .product-keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .keyword-tag-small {
+            background: rgba(79, 70, 229, 0.2);
+            color: #8b8cf6;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+            font-size: 0.7rem;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-primary {
+            flex: 1;
+            padding: 0.8rem 1.2rem;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #3730a3;
+        }
+
+        .btn-secondary {
+            padding: 0.8rem;
+            background: transparent;
+            color: #b0b0b0;
+            border: 1px solid #404040;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            border-color: #4f46e5;
+            color: #4f46e5;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .no-results h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(26, 26, 26, 0.6);
+            border-radius: 8px;
+        }
+
+        .results-count {
+            color: #b0b0b0;
+        }
+
+        .sort-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        @media (max-width: 1024px) {
+            .results-section {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+                margin-bottom: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .search-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Point4Brand Discovery</h1>
+            <p>Intelligent search powered by keyword collection and AI recommendations</p>
+        </div>
+
+        <div class="search-section">
+            <div class="search-controls">
+                <input
+                    type="text"
+                    class="search-input"
+                    placeholder="Search by name, description, or keywords..."
+                    id="searchInput"
+                >
+                <button class="search-button" onclick="performSearch()">Search</button>
+            </div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <label class="filter-label">Category</label>
+                    <select class="filter-select" id="categoryFilter">
+                        <option value="">All Categories</option>
+                        <option value="apparel">Apparel</option>
+                        <option value="drinkware">Drinkware</option>
+                        <option value="prints">Art Prints</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Collection</label>
+                    <select class="filter-select" id="collectionFilter">
+                        <option value="">All Collections</option>
+                        <option value="fractals">Fractals</option>
+                        <option value="networks">Networks</option>
+                        <option value="organic">Organic</option>
+                        <option value="chaos">Chaos Theory</option>
+                        <option value="space">Space</option>
+                        <option value="wellness">Wellness</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Price Range</label>
+                    <select class="filter-select" id="priceFilter">
+                        <option value="">All Prices</option>
+                        <option value="0-20">Under $20</option>
+                        <option value="20-30">$20 - $30</option>
+                        <option value="30-50">$30 - $50</option>
+                        <option value="50+">Over $50</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Badges</label>
+                    <select class="filter-select" id="badgeFilter">
+                        <option value="">All Products</option>
+                        <option value="bestseller">Bestseller</option>
+                        <option value="new">New</option>
+                        <option value="premium">Premium</option>
+                        <option value="limited">Limited Edition</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="active-filters" id="activeFilters">
+                <!-- Active filters will be shown here -->
+            </div>
+        </div>
+
+        <div class="results-section">
+            <div class="sidebar">
+                <h3>Browse by Keywords</h3>
+                <div class="keyword-categories" id="keywordCategories">
+                    <!-- Keyword categories will be populated here -->
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="status-bar">
+                    <div class="results-count" id="resultsCount">Loading products...</div>
+                    <div class="sort-controls">
+                        <label class="filter-label">Sort by:</label>
+                        <select class="filter-select" id="sortFilter">
+                            <option value="name">Name A-Z</option>
+                            <option value="price-asc">Price Low-High</option>
+                            <option value="price-desc">Price High-Low</option>
+                            <option value="popularity">Popularity</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="products-grid" id="productsGrid">
+                    <!-- Products will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="api/products.js"></script>
+    <script>
+        let api;
+        let allProducts = [];
+        let filteredProducts = [];
+        let currentFilters = {};
+
+        async function initializeApp() {
+            api = new Point4BrandAPI();
+            await api.initialize();
+
+            allProducts = api.getProducts();
+            filteredProducts = [...allProducts];
+
+            populateKeywordCategories();
+            displayProducts();
+            updateResultsCount();
+
+            // Add event listeners
+            document.getElementById('searchInput').addEventListener('input', debounce(performSearch, 300));
+            document.getElementById('categoryFilter').addEventListener('change', applyFilters);
+            document.getElementById('collectionFilter').addEventListener('change', applyFilters);
+            document.getElementById('priceFilter').addEventListener('change', applyFilters);
+            document.getElementById('badgeFilter').addEventListener('change', applyFilters);
+            document.getElementById('sortFilter').addEventListener('change', applySorting);
+        }
+
+        function populateKeywordCategories() {
+            const categories = api.taxonomy.categories;
+            const container = document.getElementById('keywordCategories');
+
+            Object.entries(categories).forEach(([categoryKey, categoryData]) => {
+                const categoryElement = createCategoryElement(categoryKey, categoryData);
+                container.appendChild(categoryElement);
+            });
+        }
+
+        function createCategoryElement(categoryKey, categoryData) {
+            const section = document.createElement('div');
+            section.className = 'category-section';
+
+            const header = document.createElement('div');
+            header.className = 'category-header';
+            header.onclick = () => toggleCategory(categoryKey);
+
+            const title = document.createElement('h4');
+            title.textContent = categoryData.displayName;
+            title.style.color = categoryData.color;
+
+            const arrow = document.createElement('span');
+            arrow.textContent = '▼';
+            arrow.id = `arrow-${categoryKey}`;
+
+            header.appendChild(title);
+            header.appendChild(arrow);
+
+            const content = document.createElement('div');
+            content.className = 'category-content';
+            content.id = `content-${categoryKey}`;
+
+            const keywordList = document.createElement('div');
+            keywordList.className = 'keyword-list';
+
+            Object.entries(categoryData.keywords).forEach(([keyword, data]) => {
+                const count = countProductsWithKeyword(keyword);
+                if (count > 0) {
+                    const item = createKeywordItem(keyword, count, data.definition);
+                    keywordList.appendChild(item);
+                }
+            });
+
+            content.appendChild(keywordList);
+            section.appendChild(header);
+            section.appendChild(content);
+
+            return section;
+        }
+
+        function createKeywordItem(keyword, count, definition) {
+            const item = document.createElement('div');
+            item.className = 'keyword-item';
+            item.onclick = () => toggleKeywordFilter(keyword);
+            item.title = definition;
+
+            const name = document.createElement('span');
+            name.className = 'keyword-name';
+            name.textContent = keyword;
+
+            const countSpan = document.createElement('span');
+            countSpan.className = 'keyword-count';
+            countSpan.textContent = `(${count})`;
+
+            item.appendChild(name);
+            item.appendChild(countSpan);
+
+            return item;
+        }
+
+        function countProductsWithKeyword(keyword) {
+            return allProducts.filter(product =>
+                product.keywords && product.keywords.includes(keyword)
+            ).length;
+        }
+
+        function toggleCategory(categoryKey) {
+            const content = document.getElementById(`content-${categoryKey}`);
+            const arrow = document.getElementById(`arrow-${categoryKey}`);
+
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                arrow.textContent = '▼';
+            } else {
+                content.classList.add('expanded');
+                arrow.textContent = '▲';
+            }
+        }
+
+        function toggleKeywordFilter(keyword) {
+            if (!currentFilters.keywords) {
+                currentFilters.keywords = [];
+            }
+
+            const index = currentFilters.keywords.indexOf(keyword);
+            if (index > -1) {
+                currentFilters.keywords.splice(index, 1);
+            } else {
+                currentFilters.keywords.push(keyword);
+            }
+
+            applyFilters();
+        }
+
+        function performSearch() {
+            const query = document.getElementById('searchInput').value;
+            currentFilters.searchQuery = query;
+            applyFilters();
+        }
+
+        function applyFilters() {
+            // Collect all filter values
+            const category = document.getElementById('categoryFilter').value;
+            const collection = document.getElementById('collectionFilter').value;
+            const priceRange = document.getElementById('priceFilter').value;
+            const badge = document.getElementById('badgeFilter').value;
+
+            currentFilters.category = category || undefined;
+            currentFilters.collection = collection || undefined;
+            currentFilters.badge = badge || undefined;
+
+            if (priceRange) {
+                if (priceRange === '50+') {
+                    currentFilters.priceMin = 50;
+                    currentFilters.priceMax = undefined;
+                } else {
+                    const [min, max] = priceRange.split('-').map(Number);
+                    currentFilters.priceMin = min;
+                    currentFilters.priceMax = max;
+                }
+            } else {
+                currentFilters.priceMin = undefined;
+                currentFilters.priceMax = undefined;
+            }
+
+            // Apply filters
+            if (currentFilters.searchQuery) {
+                filteredProducts = api.searchProducts(currentFilters.searchQuery, currentFilters);
+            } else {
+                const filterCopy = {...currentFilters};
+                delete filterCopy.keywords;
+                filteredProducts = api.getProducts(filterCopy);
+
+                // Apply keyword filter separately
+                if (currentFilters.keywords && currentFilters.keywords.length > 0) {
+                    filteredProducts = filteredProducts.filter(product =>
+                        currentFilters.keywords.some(keyword =>
+                            product.keywords && product.keywords.includes(keyword)
+                        )
+                    );
+                }
+            }
+
+            // Apply badge filter
+            if (currentFilters.badge) {
+                filteredProducts = filteredProducts.filter(product =>
+                    product.badges && product.badges.includes(currentFilters.badge)
+                );
+            }
+
+            applySorting();
+            displayProducts();
+            updateResultsCount();
+            updateActiveFilters();
+        }
+
+        function applySorting() {
+            const sortBy = document.getElementById('sortFilter').value;
+
+            switch (sortBy) {
+                case 'name':
+                    filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'price-asc':
+                    filteredProducts.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-desc':
+                    filteredProducts.sort((a, b) => b.price - a.price);
+                    break;
+                case 'popularity':
+                    filteredProducts.sort((a, b) => {
+                        const aPopular = a.badges && a.badges.includes('bestseller') ? 1 : 0;
+                        const bPopular = b.badges && b.badges.includes('bestseller') ? 1 : 0;
+                        return bPopular - aPopular;
+                    });
+                    break;
+            }
+
+            displayProducts();
+        }
+
+        function displayProducts() {
+            const container = document.getElementById('productsGrid');
+            container.innerHTML = '';
+
+            if (filteredProducts.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <h3>No products found</h3>
+                        <p>Try adjusting your filters or search terms</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredProducts.forEach(product => {
+                const card = createProductCard(product);
+                container.appendChild(card);
+            });
+        }
+
+        function createProductCard(product) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+
+            const badges = product.badges ? product.badges.map(badge =>
+                `<span class="badge ${badge}">${badge}</span>`
+            ).join('') : '';
+
+            const keywords = product.keywords ? product.keywords.map(keyword =>
+                `<span class="keyword-tag-small">${keyword}</span>`
+            ).join('') : '';
+
+            card.innerHTML = `
+                <div class="product-image">
+                    <div class="product-badges">${badges}</div>
+                    ${getProductIcon(product.category)}
+                </div>
+                <div class="product-info">
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-brand">by point4brand</div>
+                    <div class="product-description">${product.description}</div>
+                    <div class="product-price">$${product.price.toFixed(2)}</div>
+                    <div class="product-keywords">${keywords}</div>
+                    <div class="product-actions">
+                        <button class="btn-primary" onclick="addToCart('${product.id}')">Add to Cart</button>
+                        <button class="btn-secondary" onclick="viewProduct('${product.id}')">👁️</button>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function getProductIcon(category) {
+            const icons = {
+                'apparel': '👕',
+                'drinkware': '☕',
+                'prints': '🖼️',
+                'accessories': '✨'
+            };
+            return icons[category] || '🎨';
+        }
+
+        function updateResultsCount() {
+            const count = filteredProducts.length;
+            const total = allProducts.length;
+            document.getElementById('resultsCount').textContent =
+                `Showing ${count} of ${total} products`;
+        }
+
+        function updateActiveFilters() {
+            const container = document.getElementById('activeFilters');
+            container.innerHTML = '';
+
+            // Show active keyword filters
+            if (currentFilters.keywords && currentFilters.keywords.length > 0) {
+                currentFilters.keywords.forEach(keyword => {
+                    const tag = createFilterTag(keyword, 'keyword', keyword);
+                    container.appendChild(tag);
+                });
+            }
+
+            // Show other active filters
+            Object.entries(currentFilters).forEach(([key, value]) => {
+                if (key !== 'keywords' && key !== 'searchQuery' && value) {
+                    const tag = createFilterTag(`${key}: ${value}`, key, value);
+                    container.appendChild(tag);
+                }
+            });
+        }
+
+        function createFilterTag(label, type, value) {
+            const tag = document.createElement('div');
+            tag.className = 'filter-tag';
+
+            const text = document.createElement('span');
+            text.textContent = label;
+
+            const remove = document.createElement('span');
+            remove.className = 'remove';
+            remove.textContent = '×';
+            remove.onclick = () => removeFilter(type, value);
+
+            tag.appendChild(text);
+            tag.appendChild(remove);
+
+            return tag;
+        }
+
+        function removeFilter(type, value) {
+            if (type === 'keyword') {
+                const index = currentFilters.keywords.indexOf(value);
+                if (index > -1) {
+                    currentFilters.keywords.splice(index, 1);
+                }
+            } else {
+                delete currentFilters[type];
+                // Reset the corresponding select element
+                const selectMap = {
+                    'category': 'categoryFilter',
+                    'collection': 'collectionFilter',
+                    'badge': 'badgeFilter'
+                };
+                if (selectMap[type]) {
+                    document.getElementById(selectMap[type]).value = '';
+                }
+            }
+
+            applyFilters();
+        }
+
+        function addToCart(productId) {
+            const product = api.getProduct(productId);
+            alert(`Added "${product.name}" to cart!`);
+        }
+
+        function viewProduct(productId) {
+            const product = api.getProduct(productId);
+            alert(`View product: ${product.name}\nDescription: ${product.description}`);
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+</html>

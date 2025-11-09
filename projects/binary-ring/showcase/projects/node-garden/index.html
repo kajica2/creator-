@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node Garden - Binary Ring Project Showcase</title>
+
+    <!-- Meta Tags -->
+    <meta name="description" content="Interactive Node Garden - dynamic network visualization with organic growth patterns">
+    <meta name="keywords" content="node garden, network visualization, interactive art, real-time, organic growth">
+    <meta name="author" content="Binary Ring">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Node Garden - Interactive Network Visualization">
+    <meta property="og:description" content="Watch networks grow and evolve in real-time with interactive nodes">
+    <meta property="og:type" content="website">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../../assets/css/showcase.css">
+    <link rel="stylesheet" href="../buddhabrot/project-showcase.css">
+    <link rel="stylesheet" href="node-garden.css">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="project-nav">
+        <div class="nav-container">
+            <a href="../../index.html" class="nav-back">
+                ← Back to Showcase
+            </a>
+            <div class="nav-title">Node Garden</div>
+            <div class="nav-actions">
+                <button class="share-btn" id="shareBtn">Share</button>
+                <button class="fullscreen-btn" id="fullscreenBtn">Fullscreen</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Project Header -->
+    <header class="project-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="project-meta">
+                    <span class="project-category">Networks</span>
+                    <div class="project-stats">
+                        <span>👁 1,923 views</span>
+                        <span>❤ 234 likes</span>
+                        <span>⬇ 145 downloads</span>
+                    </div>
+                </div>
+
+                <h1 class="project-title">Node Garden</h1>
+                <p class="project-description">
+                    Dynamic network visualization with organic growth patterns and interactive nodes
+                </p>
+
+                <div class="project-tags">
+                    <span class="tag">#network</span>
+                    <span class="tag">#interactive</span>
+                    <span class="tag">#growth</span>
+                    <span class="tag">#realtime</span>
+                    <span class="tag">#organic</span>
+                </div>
+
+                <div class="project-actions">
+                    <button class="btn-primary" id="startSimulation">Start Simulation</button>
+                    <button class="btn-secondary" id="resetNetwork">Reset Network</button>
+                    <button class="btn-secondary" id="exportBtn">Export State</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Interactive Visualization -->
+    <main class="project-main">
+        <div class="visualization-container">
+            <div class="canvas-container">
+                <canvas id="nodeGardenCanvas" class="main-canvas"></canvas>
+                <div class="canvas-overlay">
+                    <div class="simulation-stats" id="simulationStats">
+                        <div class="stat-item">
+                            <span class="stat-label">Nodes:</span>
+                            <span class="stat-value" id="nodeCount">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Connections:</span>
+                            <span class="stat-value" id="connectionCount">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Energy:</span>
+                            <span class="stat-value" id="networkEnergy">100%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">FPS:</span>
+                            <span class="stat-value" id="fpsCounter">60</span>
+                        </div>
+                    </div>
+
+                    <div class="interaction-hints" id="interactionHints">
+                        <div class="hint">Click to spawn nodes</div>
+                        <div class="hint">Drag nodes to move them</div>
+                        <div class="hint">Hold Shift + Click to delete</div>
+                        <div class="hint">Mouse wheel to zoom</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real-time Controls -->
+            <div class="controls-panel" id="controlsPanel">
+                <div class="controls-header">
+                    <h3>Network Controls</h3>
+                    <button class="toggle-controls" id="toggleControls">−</button>
+                </div>
+
+                <div class="controls-content" id="controlsContent">
+                    <!-- Simulation Controls -->
+                    <div class="control-group">
+                        <label for="simulationSpeed">Simulation Speed</label>
+                        <div class="slider-container">
+                            <input type="range" id="simulationSpeed" min="0" max="2" value="1" step="0.1">
+                            <span class="slider-value" id="speedValue">1.0x</span>
+                        </div>
+                        <div class="control-buttons">
+                            <button class="control-btn" id="pauseBtn">⏸️ Pause</button>
+                            <button class="control-btn" id="playBtn" style="display:none">▶️ Play</button>
+                        </div>
+                    </div>
+
+                    <!-- Node Parameters -->
+                    <div class="control-group">
+                        <label for="maxNodes">Maximum Nodes</label>
+                        <div class="slider-container">
+                            <input type="range" id="maxNodes" min="10" max="500" value="150" step="10">
+                            <span class="slider-value" id="maxNodesValue">150</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="connectionDistance">Connection Distance</label>
+                        <div class="slider-container">
+                            <input type="range" id="connectionDistance" min="50" max="300" value="120" step="5">
+                            <span class="slider-value" id="connectionDistanceValue">120px</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="growthRate">Growth Rate</label>
+                        <div class="slider-container">
+                            <input type="range" id="growthRate" min="0" max="0.1" value="0.02" step="0.005">
+                            <span class="slider-value" id="growthRateValue">0.02</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="nodeLifespan">Node Lifespan</label>
+                        <div class="slider-container">
+                            <input type="range" id="nodeLifespan" min="100" max="1000" value="300" step="50">
+                            <span class="slider-value" id="nodeLifespanValue">300s</span>
+                        </div>
+                    </div>
+
+                    <!-- Visual Settings -->
+                    <div class="control-group">
+                        <label for="visualMode">Visual Mode</label>
+                        <select id="visualMode">
+                            <option value="organic">Organic Growth</option>
+                            <option value="neon">Neon Network</option>
+                            <option value="minimal">Minimal Lines</option>
+                            <option value="particles">Particle Flow</option>
+                            <option value="galaxy">Galaxy Mode</option>
+                        </select>
+                    </div>
+
+                    <!-- Audio Reactivity -->
+                    <div class="control-group">
+                        <label>Audio Reactivity</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="audioReactive">
+                            <label for="audioReactive" class="switch-label">
+                                <span class="switch-slider"></span>
+                            </label>
+                        </div>
+                        <div class="audio-controls" id="audioControls" style="display:none">
+                            <select id="audioSource">
+                                <option value="microphone">Microphone</option>
+                                <option value="system">System Audio</option>
+                                <option value="file">Audio File</option>
+                            </select>
+                            <div class="audio-sensitivity">
+                                <label for="audioSensitivity">Sensitivity</label>
+                                <input type="range" id="audioSensitivity" min="0.1" max="2" value="1" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Environment Presets -->
+                    <div class="control-group">
+                        <label>Environment Presets</label>
+                        <div class="preset-grid">
+                            <button class="preset-btn" data-preset="forest">🌲 Forest</button>
+                            <button class="preset-btn" data-preset="ocean">🌊 Ocean</button>
+                            <button class="preset-btn" data-preset="space">🌌 Space</button>
+                            <button class="preset-btn" data-preset="city">🏙️ City</button>
+                            <button class="preset-btn" data-preset="neural">🧠 Neural</button>
+                            <button class="preset-btn" data-preset="quantum">⚛️ Quantum</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Information -->
+        <section class="technical-section">
+            <div class="container">
+                <div class="tech-grid">
+                    <!-- Algorithm Details -->
+                    <div class="tech-card">
+                        <h3>Network Dynamics</h3>
+                        <div class="algorithm-content">
+                            <p>Node Garden implements a sophisticated ecosystem simulation combining graph theory, physics simulation, and organic growth patterns.</p>
+
+                            <h4>Core Algorithm</h4>
+                            <p>The system uses a force-directed graph layout with additional organic growth rules:</p>
+                            <ul>
+                                <li><strong>Attraction Forces:</strong> Nodes attract nearby nodes based on compatibility</li>
+                                <li><strong>Repulsion Forces:</strong> Overcrowded areas push nodes apart</li>
+                                <li><strong>Growth Mechanics:</strong> New nodes spawn based on network activity</li>
+                                <li><strong>Death Cycles:</strong> Old or isolated nodes fade away naturally</li>
+                            </ul>
+
+                            <h4>Emergence Properties</h4>
+                            <p>The network exhibits emergent behaviors including:</p>
+                            <ul>
+                                <li>Clustering around high-activity nodes</li>
+                                <li>Spontaneous pattern formation</li>
+                                <li>Self-organizing hierarchies</li>
+                                <li>Adaptive responses to user interaction</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Performance Metrics -->
+                    <div class="tech-card">
+                        <h3>Real-time Performance</h3>
+                        <div class="metrics-grid">
+                            <div class="metric">
+                                <span class="metric-label">Frame Rate</span>
+                                <span class="metric-value" id="performanceFPS">60 FPS</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Node Limit</span>
+                                <span class="metric-value">500</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Complexity</span>
+                                <span class="metric-value">O(n²)</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Memory</span>
+                                <span class="metric-value" id="memoryUsage">~50MB</span>
+                            </div>
+                        </div>
+
+                        <div class="performance-chart">
+                            <canvas id="performanceChart" width="300" height="150"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Features -->
+                    <div class="tech-card">
+                        <h3>Interaction Modes</h3>
+                        <div class="features-list">
+                            <div class="feature">
+                                <div class="feature-icon">👆</div>
+                                <div class="feature-content">
+                                    <h4>Direct Manipulation</h4>
+                                    <p>Click, drag, and spawn nodes directly in the network</p>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-icon">🎵</div>
+                                <div class="feature-content">
+                                    <h4>Audio Reactivity</h4>
+                                    <p>Network responds to music and environmental sounds</p>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-icon">🌱</div>
+                                <div class="feature-content">
+                                    <h4>Organic Growth</h4>
+                                    <p>Nodes spawn and die based on natural lifecycle patterns</p>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-icon">🎨</div>
+                                <div class="feature-content">
+                                    <h4>Visual Themes</h4>
+                                    <p>Multiple visualization modes from minimal to particle effects</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Educational Content -->
+        <section class="educational-section">
+            <div class="container">
+                <h2>Network Science & Emergence</h2>
+
+                <div class="educational-grid">
+                    <div class="edu-card">
+                        <h3>Graph Theory Foundations</h3>
+                        <p>Node Garden demonstrates fundamental concepts in network science:</p>
+                        <ul>
+                            <li><strong>Small World Networks:</strong> High clustering with short path lengths</li>
+                            <li><strong>Scale-Free Properties:</strong> Power-law degree distribution</li>
+                            <li><strong>Preferential Attachment:</strong> Rich get richer dynamics</li>
+                            <li><strong>Community Detection:</strong> Natural clustering of related nodes</li>
+                        </ul>
+
+                        <p>These principles appear in social networks, brain connectivity, and ecosystem relationships.</p>
+                    </div>
+
+                    <div class="edu-card">
+                        <h3>Complex Adaptive Systems</h3>
+                        <p>The simulation showcases key properties of complex systems:</p>
+                        <ul>
+                            <li><strong>Self-Organization:</strong> Order emerges without central control</li>
+                            <li><strong>Adaptation:</strong> Network structure responds to environmental changes</li>
+                            <li><strong>Phase Transitions:</strong> Critical points where behavior dramatically changes</li>
+                            <li><strong>Emergent Intelligence:</strong> Collective behavior exceeding individual capabilities</li>
+                        </ul>
+                    </div>
+
+                    <div class="edu-card">
+                        <h3>Real-World Applications</h3>
+                        <p>Network dynamics appear throughout nature and technology:</p>
+                        <ul>
+                            <li><strong>Neural Networks:</strong> Brain connectivity and learning</li>
+                            <li><strong>Social Media:</strong> Information spreading and influence</li>
+                            <li><strong>Ecology:</strong> Food webs and species interactions</li>
+                            <li><strong>Economics:</strong> Market dynamics and trade networks</li>
+                            <li><strong>Internet:</strong> Routing and information flow</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Collaborative Features -->
+        <section class="collaborative-section">
+            <div class="container">
+                <h2>Collaborative Network Building</h2>
+
+                <div class="collaboration-grid">
+                    <div class="collab-card">
+                        <h3>Multi-User Sessions</h3>
+                        <p>Join or create collaborative network sessions where multiple users can:</p>
+                        <ul>
+                            <li>Add nodes simultaneously in real-time</li>
+                            <li>See other participants' cursors and actions</li>
+                            <li>Chat and discuss network patterns</li>
+                            <li>Save and share collaborative creations</li>
+                        </ul>
+                        <button class="btn-primary" id="joinSession">Join Session</button>
+                    </div>
+
+                    <div class="collab-card">
+                        <h3>Community Challenges</h3>
+                        <div class="challenge-list">
+                            <div class="challenge-item">
+                                <h4>🏆 Most Connected</h4>
+                                <p>Create the most interconnected stable network</p>
+                                <span class="challenge-reward">Winner: Custom NFT</span>
+                            </div>
+                            <div class="challenge-item">
+                                <h4>🎨 Most Beautiful</h4>
+                                <p>Design the most aesthetically pleasing pattern</p>
+                                <span class="challenge-reward">Community Vote</span>
+                            </div>
+                            <div class="challenge-item">
+                                <h4>⚡ Most Efficient</h4>
+                                <p>Optimize for maximum information flow</p>
+                                <span class="challenge-reward">Algorithm Analysis</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="collab-card">
+                        <h3>Educational Workshops</h3>
+                        <p>Scheduled interactive learning sessions:</p>
+                        <div class="workshop-schedule">
+                            <div class="workshop-item">
+                                <strong>Network Science 101</strong><br>
+                                <span>Every Monday 7 PM UTC</span>
+                            </div>
+                            <div class="workshop-item">
+                                <strong>Emergence in Action</strong><br>
+                                <span>Wednesdays 3 PM UTC</span>
+                            </div>
+                            <div class="workshop-item">
+                                <strong>Creative Coding Session</strong><br>
+                                <span>Fridays 6 PM UTC</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Neural Connections -->
+        <section class="neural-connections">
+            <div class="container">
+                <h2>Related Projects</h2>
+                <div class="neural-canvas-container">
+                    <canvas id="neuralCanvas"></canvas>
+                    <div class="neural-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #66FF66;"></div>
+                            <span>Networks</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #FF6B6B;"></div>
+                            <span>Interactive</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #4ECDC4;"></div>
+                            <span>Real-time</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community & Merchandise -->
+        <section class="community-section">
+            <div class="container">
+                <div class="community-grid">
+                    <!-- Comments -->
+                    <div class="comments-section">
+                        <h3>Community Discussion</h3>
+                        <div class="comments-container" id="commentsContainer">
+                            <!-- Sample comments -->
+                            <div class="comment">
+                                <div class="comment-author">NetworkExplorer</div>
+                                <div class="comment-time">2 hours ago</div>
+                                <div class="comment-text">The way nodes naturally cluster reminds me of neural networks forming connections during learning!</div>
+                            </div>
+                            <div class="comment">
+                                <div class="comment-author">ComplexityFan</div>
+                                <div class="comment-time">5 hours ago</div>
+                                <div class="comment-text">Love how the audio reactivity makes the network dance. Perfect for my ambient music sessions.</div>
+                            </div>
+                        </div>
+                        <div class="comment-form">
+                            <textarea placeholder="Share your network discoveries..." id="commentText"></textarea>
+                            <button class="btn-primary" id="postComment">Post Comment</button>
+                        </div>
+                    </div>
+
+                    <!-- Merchandise -->
+                    <div class="merchandise-section">
+                        <h3>Network-Inspired Merchandise</h3>
+                        <div class="merch-grid">
+                            <div class="merch-item">
+                                <div class="merch-image">
+                                    <div class="placeholder-image">🕸️</div>
+                                </div>
+                                <h4>Network Map Poster</h4>
+                                <p class="merch-price">$29.99</p>
+                                <button class="btn-secondary">Customize</button>
+                            </div>
+                            <div class="merch-item">
+                                <div class="merch-image">
+                                    <div class="placeholder-image">👕</div>
+                                </div>
+                                <h4>Node Garden Tee</h4>
+                                <p class="merch-price">$24.99</p>
+                                <button class="btn-secondary">View Options</button>
+                            </div>
+                            <div class="merch-item">
+                                <div class="merch-image">
+                                    <div class="placeholder-image">💎</div>
+                                </div>
+                                <h4>Network NFT</h4>
+                                <p class="merch-price">0.1 ETH</p>
+                                <button class="btn-secondary">Mint</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../../assets/js/neural-connections.js"></script>
+    <script src="node-garden-renderer.js"></script>
+    <script src="node-garden-controls.js"></script>
+    <script src="../buddhabrot/project-showcase.js"></script>
+
+    <!-- Initialize -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            window.NodeGardenShowcase = new ProjectShowcase('node.garden');
+            window.NodeGardenShowcase.init();
+        });
+    </script>
+</body>
+</html>

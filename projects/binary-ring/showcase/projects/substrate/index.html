@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Substrate - Binary Ring Project Showcase</title>
+
+    <!-- Meta Tags -->
+    <meta name="description" content="Substrate - Crack growth simulation inspired by bacterial colonies and material decomposition">
+    <meta name="keywords" content="substrate, crack growth, bacterial colonies, organic simulation, generative art">
+    <meta name="author" content="Binary Ring">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Substrate - Organic Crack Growth Simulation">
+    <meta property="og:description" content="Watch natural crack patterns emerge through computational biology">
+    <meta property="og:type" content="website">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../../assets/css/showcase.css">
+    <link rel="stylesheet" href="../buddhabrot/project-showcase.css">
+    <link rel="stylesheet" href="../../assets/css/responsive.css">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="project-nav">
+        <div class="nav-container">
+            <a href="../../index.html" class="nav-back">
+                ← Back to Showcase
+            </a>
+            <div class="nav-title">Substrate</div>
+            <div class="nav-actions">
+                <button class="share-btn" id="shareBtn">Share</button>
+                <button class="fullscreen-btn" id="fullscreenBtn">Fullscreen</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Project Header -->
+    <header class="project-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="project-meta">
+                    <span class="project-category" style="background: #8B4513;">Organic</span>
+                    <div class="project-stats">
+                        <span>👁 1,654 views</span>
+                        <span>❤ 198 likes</span>
+                        <span>⬇ 167 downloads</span>
+                    </div>
+                </div>
+
+                <h1 class="project-title">Substrate</h1>
+                <p class="project-description">
+                    Crack growth simulation inspired by bacterial colonies and material decomposition
+                </p>
+
+                <div class="project-tags">
+                    <span class="tag">#growth</span>
+                    <span class="tag">#cracks</span>
+                    <span class="tag">#bacterial</span>
+                    <span class="tag">#organic</span>
+                    <span class="tag">#simulation</span>
+                    <span class="tag">#tarbell</span>
+                </div>
+
+                <div class="project-actions">
+                    <button class="btn-primary" id="generateBtn">Grow Substrate</button>
+                    <button class="btn-secondary" id="resetNetwork">Reset Surface</button>
+                    <button class="btn-secondary" id="exportBtn">Export Pattern</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Interactive Visualization -->
+    <main class="project-main">
+        <div class="visualization-container">
+            <div class="canvas-container">
+                <canvas id="substrateCanvas" class="main-canvas"></canvas>
+                <div class="canvas-overlay">
+                    <div class="growth-stats" id="growthStats">
+                        <div class="stat-item">
+                            <span class="stat-label">Cracks:</span>
+                            <span class="stat-value" id="crackCount">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Length:</span>
+                            <span class="stat-value" id="totalLength">0px</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Branches:</span>
+                            <span class="stat-value" id="branchCount">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Coverage:</span>
+                            <span class="stat-value" id="surfaceCoverage">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="growth-progress" id="growthProgress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <span class="progress-text" id="progressText">Ready to grow...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Growth Controls -->
+            <div class="controls-panel" id="controlsPanel">
+                <div class="controls-header">
+                    <h3>Growth Parameters</h3>
+                    <button class="toggle-controls" id="toggleControls">−</button>
+                </div>
+
+                <div class="controls-content" id="controlsContent">
+                    <!-- Initial Conditions -->
+                    <div class="control-group">
+                        <label for="initialCracks">Initial Cracks</label>
+                        <div class="slider-container">
+                            <input type="range" id="initialCracks" min="1" max="20" value="5" step="1">
+                            <span class="slider-value" id="initialCracksValue">5</span>
+                        </div>
+                        <p class="control-description">Number of seed cracks to start growth</p>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="seedPattern">Seed Pattern</label>
+                        <select id="seedPattern">
+                            <option value="random">Random Points</option>
+                            <option value="center">Center Cluster</option>
+                            <option value="edges">Edge Lines</option>
+                            <option value="grid">Grid Pattern</option>
+                            <option value="circle">Circular</option>
+                            <option value="cross">Cross Pattern</option>
+                        </select>
+                    </div>
+
+                    <!-- Growth Dynamics -->
+                    <div class="control-group">
+                        <label for="growthRate">Growth Rate</label>
+                        <div class="slider-container">
+                            <input type="range" id="growthRate" min="0.5" max="5" value="2" step="0.1">
+                            <span class="slider-value" id="growthRateValue">2.0</span>
+                        </div>
+                        <p class="control-description">Speed of crack propagation</p>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="spawnChance">Branch Probability</label>
+                        <div class="slider-container">
+                            <input type="range" id="spawnChance" min="0" max="1" value="0.3" step="0.05">
+                            <span class="slider-value" id="spawnChanceValue">0.30</span>
+                        </div>
+                        <p class="control-description">Likelihood of crack branching</p>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="turnFactor">Direction Change</label>
+                        <div class="slider-container">
+                            <input type="range" id="turnFactor" min="0" max="1" value="0.1" step="0.02">
+                            <span class="slider-value" id="turnFactorValue">0.10</span>
+                        </div>
+                        <p class="control-description">Amount of random direction variation</p>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="avoidanceStrength">Crack Avoidance</label>
+                        <div class="slider-container">
+                            <input type="range" id="avoidanceStrength" min="0" max="2" value="1" step="0.1">
+                            <span class="slider-value" id="avoidanceStrengthValue">1.0</span>
+                        </div>
+                        <p class="control-description">How strongly cracks avoid each other</p>
+                    </div>
+
+                    <!-- Visual Appearance -->
+                    <div class="control-group">
+                        <label for="colorMode">Color Scheme</label>
+                        <select id="colorMode">
+                            <option value="aged">Aged Substrate</option>
+                            <option value="monochrome">Monochrome</option>
+                            <option value="organic">Organic Brown</option>
+                            <option value="bacterial">Bacterial Culture</option>
+                            <option value="metal">Metal Corrosion</option>
+                            <option value="stone">Stone Weathering</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="crackWidth">Crack Width</label>
+                        <div class="slider-container">
+                            <input type="range" id="crackWidth" min="1" max="8" value="2" step="0.5">
+                            <span class="slider-value" id="crackWidthValue">2px</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="backgroundTexture">Background</label>
+                        <select id="backgroundTexture">
+                            <option value="smooth">Smooth Surface</option>
+                            <option value="paper">Paper Texture</option>
+                            <option value="concrete">Concrete</option>
+                            <option value="wood">Wood Grain</option>
+                            <option value="metal">Metal</option>
+                        </select>
+                    </div>
+
+                    <!-- Environment Presets -->
+                    <div class="control-group">
+                        <label>Environment Presets</label>
+                        <div class="preset-grid">
+                            <button class="preset-btn" data-preset="desert">🏜️ Desert</button>
+                            <button class="preset-btn" data-preset="forest">🌲 Forest</button>
+                            <button class="preset-btn" data-preset="urban">🏙️ Urban</button>
+                            <button class="preset-btn" data-preset="bacterial">🦠 Bacterial</button>
+                            <button class="preset-btn" data-preset="geological">⛰️ Geological</button>
+                            <button class="preset-btn" data-preset="microscopic">🔬 Microscopic</button>
+                        </div>
+                    </div>
+
+                    <!-- Animation Controls -->
+                    <div class="control-group">
+                        <label>Animation</label>
+                        <div class="control-buttons">
+                            <button class="control-btn" id="playBtn">▶️ Play</button>
+                            <button class="control-btn" id="pauseBtn" style="display:none">⏸️ Pause</button>
+                            <button class="control-btn" id="stepBtn">⏭️ Step</button>
+                            <button class="control-btn" id="resetBtn">🔄 Reset</button>
+                        </div>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="showGrowth">
+                            <label for="showGrowth" class="switch-label">
+                                <span class="switch-slider"></span>
+                            </label>
+                            <span>Show Growth Animation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Information -->
+        <section class="technical-section">
+            <div class="container">
+                <div class="tech-grid">
+                    <!-- Algorithm Details -->
+                    <div class="tech-card">
+                        <h3>Crack Growth Algorithm</h3>
+                        <div class="algorithm-content">
+                            <p>Substrate implements a biologically-inspired crack propagation system based on the work of Jared Tarbell and natural pattern formation.</p>
+
+                            <h4>Core Mechanics</h4>
+                            <ul>
+                                <li><strong>Seed Initialization:</strong> Place initial crack points across the surface</li>
+                                <li><strong>Growth Vectors:</strong> Each crack has direction and velocity</li>
+                                <li><strong>Collision Detection:</strong> Cracks stop when hitting boundaries or other cracks</li>
+                                <li><strong>Branching Rules:</strong> Probabilistic spawning of new crack directions</li>
+                                <li><strong>Environmental Response:</strong> Growth responds to surface conditions</li>
+                            </ul>
+
+                            <h4>Biological Inspiration</h4>
+                            <p>The algorithm draws from several natural processes:</p>
+                            <ul>
+                                <li>Bacterial colony growth and nutrient competition</li>
+                                <li>Stress fractures in materials under tension</li>
+                                <li>Erosion patterns in geological formations</li>
+                                <li>Root system development in plant growth</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Performance & Analysis -->
+                    <div class="tech-card">
+                        <h3>Growth Analysis</h3>
+                        <div class="metrics-grid">
+                            <div class="metric">
+                                <span class="metric-label">Complexity</span>
+                                <span class="metric-value">O(n)</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Growth Time</span>
+                                <span class="metric-value" id="growthTime">30-120s</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Max Resolution</span>
+                                <span class="metric-value">8K</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Branching Factor</span>
+                                <span class="metric-value" id="branchingFactor">2.3</span>
+                            </div>
+                        </div>
+
+                        <div class="growth-analysis">
+                            <h4>Pattern Analysis</h4>
+                            <canvas id="analysisChart" width="300" height="150"></canvas>
+                            <p class="chart-description">Real-time analysis of crack density and branching patterns</p>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Features -->
+                    <div class="tech-card">
+                        <h3>Simulation Features</h3>
+                        <div class="features-list">
+                            <div class="feature">
+                                <div class="feature-icon">🌱</div>
+                                <div class="feature-content">
+                                    <h4>Organic Growth</h4>
+                                    <p>Natural crack propagation following biological principles</p>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-icon">🎨</div>
+                                <div class="feature-content">
+                                    <h4>Material Simulation</h4>
+                                    <p>Different surface types with unique growth characteristics</p>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-icon">⏱️</div>
+                                <div class="feature-content">
+                                    <h4>Time-lapse Animation</h4>
+                                    <p>Watch crack networks evolve over time</p>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-icon">📊</div>
+                                <div class="feature-content">
+                                    <h4>Growth Analytics</h4>
+                                    <p>Real-time analysis of pattern complexity</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Educational Content -->
+        <section class="educational-section">
+            <div class="container">
+                <h2>Natural Pattern Formation</h2>
+
+                <div class="educational-grid">
+                    <div class="edu-card">
+                        <h3>Physics of Crack Formation</h3>
+                        <p>Crack formation is governed by fundamental physical principles:</p>
+                        <ul>
+                            <li><strong>Stress Concentration:</strong> Cracks form at points of highest stress</li>
+                            <li><strong>Energy Minimization:</strong> Crack paths follow routes of least resistance</li>
+                            <li><strong>Fracture Mechanics:</strong> Growth depends on material properties</li>
+                            <li><strong>Scale Invariance:</strong> Similar patterns appear at all scales</li>
+                        </ul>
+
+                        <p>These principles create the characteristic branching and avoiding behaviors seen in natural crack systems.</p>
+                    </div>
+
+                    <div class="edu-card">
+                        <h3>Biological Growth Patterns</h3>
+                        <p>Living systems exhibit similar growth patterns:</p>
+                        <ul>
+                            <li><strong>Bacterial Colonies:</strong> Nutrient-seeking growth with competition</li>
+                            <li><strong>Neural Networks:</strong> Axon pathfinding in brain development</li>
+                            <li><strong>Root Systems:</strong> Water and nutrient acquisition strategies</li>
+                            <li><strong>Fungal Networks:</strong> Mycelial exploration and resource sharing</li>
+                            <li><strong>Blood Vessels:</strong> Branching to maximize circulation efficiency</li>
+                        </ul>
+                    </div>
+
+                    <div class="edu-card">
+                        <h3>Applications & Insights</h3>
+                        <p>Understanding crack patterns has practical applications:</p>
+                        <ul>
+                            <li><strong>Materials Science:</strong> Predicting failure modes in structures</li>
+                            <li><strong>Architecture:</strong> Designing crack-resistant materials</li>
+                            <li><strong>Geology:</strong> Understanding rock formation and erosion</li>
+                            <li><strong>Art & Design:</strong> Creating organic textures and patterns</li>
+                            <li><strong>Computer Graphics:</strong> Procedural generation of natural surfaces</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Generative Gallery -->
+        <section class="gallery-section">
+            <div class="container">
+                <h2>Generated Substrate Patterns</h2>
+                <p class="section-description">Each generation creates unique crack patterns influenced by the initial conditions and growth parameters.</p>
+
+                <div class="pattern-gallery" id="patternGallery">
+                    <!-- Gallery items will be generated here -->
+                </div>
+
+                <div class="gallery-controls">
+                    <button class="btn-primary" id="generateGallery">Generate New Patterns</button>
+                    <button class="btn-secondary" id="saveToGallery">Add Current to Gallery</button>
+                    <button class="btn-secondary" id="exportGallery">Export Gallery</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Neural Connections -->
+        <section class="neural-connections">
+            <div class="container">
+                <h2>Related Projects</h2>
+                <div class="neural-canvas-container">
+                    <canvas id="neuralCanvas"></canvas>
+                    <div class="neural-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #8B4513;"></div>
+                            <span>Organic</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #FF6B6B;"></div>
+                            <span>Growth</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #4ECDC4;"></div>
+                            <span>Simulation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community & Merchandise -->
+        <section class="community-section">
+            <div class="container">
+                <div class="community-grid">
+                    <!-- Comments -->
+                    <div class="comments-section">
+                        <h3>Community Discussion</h3>
+                        <div class="comments-container" id="commentsContainer">
+                            <div class="comment">
+                                <div class="comment-author">PatternSeeker</div>
+                                <div class="comment-time">3 hours ago</div>
+                                <div class="comment-text">The bacterial preset creates the most interesting organic patterns. Reminds me of petri dish cultures!</div>
+                            </div>
+                            <div class="comment">
+                                <div class="comment-author">NatureMimic</div>
+                                <div class="comment-time">1 day ago</div>
+                                <div class="comment-text">Love how the cracks avoid each other - just like real stress patterns in materials. Great physics simulation!</div>
+                            </div>
+                            <div class="comment">
+                                <div class="comment-author">ArtisticCoder</div>
+                                <div class="comment-time">2 days ago</div>
+                                <div class="comment-text">Using this for texture generation in my 3D models. The export quality is excellent for high-res work.</div>
+                            </div>
+                        </div>
+                        <div class="comment-form">
+                            <textarea placeholder="Share your substrate discoveries..." id="commentText"></textarea>
+                            <button class="btn-primary" id="postComment">Post Comment</button>
+                        </div>
+                    </div>
+
+                    <!-- Merchandise -->
+                    <div class="merchandise-section">
+                        <h3>Organic Pattern Merchandise</h3>
+                        <div class="merch-grid">
+                            <div class="merch-item">
+                                <div class="merch-image">
+                                    <div class="placeholder-image">🖼️</div>
+                                </div>
+                                <h4>Substrate Canvas Print</h4>
+                                <p class="merch-price">$34.99</p>
+                                <button class="btn-secondary">Customize Pattern</button>
+                            </div>
+                            <div class="merch-item">
+                                <div class="merch-image">
+                                    <div class="placeholder-image">🏺</div>
+                                </div>
+                                <h4>Crackle Glaze Ceramics</h4>
+                                <p class="merch-price">$49.99</p>
+                                <button class="btn-secondary">View Collection</button>
+                            </div>
+                            <div class="merch-item">
+                                <div class="merch-image">
+                                    <div class="placeholder-image">📱</div>
+                                </div>
+                                <h4>Phone Case</h4>
+                                <p class="merch-price">$24.99</p>
+                                <button class="btn-secondary">Generate Design</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Export Modal -->
+    <div class="modal-overlay" id="exportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Export Substrate Pattern</h3>
+                <button class="modal-close" id="closeExport">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="export-options">
+                    <div class="option-group">
+                        <label>Resolution</label>
+                        <select id="exportResolution">
+                            <option value="1920x1080">Full HD (1920×1080)</option>
+                            <option value="2560x1440">2K (2560×1440)</option>
+                            <option value="3840x2160">4K (3840×2160)</option>
+                            <option value="7680x4320">8K (7680×4320)</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label>Format</label>
+                        <select id="exportFormat">
+                            <option value="png">PNG (Lossless)</option>
+                            <option value="jpg">JPEG (Compressed)</option>
+                            <option value="svg">SVG (Vector)</option>
+                            <option value="pdf">PDF (Print)</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label>Background</label>
+                        <select id="exportBackground">
+                            <option value="current">Current Background</option>
+                            <option value="white">White</option>
+                            <option value="black">Black</option>
+                            <option value="transparent">Transparent</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="export-actions">
+                    <button class="btn-secondary" id="cancelExport">Cancel</button>
+                    <button class="btn-primary" id="confirmExport">Export Pattern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../assets/js/neural-connections.js"></script>
+    <script src="substrate-renderer.js"></script>
+    <script src="../buddhabrot/project-showcase.js"></script>
+
+    <!-- Initialize -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            window.SubstrateShowcase = new ProjectShowcase('substrate');
+            window.SubstrateShowcase.init();
+        });
+    </script>
+</body>
+</html>

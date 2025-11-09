@@ -1,0 +1,43 @@
+{
+  "name": "@binary-ring/templates",
+  "version": "1.0.0",
+  "description": "Hugging Face-inspired templates for generative art and AI tools",
+  "main": "deployment.js",
+  "bin": {
+    "binary-ring-deploy": "./deployment.js"
+  },
+  "scripts": {
+    "deploy": "node deployment.js",
+    "list": "node deployment.js list",
+    "test": "jest",
+    "lint": "eslint *.js",
+    "docs": "node -e \"console.log('📖 Documentation: see README.md')\""
+  },
+  "keywords": [
+    "templates",
+    "generative-art",
+    "ai-tools",
+    "hugging-face",
+    "creative-coding",
+    "binary-ring"
+  ],
+  "author": "Binary Ring Community",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^11.0.0",
+    "inquirer": "^9.0.0",
+    "chalk": "^5.0.0",
+    "ora": "^7.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "eslint": "^8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/binary-ring/templates"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

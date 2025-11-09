@@ -1,0 +1,5 @@
+{
+  "name": "Algorithmic Music Composer",
+  "description": "An interactive web application to explore, configure, and visualize various analog and computational music generation methods, complete with AI-powered explanations for each technique.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Ring - AI Frontend Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #ffffff;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .main-interface {
+            display: grid;
+            grid-template-columns: 300px 1fr 400px;
+            grid-template-rows: 60px 1fr;
+            height: 100vh;
+            gap: 1px;
+            background: #1a1a1a;
+        }
+
+        .header {
+            grid-column: 1 / -1;
+            background: #0f0f0f;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            background: #1a1a1a;
+            color: #ffffff;
+            border: 1px solid #333;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: #2a2a2a;
+            border-color: #4f46e5;
+        }
+
+        .btn.primary {
+            background: #4f46e5;
+            border-color: #4f46e5;
+        }
+
+        .btn.primary:hover {
+            background: #3730a3;
+        }
+
+        .sidebar {
+            background: #111111;
+            border-right: 1px solid #333;
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            border-bottom: 1px solid #333;
+        }
+
+        .sidebar-header {
+            padding: 1rem;
+            background: #1a1a1a;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #b0b0b0;
+            border-bottom: 1px solid #333;
+            cursor: pointer;
+        }
+
+        .sidebar-content {
+            padding: 0.5rem;
+        }
+
+        .component-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .component-item:hover {
+            background: #2a2a2a;
+            border-color: #4f46e5;
+        }
+
+        .component-item.selected {
+            background: #4f46e5;
+            border-color: #4f46e5;
+        }
+
+        .component-name {
+            font-weight: 500;
+        }
+
+        .component-type {
+            color: #888;
+            font-size: 0.7rem;
+        }
+
+        .add-btn {
+            color: #10b981;
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+
+        .add-btn:hover {
+            color: #059669;
+        }
+
+        .main-canvas {
+            background: #0f0f0f;
+            position: relative;
+            overflow: auto;
+        }
+
+        .canvas-header {
+            background: #1a1a1a;
+            padding: 1rem;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .canvas-title {
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .canvas-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .canvas-content {
+            padding: 2rem;
+            min-height: calc(100vh - 120px);
+            background:
+                radial-gradient(circle at 25% 25%, #1a1a1a 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, #1a1a1a 0%, transparent 50%);
+        }
+
+        .preview-area {
+            border: 2px dashed #333;
+            border-radius: 8px;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 1.1rem;
+            position: relative;
+        }
+
+        .preview-area.has-content {
+            border: 1px solid #4f46e5;
+            background: #111111;
+        }
+
+        .context-window {
+            background: #111111;
+            border-left: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .context-header {
+            background: #1a1a1a;
+            padding: 1rem;
+            border-bottom: 1px solid #333;
+            font-weight: bold;
+            color: #b0b0b0;
+        }
+
+        .context-content {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            font-size: 0.85rem;
+        }
+
+        .context-item {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .context-item-type {
+            color: #4f46e5;
+            font-weight: bold;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .context-item-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .context-item-details {
+            color: #888;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .remove-btn:hover {
+            color: #dc2626;
+        }
+
+        .context-stats {
+            background: #0f0f0f;
+            padding: 1rem;
+            border-top: 1px solid #333;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .generate-section {
+            background: #1a1a1a;
+            padding: 1rem;
+            border-top: 1px solid #333;
+        }
+
+        .prompt-input {
+            width: 100%;
+            background: #0f0f0f;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 0.75rem;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 0.8rem;
+            margin-bottom: 0.75rem;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .prompt-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+
+        .floating-menu {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #1a1a1a;
+            border: 1px solid #4f46e5;
+            border-radius: 8px;
+            padding: 1rem;
+            min-width: 200px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: none;
+        }
+
+        .floating-menu.show {
+            display: block;
+        }
+
+        .menu-item {
+            padding: 0.5rem;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 0.25rem 0;
+            transition: background 0.2s;
+        }
+
+        .menu-item:hover {
+            background: #2a2a2a;
+        }
+
+        .status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #0f0f0f;
+            border-top: 1px solid #333;
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+            z-index: 999;
+        }
+
+        .drag-over {
+            border-color: #10b981 !important;
+            background-color: rgba(16, 185, 129, 0.1) !important;
+        }
+
+        .send-strategy-btn {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 8px 32px rgba(79, 70, 229, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .send-strategy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(79, 70, 229, 0.6);
+            background: linear-gradient(135deg, #3730a3 0%, #6d28d9 100%);
+        }
+
+        .send-strategy-btn:active {
+            transform: translateY(0);
+        }
+
+        .upload-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1002;
+            display: none;
+        }
+
+        .upload-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .upload-modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .upload-modal-content {
+            position: relative;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            width: 90vw;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+        }
+
+        .upload-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #333;
+            background: #2a2a2a;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .upload-modal-header h3 {
+            color: #e0e0e0;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #ef4444;
+        }
+
+        .upload-tabs {
+            display: flex;
+            background: #2a2a2a;
+            border-bottom: 1px solid #333;
+        }
+
+        .upload-tab {
+            flex: 1;
+            padding: 1rem;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .upload-tab:hover {
+            background: #333;
+            color: #e0e0e0;
+        }
+
+        .upload-tab.active {
+            color: #4f46e5;
+            border-bottom-color: #4f46e5;
+            background: #1a1a1a;
+        }
+
+        .upload-content {
+            padding: 2rem;
+        }
+
+        .upload-content.hidden {
+            display: none;
+        }
+
+        .upload-dropzone {
+            border: 2px dashed #404040;
+            border-radius: 8px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-dropzone:hover {
+            border-color: #4f46e5;
+            background: rgba(79, 70, 229, 0.1);
+        }
+
+        .upload-dropzone.drag-over {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .dropzone-content {
+            color: #b0b0b0;
+        }
+
+        .dropzone-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .dropzone-content h4 {
+            color: #e0e0e0;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-browse-btn {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-top: 1rem;
+            transition: background 0.2s;
+        }
+
+        .upload-browse-btn:hover {
+            background: #3730a3;
+        }
+
+        .upload-preview {
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-item {
+            display: flex;
+            align-items: center;
+            background: #2a2a2a;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .preview-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-right: 1rem;
+        }
+
+        .preview-info {
+            flex: 1;
+        }
+
+        .preview-name {
+            color: #e0e0e0;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .preview-size {
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        .remove-preview {
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            padding: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .upload-form {
+            space-y: 1rem;
+        }
+
+        .upload-input, .upload-textarea {
+            width: 100%;
+            background: #2a2a2a;
+            border: 1px solid #404040;
+            border-radius: 6px;
+            padding: 0.75rem;
+            color: #ffffff;
+            font-family: inherit;
+            margin-bottom: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .upload-input:focus, .upload-textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+
+        .upload-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .link-input-section, .url-input-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .link-icon, .url-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .link-input-section h4, .url-input-section h4 {
+            color: #e0e0e0;
+            margin-bottom: 0.5rem;
+        }
+
+        .link-input-section p, .url-input-section p {
+            color: #888;
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-link-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-top: 1rem;
+            transition: background 0.2s;
+        }
+
+        .preview-link-btn:hover {
+            background: #059669;
+        }
+
+        .link-preview {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #2a2a2a;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .link-preview.show {
+            display: block;
+        }
+
+        .url-type-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .url-type-option {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background: #2a2a2a;
+            border: 1px solid #404040;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .url-type-option:hover {
+            background: #333;
+        }
+
+        .url-type-option input[type="radio"] {
+            margin-right: 0.5rem;
+        }
+
+        .upload-actions {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-top: 1px solid #333;
+            background: #2a2a2a;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background: #404040;
+            color: #e0e0e0;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .btn-cancel:hover {
+            background: #555;
+        }
+
+        .btn-submit {
+            flex: 1;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: #3730a3;
+        }
+
+        .btn-submit:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 1200px) {
+            .main-interface {
+                grid-template-columns: 250px 1fr 300px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .main-interface {
+                grid-template-columns: 1fr;
+                grid-template-rows: 60px 200px 1fr 250px;
+            }
+
+            .context-window {
+                order: 4;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-interface">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">🔮 Binary Ring Frontend Generator</div>
+            <div class="header-actions">
+                <button class="btn" onclick="clearContext()">Clear Context</button>
+                <button class="btn" onclick="exportContext()">Export</button>
+                <button class="btn primary" onclick="generateFrontend()">Generate Frontend</button>
+            </div>
+        </div>
+
+        <!-- Component Library Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-header" onclick="toggleSection('apps')">
+                    📱 Apps & Projects
+                </div>
+                <div class="sidebar-content" id="apps-content">
+                    <!-- Apps will be loaded here -->
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-header" onclick="toggleSection('media')">
+                    📺 Media Components
+                </div>
+                <div class="sidebar-content" id="media-content">
+                    <div class="component-item" data-type="component" data-name="Video Gallery">
+                        <div>
+                            <div class="component-name">Video Gallery</div>
+                            <div class="component-type">Media</div>
+                        </div>
+                        <span class="add-btn" onclick="addToContext('Video Gallery', 'component', 'Chadcn video player with playlist and controls')">+</span>
+                    </div>
+                    <div class="component-item" data-type="component" data-name="Audio Player">
+                        <div>
+                            <div class="component-name">Audio Player</div>
+                            <div class="component-type">Media</div>
+                        </div>
+                        <span class="add-btn" onclick="addToContext('Audio Player', 'component', 'Advanced audio player with waveform visualization')">+</span>
+                    </div>
+                    <div class="component-item" data-type="component" data-name="Photo Gallery">
+                        <div>
+                            <div class="component-name">Photo Gallery</div>
+                            <div class="component-type">Media</div>
+                        </div>
+                        <span class="add-btn" onclick="addToContext('Photo Gallery', 'component', 'Responsive image gallery with lightbox and filters')">+</span>
+                    </div>
+                    <div class="component-item" data-type="component" data-name="Media Upload">
+                        <div>
+                            <div class="component-name">Media Upload</div>
+                            <div class="component-type">Input</div>
+                        </div>
+                        <span class="add-btn" onclick="openUploadModal()">📤</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-header" onclick="toggleSection('components')">
+                    🧩 UI Components
+                </div>
+                <div class="sidebar-content" id="components-content">
+                    <div class="component-item" data-type="component" data-name="Header Navigation">
+                        <div>
+                            <div class="component-name">Header Navigation</div>
+                            <div class="component-type">Layout</div>
+                        </div>
+                        <span class="add-btn" onclick="addToContext('Header Navigation', 'component', 'Responsive navigation bar with menu items')">+</span>
+                    </div>
+                    <div class="component-item" data-type="component" data-name="Hero Section">
+                        <div>
+                            <div class="component-name">Hero Section</div>
+                            <div class="component-type">Layout</div>
+                        </div>
+                        <span class="add-btn" onclick="addToContext('Hero Section', 'component', 'Main banner area with call-to-action')">+</span>
+                    </div>
+                    <div class="component-item" data-type="component" data-name="Product Grid">
+                        <div>
+                            <div class="component-name">Product Grid</div>
+                            <div class="component-type">Display</div>
+                        </div>
+                        <span class="add-btn" onclick="addToContext('Product Grid', 'component', 'Grid layout for displaying products')">+</span>
+                    </div>
+                    <div class="component-item" data-type="component" data-name="Search Interface">
+                        <div>
+                            <div class="component-name">Search Interface</div>
+                            <div class="component-type">Interactive</div>
+                        </div>
+                        <span class="add-btn" onclick="addToContext('Search Interface', 'component', 'Advanced search with filters and suggestions')">+</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-header" onclick="toggleSection('keywords')">
+                    🏷️ Keywords & Themes
+                </div>
+                <div class="sidebar-content" id="keywords-content">
+                    <!-- Keywords will be loaded here -->
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-header" onclick="toggleSection('styles')">
+                    🎨 Style Themes
+                </div>
+                <div class="sidebar-content" id="styles-content">
+                    <div class="component-item" data-type="style" data-name="Dark Glassmorphism">
+                        <div>
+                            <div class="component-name">Dark Glassmorphism</div>
+                            <div class="component-type">Theme</div>
+                        </div>
+                        <span class="add-btn" onclick="addToContext('Dark Glassmorphism', 'style', 'Dark theme with glass-like transparency effects')">+</span>
+                    </div>
+                    <div class="component-item" data-type="style" data-name="Minimalist Clean">
+                        <div>
+                            <div class="component-name">Minimalist Clean</div>
+                            <div class="component-type">Theme</div>
+                        </div>
+                        <span class="add-btn" onclick="addToContext('Minimalist Clean', 'style', 'Clean minimal design with lots of whitespace')">+</span>
+                    </div>
+                    <div class="component-item" data-type="style" data-name="Cyberpunk Neon">
+                        <div>
+                            <div class="component-name">Cyberpunk Neon</div>
+                            <div class="component-type">Theme</div>
+                        </div>
+                        <span class="add-btn" onclick="addToContext('Cyberpunk Neon', 'style', 'High-tech neon aesthetic with vibrant colors')">+</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Canvas Area -->
+        <div class="main-canvas">
+            <div class="canvas-header">
+                <div class="canvas-title">Frontend Preview</div>
+                <div class="canvas-actions">
+                    <button class="btn" onclick="previewMode()">👁️ Preview</button>
+                    <button class="btn" onclick="codeMode()">💻 Code</button>
+                </div>
+            </div>
+            <div class="canvas-content">
+                <div class="preview-area" id="previewArea" ondrop="dropHandler(event)" ondragover="allowDrop(event)">
+                    <div id="previewContent">
+                        Drop components here or use the context window to generate your frontend
+                        <br><br>
+                        <em>Try adding components from the sidebar to build your interface</em>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Context Window -->
+        <div class="context-window">
+            <div class="context-header">
+                📄 Context Window
+            </div>
+            <div class="context-content" id="contextContent">
+                <div style="color: #666; text-align: center; padding: 2rem 0;">
+                    No items in context yet.<br>
+                    Add components from the sidebar to build your frontend specification.
+                </div>
+            </div>
+            <div class="context-stats" id="contextStats">
+                Items: 0 | Components: 0 | Styles: 0 | Keywords: 0
+            </div>
+            <div class="generate-section">
+                <textarea
+                    class="prompt-input"
+                    id="promptInput"
+                    placeholder="Additional instructions for the frontend generation (optional)..."
+                ></textarea>
+                <button class="btn primary" style="width: 100%;" onclick="generateFromContext()">
+                    🚀 Generate Frontend from Context
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Quick Menu -->
+    <div class="floating-menu" id="quickMenu">
+        <div class="menu-item" onclick="quickAddComponent('Store Interface')">🛍️ Add Store</div>
+        <div class="menu-item" onclick="quickAddComponent('Gallery View')">🎨 Add Gallery</div>
+        <div class="menu-item" onclick="quickAddComponent('Keyword Collection')">🏷️ Add Keywords</div>
+        <div class="menu-item" onclick="quickAddComponent('Admin Dashboard')">⚙️ Add Dashboard</div>
+    </div>
+
+    <!-- Send to Strategy Button -->
+    <div class="send-strategy-btn" id="sendStrategyBtn" onclick="sendToStrategy()">
+        🚀 Send to Strategy
+    </div>
+
+    <!-- Upload Modal -->
+    <div class="upload-modal" id="uploadModal">
+        <div class="upload-modal-overlay" onclick="closeUploadModal()"></div>
+        <div class="upload-modal-content">
+            <div class="upload-modal-header">
+                <h3>📤 Add Media to Context</h3>
+                <button onclick="closeUploadModal()" class="close-btn">×</button>
+            </div>
+
+            <div class="upload-tabs">
+                <button class="upload-tab active" onclick="switchUploadTab('photo')" id="photoTab">
+                    📸 Photo Upload
+                </button>
+                <button class="upload-tab" onclick="switchUploadTab('link')" id="linkTab">
+                    🔗 Link Submission
+                </button>
+                <button class="upload-tab" onclick="switchUploadTab('url')" id="urlTab">
+                    🌐 URL Reference
+                </button>
+            </div>
+
+            <!-- Photo Upload Tab -->
+            <div class="upload-content" id="photoContent">
+                <div class="upload-dropzone" id="dropzone" ondrop="handleFileDrop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+                    <div class="dropzone-content">
+                        <div class="dropzone-icon">📷</div>
+                        <h4>Drop photos here or click to upload</h4>
+                        <p>Supports JPG, PNG, GIF, WebP up to 10MB</p>
+                        <button class="upload-browse-btn" onclick="document.getElementById('fileInput').click()">
+                            Browse Files
+                        </button>
+                        <input type="file" id="fileInput" accept="image/*" multiple style="display: none" onchange="handleFileSelect(event)">
+                    </div>
+                </div>
+
+                <div class="upload-preview" id="photoPreview"></div>
+
+                <div class="upload-form">
+                    <input type="text" id="photoTitle" placeholder="Photo title (optional)" class="upload-input">
+                    <textarea id="photoDescription" placeholder="Describe this photo and how it relates to your project..." class="upload-textarea"></textarea>
+                    <div class="upload-tags">
+                        <input type="text" id="photoTags" placeholder="Add tags (comma separated)" class="upload-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Link Submission Tab -->
+            <div class="upload-content hidden" id="linkContent">
+                <div class="link-input-section">
+                    <div class="link-icon">🔗</div>
+                    <h4>Submit a Reference Link</h4>
+                    <p>Add inspiration, examples, or references to your context</p>
+
+                    <input type="url" id="linkUrl" placeholder="https://example.com" class="upload-input">
+                    <input type="text" id="linkTitle" placeholder="Link title" class="upload-input">
+                    <textarea id="linkDescription" placeholder="Why is this relevant to your project?" class="upload-textarea"></textarea>
+                    <input type="text" id="linkTags" placeholder="Tags (comma separated)" class="upload-input">
+
+                    <button onclick="previewLink()" class="preview-link-btn">
+                        🔍 Preview Link
+                    </button>
+                </div>
+
+                <div class="link-preview" id="linkPreview"></div>
+            </div>
+
+            <!-- URL Reference Tab -->
+            <div class="upload-content hidden" id="urlContent">
+                <div class="url-input-section">
+                    <div class="url-icon">🌐</div>
+                    <h4>Reference External Content</h4>
+                    <p>Add websites, articles, or online resources</p>
+
+                    <div class="url-type-selector">
+                        <label class="url-type-option">
+                            <input type="radio" name="urlType" value="website" checked>
+                            <span>🌐 Website</span>
+                        </label>
+                        <label class="url-type-option">
+                            <input type="radio" name="urlType" value="article">
+                            <span>📰 Article</span>
+                        </label>
+                        <label class="url-type-option">
+                            <input type="radio" name="urlType" value="video">
+                            <span>🎥 Video</span>
+                        </label>
+                        <label class="url-type-option">
+                            <input type="radio" name="urlType" value="design">
+                            <span>🎨 Design</span>
+                        </label>
+                    </div>
+
+                    <input type="url" id="urlInput" placeholder="https://example.com" class="upload-input">
+                    <input type="text" id="urlTitle" placeholder="Content title" class="upload-input">
+                    <textarea id="urlDescription" placeholder="What concepts or ideas does this represent?" class="upload-textarea"></textarea>
+                    <input type="text" id="urlTags" placeholder="Concept tags" class="upload-input">
+                </div>
+            </div>
+
+            <div class="upload-actions">
+                <button onclick="closeUploadModal()" class="btn-cancel">Cancel</button>
+                <button onclick="submitUpload()" class="btn-submit" id="submitBtn">Add to Context</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <span id="statusLeft">Ready to generate frontends</span>
+        <span id="statusRight">Context: 0 items</span>
+    </div>
+
+    <script>
+        let contextItems = [];
+        let currentPreviewMode = 'preview';
+
+        // Initialize the interface
+        document.addEventListener('DOMContentLoaded', function() {
+            loadApps();
+            loadKeywords();
+            updateContextStats();
+        });
+
+        async function loadApps() {
+            const appsContent = document.getElementById('apps-content');
+
+            // Load from apps catalog
+            try {
+                const response = await fetch('./apps/catalog.json');
+                const catalog = await response.json();
+
+                catalog.apps.forEach(app => {
+                    const item = document.createElement('div');
+                    item.className = 'component-item';
+                    item.innerHTML = `
+                        <div>
+                            <div class="component-name">${app.name}</div>
+                            <div class="component-type">App</div>
+                        </div>
+                        <span class="add-btn" onclick="addToContext('${app.name}', 'app', '${app.description}')">+</span>
+                    `;
+                    appsContent.appendChild(item);
+                });
+
+                catalog.experiments.forEach(exp => {
+                    const item = document.createElement('div');
+                    item.className = 'component-item';
+                    item.innerHTML = `
+                        <div>
+                            <div class="component-name">${exp.name}</div>
+                            <div class="component-type">Experiment</div>
+                        </div>
+                        <span class="add-btn" onclick="addToContext('${exp.name}', 'experiment', '${exp.description}')">+</span>
+                    `;
+                    appsContent.appendChild(item);
+                });
+            } catch (error) {
+                console.log('Could not load apps catalog, using defaults');
+                appsContent.innerHTML = `
+                    <div class="component-item">
+                        <div>
+                            <div class="component-name">Sonic Sculptor</div>
+                            <div class="component-type">App</div>
+                        </div>
+                        <span class="add-btn" onclick="addToContext('Sonic Sculptor', 'app', 'Audio-reactive particle visualization')">+</span>
+                    </div>
+                    <div class="component-item">
+                        <div>
+                            <div class="component-name">Store Interface</div>
+                            <div class="component-type">App</div>
+                        </div>
+                        <span class="add-btn" onclick="addToContext('Store Interface', 'app', 'E-commerce store for point4brand merchandise')">+</span>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadKeywords() {
+            const keywordsContent = document.getElementById('keywords-content');
+
+            try {
+                const response = await fetch('./point4brand/keywords/taxonomy.json');
+                const taxonomy = await response.json();
+
+                Object.entries(taxonomy.categories).forEach(([catKey, catData]) => {
+                    Object.entries(catData.keywords).forEach(([keyword, data]) => {
+                        const item = document.createElement('div');
+                        item.className = 'component-item';
+                        item.innerHTML = `
+                            <div>
+                                <div class="component-name">${keyword}</div>
+                                <div class="component-type">Keyword</div>
+                            </div>
+                            <span class="add-btn" onclick="addToContext('${keyword}', 'keyword', '${data.definition}')">+</span>
+                        `;
+                        keywordsContent.appendChild(item);
+                    });
+                });
+            } catch (error) {
+                console.log('Could not load keywords, using defaults');
+                keywordsContent.innerHTML = `
+                    <div class="component-item">
+                        <div>
+                            <div class="component-name">generative-art</div>
+                            <div class="component-type">Keyword</div>
+                        </div>
+                        <span class="add-btn" onclick="addToContext('generative-art', 'keyword', 'Art created through algorithmic processes')">+</span>
+                    </div>
+                `;
+            }
+        }
+
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId + '-content');
+            content.style.display = content.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function addToContext(name, type, description) {
+            const item = {
+                id: Date.now(),
+                name,
+                type,
+                description,
+                timestamp: new Date().toLocaleTimeString()
+            };
+
+            contextItems.push(item);
+            updateContextDisplay();
+            updateContextStats();
+            updateStatus(`Added ${name} to context`);
+
+            // Animate the addition
+            const contextContent = document.getElementById('contextContent');
+            contextContent.scrollTop = contextContent.scrollHeight;
+        }
+
+        function removeFromContext(id) {
+            contextItems = contextItems.filter(item => item.id !== id);
+            updateContextDisplay();
+            updateContextStats();
+            updateStatus('Removed item from context');
+        }
+
+        function updateContextDisplay() {
+            const contextContent = document.getElementById('contextContent');
+
+            if (contextItems.length === 0) {
+                contextContent.innerHTML = `
+                    <div style="color: #666; text-align: center; padding: 2rem 0;">
+                        No items in context yet.<br>
+                        Add components from the sidebar to build your frontend specification.
+                    </div>
+                `;
+                return;
+            }
+
+            contextContent.innerHTML = contextItems.map(item => `
+                <div class="context-item">
+                    <div class="context-item-type">${item.type}</div>
+                    <div class="context-item-name">${item.name}</div>
+                    <div class="context-item-details">${item.description}</div>
+                    <span class="remove-btn" onclick="removeFromContext(${item.id})" title="Remove from context">×</span>
+                </div>
+            `).join('');
+        }
+
+        function updateContextStats() {
+            const stats = contextItems.reduce((acc, item) => {
+                acc[item.type] = (acc[item.type] || 0) + 1;
+                return acc;
+            }, {});
+
+            const statsText = `Items: ${contextItems.length} | ` +
+                `Components: ${stats.component || 0} | ` +
+                `Styles: ${stats.style || 0} | ` +
+                `Keywords: ${stats.keyword || 0}`;
+
+            document.getElementById('contextStats').textContent = statsText;
+            document.getElementById('statusRight').textContent = `Context: ${contextItems.length} items`;
+        }
+
+        function generateFromContext() {
+            if (contextItems.length === 0) {
+                alert('Add some items to the context window first!');
+                return;
+            }
+
+            const prompt = document.getElementById('promptInput').value;
+            updateStatus('Generating frontend from context...');
+
+            // Simulate generation process
+            const previewArea = document.getElementById('previewArea');
+            previewArea.classList.add('has-content');
+
+            const components = contextItems.filter(item => item.type === 'component').map(item => item.name);
+            const apps = contextItems.filter(item => item.type === 'app').map(item => item.name);
+            const styles = contextItems.filter(item => item.type === 'style').map(item => item.name);
+            const keywords = contextItems.filter(item => item.type === 'keyword').map(item => item.name);
+
+            document.getElementById('previewContent').innerHTML = `
+                <div style="padding: 2rem; text-align: left;">
+                    <h2 style="color: #4f46e5; margin-bottom: 1rem;">🚀 Generated Frontend Specification</h2>
+
+                    ${apps.length > 0 ? `
+                        <h3 style="color: #10b981; margin: 1rem 0 0.5rem 0;">📱 Apps & Features:</h3>
+                        <ul style="margin-left: 1rem; color: #b0b0b0;">
+                            ${apps.map(app => `<li>${app}</li>`).join('')}
+                        </ul>
+                    ` : ''}
+
+                    ${components.length > 0 ? `
+                        <h3 style="color: #f59e0b; margin: 1rem 0 0.5rem 0;">🧩 UI Components:</h3>
+                        <ul style="margin-left: 1rem; color: #b0b0b0;">
+                            ${components.map(comp => `<li>${comp}</li>`).join('')}
+                        </ul>
+                    ` : ''}
+
+                    ${styles.length > 0 ? `
+                        <h3 style="color: #ef4444; margin: 1rem 0 0.5rem 0;">🎨 Style Theme:</h3>
+                        <ul style="margin-left: 1rem; color: #b0b0b0;">
+                            ${styles.map(style => `<li>${style}</li>`).join('')}
+                        </ul>
+                    ` : ''}
+
+                    ${keywords.length > 0 ? `
+                        <h3 style="color: #8b5cf6; margin: 1rem 0 0.5rem 0;">🏷️ Keywords & Concepts:</h3>
+                        <div style="margin-left: 1rem;">
+                            ${keywords.map(kw => `<span style="background: #4f46e5; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; margin: 0.25rem; display: inline-block; font-size: 0.8rem;">${kw}</span>`).join('')}
+                        </div>
+                    ` : ''}
+
+                    ${prompt ? `
+                        <h3 style="color: #06b6d4; margin: 1rem 0 0.5rem 0;">💡 Additional Instructions:</h3>
+                        <p style="background: #1a1a1a; padding: 1rem; border-radius: 4px; color: #e0e0e0; font-style: italic; border-left: 3px solid #06b6d4; margin-left: 1rem;">${prompt}</p>
+                    ` : ''}
+
+                    <div style="margin-top: 2rem; text-align: center;">
+                        <button class="btn primary" onclick="implementFrontend()">✨ Implement Frontend</button>
+                        <button class="btn" onclick="exportSpecification()">📄 Export Spec</button>
+                    </div>
+                </div>
+            `;
+
+            updateStatus('Frontend specification generated!');
+        }
+
+        function implementFrontend() {
+            updateStatus('Implementation would start here - connect to your preferred framework!');
+            alert('This would trigger the actual frontend generation process based on your context window specification.');
+        }
+
+        function exportSpecification() {
+            const spec = {
+                timestamp: new Date().toISOString(),
+                items: contextItems,
+                prompt: document.getElementById('promptInput').value,
+                metadata: {
+                    totalItems: contextItems.length,
+                    itemTypes: contextItems.reduce((acc, item) => {
+                        acc[item.type] = (acc[item.type] || 0) + 1;
+                        return acc;
+                    }, {})
+                }
+            };
+
+            const blob = new Blob([JSON.stringify(spec, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'frontend-specification.json';
+            a.click();
+            URL.revokeObjectURL(url);
+
+            updateStatus('Specification exported!');
+        }
+
+        function clearContext() {
+            if (contextItems.length === 0) return;
+
+            if (confirm('Clear all items from context window?')) {
+                contextItems = [];
+                updateContextDisplay();
+                updateContextStats();
+                updateStatus('Context cleared');
+            }
+        }
+
+        function updateStatus(message) {
+            document.getElementById('statusLeft').textContent = message;
+            setTimeout(() => {
+                document.getElementById('statusLeft').textContent = 'Ready to generate frontends';
+            }, 3000);
+        }
+
+        function quickAddComponent(name) {
+            const descriptions = {
+                'Store Interface': 'E-commerce interface with product catalog and shopping cart',
+                'Gallery View': 'Visual gallery for showcasing generative art projects',
+                'Keyword Collection': 'Interactive keyword collection and recommendation system',
+                'Admin Dashboard': 'Administrative interface for content management'
+            };
+
+            addToContext(name, 'component', descriptions[name] || 'Quick-added component');
+            document.getElementById('quickMenu').classList.remove('show');
+        }
+
+        // Drag and drop functionality
+        function allowDrop(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.add('drag-over');
+        }
+
+        function dropHandler(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('drag-over');
+
+            // This would handle dropped files or components
+            updateStatus('Drop functionality ready for enhancement');
+        }
+
+        // Show quick menu on right click
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.closest('.main-canvas')) {
+                e.preventDefault();
+                const menu = document.getElementById('quickMenu');
+                menu.style.left = e.clientX + 'px';
+                menu.style.top = e.clientY + 'px';
+                menu.classList.add('show');
+            }
+        });
+
+        // Hide quick menu on click elsewhere
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.floating-menu')) {
+                document.getElementById('quickMenu').classList.remove('show');
+            }
+        });
+
+        // Remove drag-over class when leaving
+        document.addEventListener('dragleave', function(e) {
+            if (e.target.classList.contains('preview-area')) {
+                e.target.classList.remove('drag-over');
+            }
+        });
+
+        function previewMode() {
+            currentPreviewMode = 'preview';
+            updateStatus('Preview mode active');
+        }
+
+        function codeMode() {
+            currentPreviewMode = 'code';
+            updateStatus('Code mode active');
+        }
+
+        function generateFrontend() {
+            if (contextItems.length === 0) {
+                updateStatus('Add items to context window first');
+                return;
+            }
+            generateFromContext();
+        }
+
+        // Send to Strategy functionality
+        function sendToStrategy() {
+            if (contextItems.length === 0) {
+                updateStatus('No items in context to send to strategy');
+                return;
+            }
+
+            const strategyPayload = {
+                timestamp: new Date().toISOString(),
+                contextItems: contextItems,
+                prompt: document.getElementById('promptInput').value,
+                sessionId: `session-${Date.now()}`,
+                metadata: {
+                    totalItems: contextItems.length,
+                    itemTypes: contextItems.reduce((acc, item) => {
+                        acc[item.type] = (acc[item.type] || 0) + 1;
+                        return acc;
+                    }, {})
+                }
+            };
+
+            // Simulate sending to strategy API
+            updateStatus('Sending context to strategy engine...');
+
+            // Add visual feedback
+            const btn = document.getElementById('sendStrategyBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ Processing...';
+            btn.style.pointerEvents = 'none';
+
+            setTimeout(() => {
+                // Simulate strategy response with new concepts
+                const newConcepts = generateNewConcepts(contextItems);
+                replaceWithNewConcepts(newConcepts);
+
+                // Reset button
+                btn.innerHTML = originalText;
+                btn.style.pointerEvents = 'auto';
+
+                updateStatus(`Strategy processed! Generated ${newConcepts.length} new concepts`);
+            }, 2000);
+        }
+
+        function generateNewConcepts(existingItems) {
+            // AI-like concept generation based on existing context
+            const concepts = [
+                {
+                    name: 'Neural Interface Design',
+                    type: 'concept',
+                    description: 'Brain-computer interface patterns for direct thought-to-UI interaction',
+                    confidence: 0.92,
+                    basedOn: existingItems.filter(item => item.type === 'component').map(item => item.name)
+                },
+                {
+                    name: 'Dimensional Data Visualization',
+                    type: 'concept',
+                    description: 'Multi-dimensional data representation with interactive exploration',
+                    confidence: 0.88,
+                    basedOn: existingItems.filter(item => item.type === 'keyword').map(item => item.name)
+                },
+                {
+                    name: 'Quantum State Management',
+                    type: 'concept',
+                    description: 'State management inspired by quantum superposition and entanglement',
+                    confidence: 0.85,
+                    basedOn: existingItems.filter(item => item.type === 'app').map(item => item.name)
+                },
+                {
+                    name: 'Adaptive Morphic UI',
+                    type: 'concept',
+                    description: 'User interfaces that physically morph based on context and user behavior',
+                    confidence: 0.90,
+                    basedOn: existingItems.filter(item => item.type === 'style').map(item => item.name)
+                }
+            ];
+
+            // Return concepts based on context complexity
+            const numConcepts = Math.min(concepts.length, Math.max(2, Math.floor(existingItems.length / 2)));
+            return concepts.slice(0, numConcepts);
+        }
+
+        function replaceWithNewConcepts(newConcepts) {
+            // Clear current context with animation
+            const contextContent = document.getElementById('contextContent');
+            contextContent.style.opacity = '0.5';
+            contextContent.style.transform = 'scale(0.95)';
+
+            setTimeout(() => {
+                // Clear existing items
+                contextItems = [];
+
+                // Add new concepts
+                newConcepts.forEach((concept, index) => {
+                    setTimeout(() => {
+                        const item = {
+                            id: Date.now() + index,
+                            name: concept.name,
+                            type: concept.type,
+                            description: concept.description,
+                            timestamp: new Date().toLocaleTimeString(),
+                            confidence: concept.confidence,
+                            basedOn: concept.basedOn
+                        };
+
+                        contextItems.push(item);
+                        updateContextDisplay();
+                        updateContextStats();
+
+                        // Show what it's based on
+                        if (concept.basedOn && concept.basedOn.length > 0) {
+                            updateStatus(`New concept "${concept.name}" based on: ${concept.basedOn.slice(0, 2).join(', ')}`);
+                        }
+                    }, index * 300);
+                });
+
+                // Reset visual state
+                contextContent.style.opacity = '1';
+                contextContent.style.transform = 'scale(1)';
+                contextContent.style.transition = 'all 0.5s ease';
+
+            }, 500);
+        }
+
+        function updateContextDisplay() {
+            const contextContent = document.getElementById('contextContent');
+
+            if (contextItems.length === 0) {
+                contextContent.innerHTML = `
+                    <div style="color: #666; text-align: center; padding: 2rem 0;">
+                        No items in context yet.<br>
+                        Add components from the sidebar to build your frontend specification.
+                    </div>
+                `;
+                return;
+            }
+
+            contextContent.innerHTML = contextItems.map(item => `
+                <div class="context-item" style="transition: all 0.3s ease;">
+                    <div class="context-item-type">${item.type}</div>
+                    <div class="context-item-name">${item.name}</div>
+                    <div class="context-item-details">${item.description}</div>
+                    ${item.confidence ? `
+                        <div style="margin-top: 0.5rem;">
+                            <div style="background: #4f46e5; height: 3px; border-radius: 2px; width: ${item.confidence * 100}%; margin-bottom: 0.25rem;"></div>
+                            <div style="color: #888; font-size: 0.7rem;">Confidence: ${Math.round(item.confidence * 100)}%</div>
+                        </div>
+                    ` : ''}
+                    ${item.basedOn && item.basedOn.length > 0 ? `
+                        <div style="color: #888; font-size: 0.7rem; margin-top: 0.5rem;">
+                            Based on: ${item.basedOn.slice(0, 3).join(', ')}${item.basedOn.length > 3 ? '...' : ''}
+                        </div>
+                    ` : ''}
+                    <span class="remove-btn" onclick="removeFromContext(${item.id})" title="Remove from context">×</span>
+                </div>
+            `).join('');
+        }
+
+        // Enhanced status updates for strategy processing
+        function updateStatus(message) {
+            document.getElementById('statusLeft').textContent = message;
+
+            // Add visual feedback for strategy operations
+            if (message.includes('strategy') || message.includes('Strategy')) {
+                document.getElementById('statusLeft').style.color = '#4f46e5';
+                setTimeout(() => {
+                    document.getElementById('statusLeft').style.color = '#666';
+                }, 3000);
+            }
+
+            setTimeout(() => {
+                document.getElementById('statusLeft').textContent = 'Ready to generate frontends';
+            }, 3000);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'Enter':
+                        e.preventDefault();
+                        generateFromContext();
+                        break;
+                    case 'Backspace':
+                        e.preventDefault();
+                        clearContext();
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        sendToStrategy();
+                        break;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

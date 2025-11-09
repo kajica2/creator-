@@ -1,0 +1,219 @@
+{
+  "taxonomyVersion": "1.0.0",
+  "lastUpdated": "2024-11-09T00:00:00Z",
+  "description": "Standardized keyword taxonomy for point4brand merchandise with consistent tagging system",
+  "categories": {
+    "mathematical_art": {
+      "displayName": "Mathematical Art",
+      "description": "Art based on mathematical concepts, algorithms, and visualizations",
+      "color": "#8B5CF6",
+      "keywords": {
+        "fractal": {
+          "definition": "Self-similar patterns that repeat at different scales",
+          "relatedConcepts": ["mandelbrot", "julia-set", "recursive-patterns"],
+          "popularityScore": 85,
+          "applications": ["buddhabrot-tee", "mathematical-visualizations"]
+        },
+        "chaos-theory": {
+          "definition": "Mathematical study of dynamical systems sensitive to initial conditions",
+          "relatedConcepts": ["lorenz-attractor", "butterfly-effect", "non-linear-dynamics"],
+          "popularityScore": 78,
+          "applications": ["lorenz-mug", "chaos-visualizations"]
+        },
+        "algorithmic": {
+          "definition": "Art created through computational algorithms and procedures",
+          "relatedConcepts": ["generative", "procedural", "computational-art"],
+          "popularityScore": 90,
+          "applications": ["complete-collection", "all-generative-works"]
+        }
+      }
+    },
+    "network_systems": {
+      "displayName": "Network & Systems",
+      "description": "Visualizations of networks, graphs, and complex system interactions",
+      "color": "#10B981",
+      "keywords": {
+        "network-visualization": {
+          "definition": "Visual representations of network structures and connections",
+          "relatedConcepts": ["graph-theory", "node-edge-diagrams", "connectivity-patterns"],
+          "popularityScore": 82,
+          "applications": ["node-garden-tee", "network-projects"]
+        },
+        "graph-theory": {
+          "definition": "Mathematical study of graphs and their properties",
+          "relatedConcepts": ["vertices", "edges", "connectivity", "algorithms"],
+          "popularityScore": 75,
+          "applications": ["network-visualizations", "data-structures"]
+        },
+        "complex-systems": {
+          "definition": "Systems with many interconnected components showing emergent behavior",
+          "relatedConcepts": ["emergence", "interconnectivity", "system-dynamics"],
+          "popularityScore": 88,
+          "applications": ["various-projects", "system-modeling"]
+        }
+      ]
+    },
+    "nature_inspired": {
+      "displayName": "Nature Inspired",
+      "description": "Patterns and designs inspired by natural phenomena and organic processes",
+      "color": "#F59E0B",
+      "keywords": {
+        "organic-patterns": {
+          "definition": "Natural, flowing patterns found in biological and geological systems",
+          "relatedConcepts": ["biomimicry", "natural-forms", "growth-patterns"],
+          "popularityScore": 80,
+          "applications": ["substrate-tee", "organic-textures"]
+        },
+        "substrate-simulation": {
+          "definition": "Computer simulation of crack formation in materials",
+          "relatedConcepts": ["crack-propagation", "material-physics", "stress-patterns"],
+          "popularityScore": 72,
+          "applications": ["substrate-collection", "material-studies"]
+        },
+        "procedural": {
+          "definition": "Generated through algorithmic procedures rather than manual design",
+          "relatedConcepts": ["algorithmic", "automated", "rule-based"],
+          "popularityScore": 85,
+          "applications": ["texture-generation", "pattern-creation"]
+        }
+      }
+    },
+    "interactive_visual": {
+      "displayName": "Interactive & Visual",
+      "description": "Interactive elements and dynamic visual experiences",
+      "color": "#EF4444",
+      "keywords": {
+        "interactive": {
+          "definition": "Responsive to user input or environmental changes",
+          "relatedConcepts": ["user-interaction", "responsive-design", "dynamic"],
+          "popularityScore": 92,
+          "applications": ["interactive-projects", "user-experiences"]
+        },
+        "visualization": {
+          "definition": "Visual representation of data, concepts, or phenomena",
+          "relatedConcepts": ["data-viz", "scientific-visualization", "infographics"],
+          "popularityScore": 95,
+          "applications": ["all-visual-projects", "data-representation"]
+        },
+        "color-change": {
+          "definition": "Materials or displays that change color under certain conditions",
+          "relatedConcepts": ["thermochromic", "reactive-materials", "dynamic-color"],
+          "popularityScore": 68,
+          "applications": ["happy-place-cup", "reactive-materials"]
+        }
+      }
+    },
+    "wellness_mindfulness": {
+      "displayName": "Wellness & Mindfulness",
+      "description": "Designs promoting mental health, meditation, and well-being",
+      "color": "#06B6D4",
+      "keywords": {
+        "mindfulness": {
+          "definition": "Present-moment awareness and mental clarity practices",
+          "relatedConcepts": ["meditation", "awareness", "mental-health"],
+          "popularityScore": 85,
+          "applications": ["wellness-projects", "therapeutic-designs"]
+        },
+        "meditation": {
+          "definition": "Practice of mental training and contemplative awareness",
+          "relatedConcepts": ["mindfulness", "contemplation", "spiritual-practice"],
+          "popularityScore": 82,
+          "applications": ["buddhabrot-tee", "contemplative-art"]
+        },
+        "therapeutic": {
+          "definition": "Designed to promote healing, recovery, or well-being",
+          "relatedConcepts": ["healing", "wellness", "mental-health"],
+          "popularityScore": 78,
+          "applications": ["wellness-collection", "therapeutic-art"]
+        }
+      }
+    },
+    "science_space": {
+      "displayName": "Science & Space",
+      "description": "Scientific concepts, astronomy, and space-related themes",
+      "color": "#8B5CF6",
+      "keywords": {
+        "orbital-mechanics": {
+          "definition": "Physics of objects moving in gravitational fields",
+          "relatedConcepts": ["astronomy", "physics", "celestial-mechanics"],
+          "popularityScore": 73,
+          "applications": ["orbitals-tumbler", "space-visualizations"]
+        },
+        "astronomy": {
+          "definition": "Scientific study of celestial objects and phenomena",
+          "relatedConcepts": ["space", "planets", "cosmic", "universe"],
+          "popularityScore": 88,
+          "applications": ["space-themed-products", "cosmic-art"]
+        },
+        "physics": {
+          "definition": "Natural science studying matter, energy, and their interactions",
+          "relatedConcepts": ["mechanics", "dynamics", "forces", "energy"],
+          "popularityScore": 80,
+          "applications": ["physics-visualizations", "scientific-art"]
+        }
+      ]
+    },
+    "lifestyle_culture": {
+      "displayName": "Lifestyle & Culture",
+      "description": "Cultural, lifestyle, and everyday use contexts",
+      "color": "#F97316",
+      "keywords": {
+        "coffee-culture": {
+          "definition": "Social and cultural practices around coffee consumption",
+          "relatedConcepts": ["morning-ritual", "cafe-culture", "beverage-art"],
+          "popularityScore": 70,
+          "applications": ["coffee-mugs", "drinkware"]
+        },
+        "eco-friendly": {
+          "definition": "Environmentally sustainable and responsible materials/practices",
+          "relatedConcepts": ["sustainable", "green", "environmental", "recyclable"],
+          "popularityScore": 90,
+          "applications": ["eco-products", "sustainable-merchandise"]
+        },
+        "premium": {
+          "definition": "High-quality materials and craftsmanship",
+          "relatedConcepts": ["luxury", "high-quality", "artisanal", "crafted"],
+          "popularityScore": 85,
+          "applications": ["premium-products", "quality-merchandise"]
+        }
+      }
+    }
+  },
+  "searchFilters": {
+    "priceRanges": [
+      {"label": "Under $20", "min": 0, "max": 20},
+      {"label": "$20 - $30", "min": 20, "max": 30},
+      {"label": "$30 - $50", "min": 30, "max": 50},
+      {"label": "Over $50", "min": 50, "max": 999}
+    ],
+    "categories": [
+      {"id": "apparel", "label": "T-Shirts", "icon": "👕"},
+      {"id": "drinkware", "label": "Cups & Mugs", "icon": "☕"},
+      {"id": "prints", "label": "Art Prints", "icon": "🖼️"},
+      {"id": "accessories", "label": "Accessories", "icon": "✨"}
+    ],
+    "collections": [
+      {"id": "fractals", "label": "Fractals", "description": "Mathematical beauty"},
+      {"id": "networks", "label": "Networks", "description": "Connected systems"},
+      {"id": "organic", "label": "Organic", "description": "Nature-inspired"},
+      {"id": "chaos", "label": "Chaos Theory", "description": "Dynamic systems"},
+      {"id": "space", "label": "Space", "description": "Cosmic themes"},
+      {"id": "wellness", "label": "Wellness", "description": "Mindful designs"}
+    ]
+  },
+  "recommendationRules": {
+    "keywordMatching": {
+      "fractal": ["mathematical-art", "visualization", "algorithmic"],
+      "network-visualization": ["graph-theory", "connectivity", "interactive"],
+      "organic-patterns": ["nature-inspired", "procedural", "textures"],
+      "mindfulness": ["meditation", "wellness", "therapeutic"],
+      "chaos-theory": ["mathematical-art", "dynamical-systems", "visualization"]
+    },
+    "productSynergies": {
+      "buddhabrot-tee": ["lorenz-mug", "complete-collection"],
+      "node-garden-tee": ["orbitals-tumbler", "network-themed-prints"],
+      "substrate-tee": ["organic-themed-products", "nature-collection"],
+      "happy-place-cup": ["wellness-products", "mindfulness-collection"]
+    }
+  }
+}

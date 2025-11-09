@@ -24,6 +24,7 @@ const mapUser = (supabaseUser: SupabaseUser | null, session: Session | null): Us
   const avatarUrl = metadata.avatar_url || metadata.picture || '';
 
   return {
+    id: supabaseUser.id,
     name: displayName,
     email: supabaseUser.email ?? '',
     picture: avatarUrl,

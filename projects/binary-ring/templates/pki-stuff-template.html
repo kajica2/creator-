@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <!-- Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PKI Stuff - Public Key Infrastructure tools and cryptographic visualization for secure generative art">
+    <meta name="theme-color" content="#dc2626">
+    <meta name="color-scheme" content="light dark">
+
+    <!-- Title -->
+    <title>PKI Stuff - Cryptographic Art Tools | Binary Ring</title>
+
+    <!-- Structured Data (Schema.org) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "PKI Stuff",
+      "description": "Public Key Infrastructure tools for creating cryptographic art and secure generative experiences",
+      "url": "https://binaryring.art/tools/pki-stuff",
+      "applicationCategory": "SecurityApplication",
+      "creator": {
+        "@type": "Person",
+        "name": "rahpi",
+        "url": "https://binaryring.art/users/rahpi"
+      },
+      "featureList": [
+        "Cryptographic Key Generation",
+        "Digital Signature Visualization",
+        "Hash Function Art",
+        "Encryption Pattern Generation",
+        "Certificate Chain Visualization",
+        "Secure Art Sharing"
+      ],
+      "screenshot": "https://binaryring.art/screenshots/pki-stuff.jpg",
+      "operatingSystem": "Web Browser",
+      "browserRequirements": "Modern browser with Web Crypto API support"
+    }
+    </script>
+
+    <!-- Preconnects -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/templates/huggingface-theme.css">
+    <link rel="stylesheet" href="/templates/pki-stuff.css">
+
+    <!-- Configuration (inspired by pki-stuff patterns) -->
+    <script>
+        window.pkiConfig = {
+            appId: 'pki-stuff',
+            version: '1.5.0',
+            creator: 'rahpi',
+
+            // Enhanced theme system (from pki-stuff implementation)
+            theme: {
+                autoDetect: true,
+                cookieName: 'pki-stuff-theme',
+                systemPreference: window.matchMedia('(prefers-color-scheme: dark)').matches,
+                darkModeClass: 'dark',
+                transitions: {
+                    enabled: true,
+                    duration: 200
+                }
+            },
+
+            // Cryptographic settings
+            crypto: {
+                defaultKeySize: 2048,
+                supportedAlgorithms: ['RSA', 'ECDSA', 'EdDSA'],
+                hashFunctions: ['SHA-256', 'SHA-384', 'SHA-512', 'SHA-3'],
+                keyFormats: ['PEM', 'DER', 'JWK'],
+                visualizationModes: ['pattern', 'fractal', 'network', 'flow']
+            },
+
+            // Security features
+            security: {
+                clientSideOnly: true,
+                noKeyStorage: true,
+                secureRandom: true,
+                zerotizeMemory: true,
+                auditLogging: true
+            },
+
+            // Visualization parameters
+            visualization: {
+                maxDataPoints: 10000,
+                animationFrameRate: 60,
+                colorPalettes: {
+                    secure: ['#10b981', '#059669', '#047857'],
+                    warning: ['#f59e0b', '#d97706', '#b45309'],
+                    danger: ['#ef4444', '#dc2626', '#b91c1c'],
+                    crypto: ['#8b5cf6', '#7c3aed', '#6d28d9']
+                },
+                effects: {
+                    particles: true,
+                    trails: true,
+                    glow: true,
+                    encryption: true
+                }
+            },
+
+            // Art generation modes
+            artModes: {
+                keyVisualization: {
+                    enabled: true,
+                    algorithm: 'key-entropy-mapping',
+                    colorMapping: 'crypto'
+                },
+                signaturePatterns: {
+                    enabled: true,
+                    algorithm: 'signature-geometry',
+                    interactive: true
+                },
+                hashArt: {
+                    enabled: true,
+                    algorithm: 'hash-fractal-generation',
+                    recursive: true
+                },
+                encryptionFlow: {
+                    enabled: true,
+                    algorithm: 'data-flow-visualization',
+                    realTime: true
+                }
+            },
+
+            // Analytics (inspired by HF pki-stuff)
+            analytics: {
+                enabled: true,
+                provider: 'plausible',
+                domain: 'binaryring.art',
+                respectDNT: true,
+                events: {
+                    keyGeneration: 'Crypto Key Generated',
+                    artCreation: 'Cryptographic Art Created',
+                    visualization: 'Crypto Visualization',
+                    export: 'Secure Export',
+                    share: 'Secure Share'
+                }
+            }
+        };
+
+        // Enhanced theme detection (inspired by pki-stuff cookie handling)
+        function initializePkiTheme() {
+            const config = window.pkiConfig.theme;
+
+            // Enhanced cookie parsing (like pki-stuff implementation)
+            const cookieRegex = new RegExp(`(?:^|;)\\s*${config.cookieName}\\s*=\\s*([^;]+)`);
+            const cookieMatch = document.cookie.match(cookieRegex);
+            const savedTheme = cookieMatch ? decodeURIComponent(cookieMatch[1]) : null;
+
+            // Theme detection logic
+            let theme = savedTheme;
+            if (!theme) {
+                theme = config.systemPreference ? 'dark' : 'light';
+            }
+
+            // Apply theme with enhanced logic
+            applyPkiTheme(theme);
+
+            // System preference listener
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                if (!savedTheme) {
+                    applyPkiTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+        }
+
+        function applyPkiTheme(theme) {
+            const isDark = theme === 'dark';
+
+            // Enhanced theme application (like pki-stuff)
+            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.classList.toggle(window.pkiConfig.theme.darkModeClass, isDark);
+
+            // Update crypto visualization colors
+            updateCryptoColors(theme);
+
+            // Update security indicators
+            updateSecurityIndicators(theme);
+        }
+
+        function updateCryptoColors(theme) {
+            const root = document.documentElement;
+            const isDark = theme === 'dark';
+
+            if (isDark) {
+                root.style.setProperty('--crypto-bg', '#0a0a0a');
+                root.style.setProperty('--key-color', '#10b981');
+                root.style.setProperty('--hash-color', '#8b5cf6');
+                root.style.setProperty('--signature-color', '#f59e0b');
+                root.style.setProperty('--encryption-color', '#ef4444');
+            } else {
+                root.style.setProperty('--crypto-bg', '#fafafa');
+                root.style.setProperty('--key-color', '#059669');
+                root.style.setProperty('--hash-color', '#7c3aed');
+                root.style.setProperty('--signature-color', '#d97706');
+                root.style.setProperty('--encryption-color', '#dc2626');
+            }
+        }
+
+        function updateSecurityIndicators(theme) {
+            const indicators = document.querySelectorAll('.security-indicator');
+            indicators.forEach(indicator => {
+                indicator.style.filter = theme === 'dark' ? 'brightness(1.2)' : 'brightness(1)';
+            });
+        }
+
+        // Initialize theme immediately
+        initializePkiTheme();
+    </script>
+</head>
+<body class="pki-stuff">
+    <!-- Skip Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Security Warning Banner -->
+    <div class="security-banner" id="securityBanner">
+        <div class="banner-content">
+            <div class="security-icon">🔒</div>
+            <div class="banner-text">
+                <strong>Security Notice:</strong> All cryptographic operations are performed locally in your browser. Keys are never transmitted or stored.
+            </div>
+            <button class="banner-close" onclick="dismissSecurityBanner()">×</button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="pki-header" role="banner">
+        <div class="header-container">
+            <!-- Branding -->
+            <div class="header-brand">
+                <a href="/" class="brand-link">
+                    <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <circle cx="12" cy="16" r="1"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    <span class="brand-text">Binary Ring</span>
+                </a>
+                <div class="app-info">
+                    <h1 class="app-title">PKI Stuff</h1>
+                    <span class="app-subtitle">Cryptographic Art Tools</span>
+                </div>
+            </div>
+
+            <!-- Security Status -->
+            <div class="security-status">
+                <div class="status-indicator secure" id="securityStatus">
+                    <div class="indicator-light"></div>
+                    <span class="status-text">Secure Session</span>
+                </div>
+                <div class="crypto-info">
+                    <span class="crypto-detail">Web Crypto API: <span class="status-ok">✓</span></span>
+                    <span class="crypto-detail">Secure Context: <span class="status-ok">✓</span></span>
+                </div>
+            </div>
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+                <!-- Clear Memory -->
+                <button class="security-action-btn" onclick="clearCryptoMemory()" title="Clear Memory">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <polyline points="3,6 5,6 21,6"/>
+                        <path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"/>
+                        <line x1="10" y1="11" x2="10" y2="17"/>
+                        <line x1="14" y1="11" x2="14" y2="17"/>
+                    </svg>
+                    Clear
+                </button>
+
+                <!-- Security Audit -->
+                <button class="security-action-btn" onclick="runSecurityAudit()" title="Security Audit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M9 11l3 3L22 4"/>
+                        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+                    </svg>
+                    Audit
+                </button>
+
+                <!-- Theme Toggle -->
+                <button class="theme-toggle action-btn" onclick="togglePkiTheme()" title="Toggle Theme">
+                    <span class="theme-icon theme-icon-light">☀️</span>
+                    <span class="theme-icon theme-icon-dark">🌙</span>
+                </button>
+
+                <!-- Settings -->
+                <button class="settings-btn action-btn" onclick="openPkiSettings()" title="PKI Settings">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="pki-main" role="main">
+        <div class="pki-layout">
+            <!-- Crypto Tools Panel -->
+            <aside class="crypto-tools" role="complementary">
+                <div class="tools-header">
+                    <h2>🔐 Crypto Tools</h2>
+                    <button class="tools-toggle" onclick="toggleCryptoTools()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="6,9 12,15 18,9"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="tools-content">
+                    <!-- Key Generation -->
+                    <div class="tool-section">
+                        <h3>🗝️ Key Generation</h3>
+                        <div class="tool-controls">
+                            <div class="control-group">
+                                <label for="keyAlgorithm">Algorithm:</label>
+                                <select id="keyAlgorithm" onchange="updateKeyOptions()">
+                                    <option value="RSA">RSA</option>
+                                    <option value="ECDSA">ECDSA</option>
+                                    <option value="EdDSA">EdDSA</option>
+                                </select>
+                            </div>
+
+                            <div class="control-group">
+                                <label for="keySize">Key Size:</label>
+                                <select id="keySize">
+                                    <option value="2048">2048 bit</option>
+                                    <option value="3072">3072 bit</option>
+                                    <option value="4096">4096 bit</option>
+                                </select>
+                            </div>
+
+                            <button class="crypto-btn primary" onclick="generateKeyPair()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <circle cx="12" cy="16" r="1"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                                Generate Keys
+                            </button>
+                        </div>
+
+                        <div class="key-display" id="keyDisplay" style="display: none;">
+                            <div class="key-info">
+                                <span class="key-label">Public Key:</span>
+                                <div class="key-fingerprint" id="publicKeyFingerprint"></div>
+                            </div>
+                            <div class="key-actions">
+                                <button class="key-action-btn" onclick="visualizeKey('public')">Visualize</button>
+                                <button class="key-action-btn" onclick="exportKey('public')">Export</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hash Functions -->
+                    <div class="tool-section">
+                        <h3>🔢 Hash Functions</h3>
+                        <div class="tool-controls">
+                            <div class="control-group">
+                                <label for="hashAlgorithm">Hash Function:</label>
+                                <select id="hashAlgorithm">
+                                    <option value="SHA-256">SHA-256</option>
+                                    <option value="SHA-384">SHA-384</option>
+                                    <option value="SHA-512">SHA-512</option>
+                                    <option value="SHA-3">SHA-3</option>
+                                </select>
+                            </div>
+
+                            <div class="control-group">
+                                <label for="hashInput">Input Data:</label>
+                                <textarea id="hashInput" placeholder="Enter text or upload file..." rows="3"></textarea>
+                            </div>
+
+                            <div class="file-input-container">
+                                <input type="file" id="hashFile" onchange="loadFileForHash(this)">
+                                <label for="hashFile" class="file-input-label">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14,2 14,8 20,8"/>
+                                    </svg>
+                                    Upload File
+                                </label>
+                            </div>
+
+                            <button class="crypto-btn primary" onclick="computeHash()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M20 6L9 17l-5-5"/>
+                                </svg>
+                                Compute Hash
+                            </button>
+                        </div>
+
+                        <div class="hash-result" id="hashResult" style="display: none;">
+                            <div class="hash-value" id="hashValue"></div>
+                            <div class="hash-actions">
+                                <button class="hash-action-btn" onclick="visualizeHash()">Visualize</button>
+                                <button class="hash-action-btn" onclick="copyHash()">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Digital Signatures -->
+                    <div class="tool-section">
+                        <h3>✍️ Digital Signatures</h3>
+                        <div class="tool-controls">
+                            <div class="control-group">
+                                <label for="signatureData">Data to Sign:</label>
+                                <textarea id="signatureData" placeholder="Enter message to sign..." rows="3"></textarea>
+                            </div>
+
+                            <div class="signature-buttons">
+                                <button class="crypto-btn" onclick="createSignature()" id="signBtn" disabled>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5"/>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+                                    Sign
+                                </button>
+
+                                <button class="crypto-btn" onclick="verifySignature()" id="verifyBtn" disabled>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M9 11l3 3L22 4"/>
+                                        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+                                    </svg>
+                                    Verify
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="signature-result" id="signatureResult" style="display: none;">
+                            <div class="signature-display">
+                                <span class="signature-label">Digital Signature:</span>
+                                <div class="signature-value" id="signatureValue"></div>
+                            </div>
+                            <button class="signature-action-btn" onclick="visualizeSignature()">Visualize Pattern</button>
+                        </div>
+                    </div>
+
+                    <!-- Encryption Tools -->
+                    <div class="tool-section">
+                        <h3>🔐 Encryption</h3>
+                        <div class="tool-controls">
+                            <div class="control-group">
+                                <label for="encryptionMode">Mode:</label>
+                                <select id="encryptionMode">
+                                    <option value="AES-GCM">AES-GCM</option>
+                                    <option value="AES-CBC">AES-CBC</option>
+                                    <option value="RSA-OAEP">RSA-OAEP</option>
+                                </select>
+                            </div>
+
+                            <div class="control-group">
+                                <label for="encryptionData">Data to Encrypt:</label>
+                                <textarea id="encryptionData" placeholder="Enter sensitive data..." rows="3"></textarea>
+                            </div>
+
+                            <div class="encryption-buttons">
+                                <button class="crypto-btn" onclick="encryptData()">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                        <circle cx="12" cy="16" r="1"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                    Encrypt
+                                </button>
+
+                                <button class="crypto-btn" onclick="decryptData()" id="decryptBtn" disabled>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                        <circle cx="12" cy="16" r="1"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                    Decrypt
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Visualization Canvas -->
+            <section class="visualization-section" role="main">
+                <div class="canvas-header">
+                    <div class="canvas-title">
+                        <h2>🎨 Cryptographic Art</h2>
+                        <span class="canvas-subtitle">Visual representation of cryptographic operations</span>
+                    </div>
+
+                    <div class="visualization-controls">
+                        <!-- Art Mode Selection -->
+                        <div class="mode-selector">
+                            <button class="mode-btn active" onclick="setVisualizationMode('pattern')" data-mode="pattern">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect x="3" y="3" width="7" height="7"/>
+                                    <rect x="14" y="3" width="7" height="7"/>
+                                    <rect x="14" y="14" width="7" height="7"/>
+                                    <rect x="3" y="14" width="7" height="7"/>
+                                </svg>
+                                Pattern
+                            </button>
+                            <button class="mode-btn" onclick="setVisualizationMode('fractal')" data-mode="fractal">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M21.5 21.5l-9.5-9.5"/>
+                                    <path d="M12 12L2.5 2.5"/>
+                                    <path d="M12 12l9.5-9.5"/>
+                                    <path d="M12 12L2.5 21.5"/>
+                                </svg>
+                                Fractal
+                            </button>
+                            <button class="mode-btn" onclick="setVisualizationMode('network')" data-mode="network">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M17.5 21H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+                                </svg>
+                                Network
+                            </button>
+                            <button class="mode-btn" onclick="setVisualizationMode('flow')" data-mode="flow">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0V14.76a4.5 4.5 0 0 0 5 0z"/>
+                                    <path d="M9.5 1.5v15a2.5 2.5 0 0 0 5 0V1.5"/>
+                                </svg>
+                                Flow
+                            </button>
+                        </div>
+
+                        <!-- Animation Controls -->
+                        <div class="animation-controls">
+                            <button class="anim-btn" onclick="playAnimation()" id="playBtn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polygon points="5,3 19,12 5,21"/>
+                                </svg>
+                            </button>
+                            <button class="anim-btn" onclick="pauseAnimation()" id="pauseBtn" style="display: none;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect x="6" y="4" width="4" height="16"/>
+                                    <rect x="14" y="4" width="4" height="16"/>
+                                </svg>
+                            </button>
+                            <button class="anim-btn" onclick="resetAnimation()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="23,4 23,10 17,10"/>
+                                    <polyline points="1,20 1,14 7,14"/>
+                                    <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Export Controls -->
+                        <div class="export-controls">
+                            <button class="export-btn" onclick="exportVisualization('png')" title="Export PNG">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <polyline points="21,15 16,10 5,21"/>
+                                </svg>
+                            </button>
+                            <button class="export-btn" onclick="exportVisualization('svg')" title="Export SVG">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14,2 14,8 20,8"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="canvas-container">
+                    <!-- Security Indicator -->
+                    <div class="security-overlay">
+                        <div class="security-indicator" id="canvasSecurityIndicator">
+                            <div class="indicator-light secure"></div>
+                            <span>Client-Side Processing</span>
+                        </div>
+                    </div>
+
+                    <!-- Main Visualization Canvas -->
+                    <canvas id="cryptoCanvas" class="crypto-canvas"></canvas>
+
+                    <!-- Info Overlay -->
+                    <div class="info-overlay" id="infoOverlay" style="display: none;">
+                        <div class="info-content">
+                            <h4 id="infoTitle">Cryptographic Information</h4>
+                            <div class="info-details" id="infoDetails">
+                                <!-- Dynamic content populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Crypto Statistics -->
+                <div class="crypto-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Entropy:</span>
+                        <span class="stat-value" id="entropyValue">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Complexity:</span>
+                        <span class="stat-value" id="complexityValue">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Security Level:</span>
+                        <span class="stat-value" id="securityLevelValue">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Pattern Density:</span>
+                        <span class="stat-value" id="densityValue">--</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Security Audit Modal -->
+        <div class="audit-modal" id="auditModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>🔍 Security Audit Report</h2>
+                    <button class="modal-close" onclick="closeAuditModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="audit-results" id="auditResults">
+                        <!-- Audit results will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="/templates/huggingface-config.js"></script>
+    <script src="/templates/pki-crypto-engine.js"></script>
+    <script src="/templates/pki-visualization.js"></script>
+    <script src="/templates/pki-security.js"></script>
+
+    <!-- Initialize -->
+    <script>
+        // Theme toggle function (inspired by pki-stuff)
+        function togglePkiTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+
+            applyPkiTheme(newTheme);
+
+            // Save preference (enhanced cookie handling)
+            const expires = new Date();
+            expires.setFullYear(expires.getFullYear() + 1);
+            document.cookie = `${window.pkiConfig.theme.cookieName}=${encodeURIComponent(newTheme)}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
+
+            // Track theme change
+            if (window.BinaryRing) {
+                BinaryRing.trackEvent('Theme Toggle', {
+                    theme: newTheme,
+                    app: 'pki-stuff'
+                });
+            }
+        }
+
+        // Initialize PKI application
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check Web Crypto API support
+            if (!window.crypto || !window.crypto.subtle) {
+                showSecurityWarning('Web Crypto API not supported');
+                return;
+            }
+
+            // Initialize PKI tools
+            initializePkiTools();
+
+            // Track app usage
+            if (window.BinaryRing) {
+                BinaryRing.trackEvent('PKI Tools Launch', {
+                    app: 'pki-stuff',
+                    secure_context: window.isSecureContext,
+                    timestamp: Date.now()
+                });
+            }
+        });
+
+        // Security cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            clearCryptoMemory();
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'k':
+                        e.preventDefault();
+                        generateKeyPair();
+                        break;
+                    case 'h':
+                        e.preventDefault();
+                        computeHash();
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        if (e.shiftKey) {
+                            createSignature();
+                        } else {
+                            exportVisualization('png');
+                        }
+                        break;
+                    case 'Delete':
+                        clearCryptoMemory();
+                        break;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

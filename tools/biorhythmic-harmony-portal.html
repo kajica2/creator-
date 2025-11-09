@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biorhythmic Harmony Portal - KaiDjuric AI Tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --dark: #0f172a;
+            --light: #f1f5f9;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Animated Background System */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .neural-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 25%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+            animation: neural-pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes neural-pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+
+        /* Vanta.js Wave Container */
+        #vanta-waves {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Glassmorphism UI */
+        .glass-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: title-glow 4s ease-in-out infinite;
+        }
+
+        @keyframes title-glow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Navigation */
+        .nav-bar {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .nav-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn:hover {
+            background: rgba(99, 102, 241, 0.3);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .input-section {
+            padding: 2rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .input-group input[type="date"],
+        .input-group input[type="time"] {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Results Section */
+        .results-section {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .biorhythm-card {
+            padding: 1.5rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .physical-card {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.1));
+        }
+
+        .emotional-card {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(22, 163, 74, 0.1));
+        }
+
+        .intellectual-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.1));
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.8s ease;
+        }
+
+        .physical-progress { background: linear-gradient(90deg, #ef4444, #dc2626); }
+        .emotional-progress { background: linear-gradient(90deg, #22c55e, #16a34a); }
+        .intellectual-progress { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+
+        .score-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .description {
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        /* AI Analysis */
+        .ai-analysis {
+            grid-column: 1 / -1;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .ai-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .ai-content {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .chart-container {
+            margin-top: 2rem;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1rem;
+            position: relative;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .nav-bar {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .nav-btn {
+                font-size: 0.9rem;
+                padding: 0.5rem 1rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="particles" id="particles"></div>
+        <div class="neural-grid"></div>
+    </div>
+
+    <!-- Vanta.js Waves -->
+    <div id="vanta-waves"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="title">Biorhythmic Harmony Portal</h1>
+            <p class="subtitle">Discover your natural rhythms and optimize your daily performance through AI-powered biorhythm analysis</p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-bar">
+            <a href="../index.html" class="nav-btn">← Back to Hub</a>
+            <a href="printcraft-onboarding.html" class="nav-btn">PrintCraft</a>
+            <a href="point4brand-ecommerce.html" class="nav-btn">Point4Brand</a>
+            <a href="animated-background-template.html" class="nav-btn">Backgrounds</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Input Section -->
+            <div class="glass-container input-section">
+                <h3 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Personal Information</h3>
+
+                <div class="input-group">
+                    <label for="birthDate">Birth Date</label>
+                    <input type="date" id="birthDate" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="birthTime">Birth Time (Optional)</label>
+                    <input type="time" id="birthTime">
+                </div>
+
+                <div class="input-group">
+                    <label for="targetDate">Analysis Date</label>
+                    <input type="date" id="targetDate" required>
+                </div>
+
+                <button class="calculate-btn" onclick="calculateBiorhythms()">
+                    <span id="btnText">Calculate Biorhythms</span>
+                    <span id="btnLoader" class="loading hidden"></span>
+                </button>
+            </div>
+
+            <!-- Results Section -->
+            <div class="glass-container results-section" id="resultsSection" style="display: none;">
+                <h3 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Your Biorhythmic State</h3>
+
+                <!-- Physical Cycle -->
+                <div class="biorhythm-card physical-card">
+                    <div class="card-title">
+                        <svg class="card-icon" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2M21 9V7L15 5.5V7L12 6L9 7V5.5L3 7V9L9 10.5L12 9L15 10.5L21 9M12 19C10.9 19 10 18.1 10 17C10 15.9 10.9 15 12 15C13.1 15 14 15.9 14 17C14 18.1 13.1 19 12 19M12 13C8.7 13 6 10.3 6 7V9C6 12.3 8.7 15 12 15S18 12.3 18 9V7C18 10.3 15.3 13 12 13Z"/>
+                        </svg>
+                        Physical Cycle (23 days)
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill physical-progress" id="physicalProgress"></div>
+                    </div>
+                    <div class="score-text" id="physicalScore">--</div>
+                    <div class="description" id="physicalDesc">Physical strength, endurance, and energy levels</div>
+                </div>
+
+                <!-- Emotional Cycle -->
+                <div class="biorhythm-card emotional-card">
+                    <div class="card-title">
+                        <svg class="card-icon" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/>
+                        </svg>
+                        Emotional Cycle (28 days)
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill emotional-progress" id="emotionalProgress"></div>
+                    </div>
+                    <div class="score-text" id="emotionalScore">--</div>
+                    <div class="description" id="emotionalDesc">Mood, creativity, and interpersonal relationships</div>
+                </div>
+
+                <!-- Intellectual Cycle -->
+                <div class="biorhythm-card intellectual-card">
+                    <div class="card-title">
+                        <svg class="card-icon" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M9,2V8H11V11H5C3.89,11 3,11.89 3,13V16H5V20H19V16H21V13C21,11.89 20.11,11 19,11H13V8H15V2H9M11,16H13V18H11V16Z"/>
+                        </svg>
+                        Intellectual Cycle (33 days)
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill intellectual-progress" id="intellectualProgress"></div>
+                    </div>
+                    <div class="score-text" id="intellectualScore">--</div>
+                    <div class="description" id="intellectualDesc">Mental clarity, decision-making, and learning capacity</div>
+                </div>
+            </div>
+
+            <!-- AI Analysis -->
+            <div class="glass-container ai-analysis" id="aiAnalysis" style="display: none;">
+                <h3 class="ai-title">🤖 AI-Powered Insights</h3>
+                <div class="ai-content" id="aiContent">
+                    Analyzing your biorhythmic patterns...
+                </div>
+                <div class="chart-container">
+                    <canvas id="biorhythmChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Vanta.js Waves
+        let vantaEffect;
+
+        function initVanta() {
+            if (window.VANTA) {
+                vantaEffect = window.VANTA.WAVES({
+                    el: "#vanta-waves",
+                    mouseControls: true,
+                    touchControls: true,
+                    gyroControls: false,
+                    minHeight: 200.00,
+                    minWidth: 200.00,
+                    scale: 1.00,
+                    scaleMobile: 1.00,
+                    color: 0x1a1a2e,
+                    shininess: 30.00,
+                    waveHeight: 15.00,
+                    waveSpeed: 0.75,
+                    zoom: 0.85
+                });
+            }
+        }
+
+        // Initialize particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            particlesContainer.innerHTML = '';
+
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+
+                const size = Math.random() * 3 + 1;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Biorhythm calculation
+        function calculateBiorhythms() {
+            const birthDate = document.getElementById('birthDate').value;
+            const targetDate = document.getElementById('targetDate').value;
+
+            if (!birthDate || !targetDate) {
+                alert('Please fill in both birth date and analysis date');
+                return;
+            }
+
+            // Show loading state
+            document.getElementById('btnText').style.display = 'none';
+            document.getElementById('btnLoader').classList.remove('hidden');
+
+            // Calculate days lived
+            const birth = new Date(birthDate);
+            const target = new Date(targetDate);
+            const daysLived = Math.floor((target - birth) / (1000 * 60 * 60 * 24));
+
+            // Calculate biorhythm cycles
+            const physical = Math.sin(2 * Math.PI * daysLived / 23);
+            const emotional = Math.sin(2 * Math.PI * daysLived / 28);
+            const intellectual = Math.sin(2 * Math.PI * daysLived / 33);
+
+            // Convert to percentages
+            const physicalPercent = ((physical + 1) * 50);
+            const emotionalPercent = ((emotional + 1) * 50);
+            const intellectualPercent = ((intellectual + 1) * 50);
+
+            setTimeout(() => {
+                // Update UI
+                updateBiorhythmDisplay(physicalPercent, emotionalPercent, intellectualPercent);
+                generateAIAnalysis(physicalPercent, emotionalPercent, intellectualPercent);
+                createChart(daysLived);
+
+                // Show results
+                document.getElementById('resultsSection').style.display = 'flex';
+                document.getElementById('aiAnalysis').style.display = 'block';
+
+                // Reset button
+                document.getElementById('btnText').style.display = 'inline';
+                document.getElementById('btnLoader').classList.add('hidden');
+            }, 2000);
+        }
+
+        function updateBiorhythmDisplay(physical, emotional, intellectual) {
+            // Update progress bars
+            document.getElementById('physicalProgress').style.width = physical + '%';
+            document.getElementById('emotionalProgress').style.width = emotional + '%';
+            document.getElementById('intellectualProgress').style.width = intellectual + '%';
+
+            // Update scores
+            document.getElementById('physicalScore').textContent = Math.round(physical) + '%';
+            document.getElementById('emotionalScore').textContent = Math.round(emotional) + '%';
+            document.getElementById('intellectualScore').textContent = Math.round(intellectual) + '%';
+
+            // Update descriptions
+            document.getElementById('physicalDesc').textContent = getPhysicalDescription(physical);
+            document.getElementById('emotionalDesc').textContent = getEmotionalDescription(emotional);
+            document.getElementById('intellectualDesc').textContent = getIntellectualDescription(intellectual);
+        }
+
+        function getPhysicalDescription(percent) {
+            if (percent > 75) return 'Peak physical energy - excellent time for exercise and physical challenges';
+            if (percent > 50) return 'Good physical condition - moderate activities recommended';
+            if (percent > 25) return 'Low physical energy - focus on rest and light activities';
+            return 'Critical physical phase - prioritize recovery and gentle movement';
+        }
+
+        function getEmotionalDescription(percent) {
+            if (percent > 75) return 'High emotional state - great for relationships and creative work';
+            if (percent > 50) return 'Stable emotions - good time for social interactions';
+            if (percent > 25) return 'Sensitive period - practice self-care and mindfulness';
+            return 'Emotional low point - avoid major decisions, focus on healing';
+        }
+
+        function getIntellectualDescription(percent) {
+            if (percent > 75) return 'Mental peak - ideal for learning, problem-solving, and strategic thinking';
+            if (percent > 50) return 'Clear thinking - good for routine mental tasks';
+            if (percent > 25) return 'Reduced mental clarity - break complex tasks into smaller steps';
+            return 'Mental low phase - avoid important decisions, focus on reflection';
+        }
+
+        function generateAIAnalysis(physical, emotional, intellectual) {
+            const overall = (physical + emotional + intellectual) / 3;
+            let analysis = '';
+
+            if (overall > 70) {
+                analysis = `🌟 You're in an exceptional period! Your biorhythms are highly synchronized, indicating peak performance potential across all areas. This is an ideal time for tackling ambitious projects, making important decisions, and pushing your boundaries. Your physical vitality, emotional stability, and mental clarity are all working in harmony.`;
+            } else if (overall > 50) {
+                analysis = `⚡ You're in a balanced phase with good overall energy. While not at your absolute peak, this is a stable period where you can make steady progress. Focus on consistent effort rather than intense bursts. This is a great time for building habits and maintaining momentum in your goals.`;
+            } else if (overall > 30) {
+                analysis = `🧘 You're in a transitional period where conservation of energy is key. This isn't necessarily negative - it's a natural cycle of rest and regeneration. Use this time for reflection, planning, and gentle self-care. Avoid overcommitting and honor your need for slower-paced activities.`;
+            } else {
+                analysis = `🛌 You're in a significant low phase across multiple cycles. This is your body and mind's way of calling for deep rest and recovery. Don't fight this natural rhythm - embrace it as a time for healing, introspection, and preparing for your next upward cycle. Focus on basics: sleep, nutrition, and gentle movement.`;
+            }
+
+            // Add specific recommendations
+            const recommendations = generateRecommendations(physical, emotional, intellectual);
+            analysis += `\n\n${recommendations}`;
+
+            document.getElementById('aiContent').textContent = analysis;
+        }
+
+        function generateRecommendations(physical, emotional, intellectual) {
+            let recs = '📋 Personalized Recommendations:\n\n';
+
+            if (physical > 60) {
+                recs += '🏃‍♂️ Physical: High energy period - try challenging workouts, sports, or outdoor adventures\n';
+            } else {
+                recs += '🚶‍♂️ Physical: Focus on gentle movement - yoga, walking, stretching\n';
+            }
+
+            if (emotional > 60) {
+                recs += '❤️ Emotional: Great time for deep conversations, creative expression, or relationship building\n';
+            } else {
+                recs += '🤗 Emotional: Practice self-compassion, meditation, or spend time in nature\n';
+            }
+
+            if (intellectual > 60) {
+                recs += '🧠 Mental: Ideal for learning new skills, strategic planning, or complex problem-solving\n';
+            } else {
+                recs += '📚 Mental: Keep things simple - light reading, gentle puzzles, or mindful activities\n';
+            }
+
+            return recs;
+        }
+
+        function createChart(daysLived) {
+            const ctx = document.getElementById('biorhythmChart').getContext('2d');
+
+            // Generate data for past 15 days and future 15 days
+            const days = [];
+            const physicalData = [];
+            const emotionalData = [];
+            const intellectualData = [];
+
+            for (let i = -15; i <= 15; i++) {
+                const day = daysLived + i;
+                days.push(i === 0 ? 'Today' : (i > 0 ? `+${i}` : `${i}`));
+
+                physicalData.push(Math.sin(2 * Math.PI * day / 23) * 100);
+                emotionalData.push(Math.sin(2 * Math.PI * day / 28) * 100);
+                intellectualData.push(Math.sin(2 * Math.PI * day / 33) * 100);
+            }
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: days,
+                    datasets: [{
+                        label: 'Physical (23 days)',
+                        data: physicalData,
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Emotional (28 days)',
+                        data: emotionalData,
+                        borderColor: '#22c55e',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Intellectual (33 days)',
+                        data: intellectualData,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'white'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: 'rgba(255,255,255,0.8)' },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        },
+                        y: {
+                            ticks: { color: 'rgba(255,255,255,0.8)' },
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            min: -100,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // Set default dates
+        window.addEventListener('load', () => {
+            initVanta();
+            createParticles();
+
+            // Set today as default target date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('targetDate').value = today;
+        });
+
+        // Cleanup Vanta on page unload
+        window.addEventListener('beforeunload', () => {
+            if (vantaEffect) vantaEffect.destroy();
+        });
+    </script>
+</body>
+</html>

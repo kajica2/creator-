@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <!-- Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Binary Ring Templates - Professional Hugging Face-inspired templates for generative art, AI tools, and creative technology">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="color-scheme" content="light dark">
+
+    <!-- Title -->
+    <title>Binary Ring Templates - Creative Technology Templates</title>
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Binary Ring Templates",
+      "description": "Professional templates for creative technology applications",
+      "url": "https://binaryring.art/templates",
+      "creator": {
+        "@type": "Organization",
+        "name": "Binary Ring Collective"
+      },
+      "about": {
+        "@type": "Thing",
+        "name": "Web Application Templates",
+        "description": "Hugging Face-inspired templates for AI, creativity, and technology"
+      }
+    }
+    </script>
+
+    <!-- Preconnects -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://unpkg.com">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="huggingface-theme.css">
+    <style>
+        /* Template Gallery Specific Styles */
+        .template-gallery {
+            padding: var(--space-20) var(--space-6);
+        }
+
+        .gallery-header {
+            text-align: center;
+            margin-bottom: var(--space-16);
+        }
+
+        .gallery-title {
+            font-size: var(--text-5xl);
+            font-weight: 800;
+            margin-bottom: var(--space-4);
+            background: linear-gradient(135deg, var(--color-primary), #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gallery-subtitle {
+            font-size: var(--text-xl);
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto var(--space-8);
+            line-height: 1.6;
+        }
+
+        .template-filters {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-4);
+            margin-bottom: var(--space-12);
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: var(--space-2) var(--space-4);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all var(--transition-fast);
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--color-primary);
+            color: var(--text-inverse);
+            border-color: var(--color-primary);
+        }
+
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: var(--space-8);
+            margin-bottom: var(--space-16);
+        }
+
+        .template-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            transition: all var(--transition-base);
+            position: relative;
+        }
+
+        .template-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--color-primary);
+        }
+
+        .template-preview {
+            position: relative;
+            height: 240px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .template-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .template-preview-icon {
+            font-size: 4rem;
+            opacity: 0.8;
+        }
+
+        .template-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+
+        .template-card:hover .template-overlay {
+            opacity: 1;
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .preview-btn {
+            padding: var(--space-2) var(--space-4);
+            background: var(--bg-overlay);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-lg);
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all var(--transition-fast);
+        }
+
+        .preview-btn:hover {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        .template-content {
+            padding: var(--space-6);
+        }
+
+        .template-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--space-4);
+        }
+
+        .template-title {
+            font-size: var(--text-xl);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .template-creator {
+            font-size: var(--text-sm);
+            color: var(--text-tertiary);
+        }
+
+        .template-badge {
+            padding: var(--space-1) var(--space-3);
+            background: var(--color-primary);
+            color: var(--text-inverse);
+            font-size: var(--text-xs);
+            font-weight: 500;
+            border-radius: var(--radius-full);
+            text-transform: uppercase;
+        }
+
+        .template-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: var(--space-4);
+        }
+
+        .template-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+            margin-bottom: var(--space-4);
+        }
+
+        .feature-tag {
+            padding: var(--space-1) var(--space-2);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-md);
+            font-size: var(--text-xs);
+            color: var(--text-secondary);
+        }
+
+        .template-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .template-btn {
+            flex: 1;
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-lg);
+            font-weight: 500;
+            text-decoration: none;
+            text-align: center;
+            transition: all var(--transition-fast);
+        }
+
+        .template-btn.primary {
+            background: var(--color-primary);
+            color: var(--text-inverse);
+            border: 1px solid var(--color-primary);
+        }
+
+        .template-btn.primary:hover {
+            background: var(--color-primary-hover);
+        }
+
+        .template-btn.secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-primary);
+        }
+
+        .template-btn.secondary:hover {
+            background: var(--bg-hover);
+        }
+
+        .stats-section {
+            background: var(--bg-secondary);
+            padding: var(--space-16) var(--space-6);
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-8);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: var(--text-4xl);
+            font-weight: 700;
+            color: var(--color-primary);
+            display: block;
+            margin-bottom: var(--space-2);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .cta-section {
+            padding: var(--space-20) var(--space-6);
+            text-align: center;
+            background: linear-gradient(135deg, var(--color-primary), #8b5cf6);
+        }
+
+        .cta-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: var(--text-4xl);
+            font-weight: 700;
+            color: white;
+            margin-bottom: var(--space-4);
+        }
+
+        .cta-description {
+            font-size: var(--text-lg);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: var(--space-8);
+            line-height: 1.6;
+        }
+
+        .cta-actions {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-4);
+        }
+
+        .cta-btn {
+            padding: var(--space-4) var(--space-8);
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all var(--transition-fast);
+        }
+
+        .cta-btn.primary {
+            background: white;
+            color: var(--color-primary);
+        }
+
+        .cta-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .cta-btn.secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .cta-btn.secondary:hover {
+            background: white;
+            color: var(--color-primary);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .template-filters {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .gallery-title {
+                font-size: var(--text-4xl);
+            }
+
+            .cta-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+
+    <!-- Configuration -->
+    <script src="huggingface-config.js"></script>
+</head>
+<body class="template-gallery-page">
+    <!-- Skip Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="app-header" role="banner">
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-brand">
+                    <a href="../index.html" class="brand-link">
+                        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/>
+                        </svg>
+                        <span class="brand-text">Binary Ring</span>
+                    </a>
+                </div>
+
+                <ul class="navbar-nav">
+                    <li><a href="../showcase/index.html" class="nav-link">Gallery</a></li>
+                    <li><a href="../community/index.html" class="nav-link">Community</a></li>
+                    <li><a href="#templates" class="nav-link">Templates</a></li>
+                    <li><a href="../store/index.html" class="nav-link">Store</a></li>
+                </ul>
+
+                <div class="navbar-actions">
+                    <button class="theme-toggle btn-icon" onclick="BinaryRing.toggleTheme()">
+                        <span class="theme-icon theme-icon-light">☀️</span>
+                        <span class="theme-icon theme-icon-dark">🌙</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="template-gallery" role="main">
+        <!-- Gallery Header -->
+        <section class="gallery-header">
+            <h1 class="gallery-title">Template Collection</h1>
+            <p class="gallery-subtitle">
+                Professional, Hugging Face-inspired templates for generative art, AI tools,
+                and creative technology applications. Built with modern web standards and
+                optimized for performance.
+            </p>
+
+            <!-- Filters -->
+            <div class="template-filters" id="templateFilters">
+                <button class="filter-btn active" data-filter="all">All Templates</button>
+                <button class="filter-btn" data-filter="ai">AI & Generation</button>
+                <button class="filter-btn" data-filter="simulation">Simulation</button>
+                <button class="filter-btn" data-filter="tools">Tools & Utilities</button>
+                <button class="filter-btn" data-filter="creative">Creative</button>
+                <button class="filter-btn" data-filter="security">Security</button>
+            </div>
+        </section>
+
+        <!-- Templates Grid -->
+        <section class="templates-section" id="templates">
+            <div class="container">
+                <div class="templates-grid" id="templatesGrid">
+                    <!-- User Profile Template -->
+                    <article class="template-card" data-category="creative">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <div class="template-preview-icon">👤</div>
+                            <div class="template-overlay">
+                                <div class="preview-actions">
+                                    <a href="gregosmogony-template.html" class="preview-btn">Live Demo</a>
+                                    <a href="#" class="preview-btn" onclick="viewTemplateSource('gregosmogony')">View Code</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-content">
+                            <div class="template-header">
+                                <div>
+                                    <h3 class="template-title">User Profile Template</h3>
+                                    <p class="template-creator">Inspired by gregosmogony</p>
+                                </div>
+                                <span class="template-badge">Profile</span>
+                            </div>
+                            <p class="template-description">
+                                Comprehensive user profile template with project showcases, activity feeds,
+                                neural connection visualization, and community interaction features.
+                            </p>
+                            <div class="template-features">
+                                <span class="feature-tag">Project Gallery</span>
+                                <span class="feature-tag">Activity Feed</span>
+                                <span class="feature-tag">Neural Viz</span>
+                                <span class="feature-tag">Social Features</span>
+                            </div>
+                            <div class="template-actions">
+                                <a href="gregosmogony-template.html" class="template-btn primary">Use Template</a>
+                                <a href="#" class="template-btn secondary" onclick="downloadTemplate('gregosmogony')">Download</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- AI Generator Template -->
+                    <article class="template-card" data-category="ai">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                            <div class="template-preview-icon">🧠</div>
+                            <div class="template-overlay">
+                                <div class="preview-actions">
+                                    <a href="ax1-template.html" class="preview-btn">Live Demo</a>
+                                    <a href="#" class="preview-btn" onclick="viewTemplateSource('ax1')">View Code</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-content">
+                            <div class="template-header">
+                                <div>
+                                    <h3 class="template-title">AI Art Generator</h3>
+                                    <p class="template-creator">Inspired by hamadali1/ax1</p>
+                                </div>
+                                <span class="template-badge">AI</span>
+                            </div>
+                            <p class="template-description">
+                                Advanced neural art generation tool with real-time parameter controls,
+                                multiple AI models, and high-resolution export capabilities.
+                            </p>
+                            <div class="template-features">
+                                <span class="feature-tag">Neural Models</span>
+                                <span class="feature-tag">Real-time</span>
+                                <span class="feature-tag">Export Tools</span>
+                                <span class="feature-tag">Performance</span>
+                            </div>
+                            <div class="template-actions">
+                                <a href="ax1-template.html" class="template-btn primary">Use Template</a>
+                                <a href="#" class="template-btn secondary" onclick="downloadTemplate('ax1')">Download</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Scientific Simulation Template -->
+                    <article class="template-card" data-category="simulation">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                            <div class="template-preview-icon">🌌</div>
+                            <div class="template-overlay">
+                                <div class="preview-actions">
+                                    <a href="circle-skies-template.html" class="preview-btn">Live Demo</a>
+                                    <a href="#" class="preview-btn" onclick="viewTemplateSource('circle-skies')">View Code</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-content">
+                            <div class="template-header">
+                                <div>
+                                    <h3 class="template-title">Celestial Simulation</h3>
+                                    <p class="template-creator">Inspired by Izhevsky/circle-in-the-skies</p>
+                                </div>
+                                <span class="template-badge">Physics</span>
+                            </div>
+                            <p class="template-description">
+                                Real-time celestial mechanics simulation with orbital physics,
+                                atmospheric effects, and interactive astronomical visualization.
+                            </p>
+                            <div class="template-features">
+                                <span class="feature-tag">Physics Engine</span>
+                                <span class="feature-tag">Orbital Mechanics</span>
+                                <span class="feature-tag">Atmosphere</span>
+                                <span class="feature-tag">Audio Reactive</span>
+                            </div>
+                            <div class="template-actions">
+                                <a href="circle-skies-template.html" class="template-btn primary">Use Template</a>
+                                <a href="#" class="template-btn secondary" onclick="downloadTemplate('circle-skies')">Download</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Workflow Designer Template -->
+                    <article class="template-card" data-category="tools">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                            <div class="template-preview-icon">⚙️</div>
+                            <div class="template-overlay">
+                                <div class="preview-actions">
+                                    <a href="ai-blueprint-template.html" class="preview-btn">Live Demo</a>
+                                    <a href="#" class="preview-btn" onclick="viewTemplateSource('ai-blueprint')">View Code</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-content">
+                            <div class="template-header">
+                                <div>
+                                    <h3 class="template-title">AI Blueprint Designer</h3>
+                                    <p class="template-creator">Inspired by Melvinmw/ai-blue-print</p>
+                                </div>
+                                <span class="template-badge">Workflow</span>
+                            </div>
+                            <p class="template-description">
+                                Visual workflow designer for AI automation with drag-and-drop interface,
+                                intelligent suggestions, and real-time collaboration features.
+                            </p>
+                            <div class="template-features">
+                                <span class="feature-tag">Node Editor</span>
+                                <span class="feature-tag">AI Assistant</span>
+                                <span class="feature-tag">Collaboration</span>
+                                <span class="feature-tag">Templates</span>
+                            </div>
+                            <div class="template-actions">
+                                <a href="ai-blueprint-template.html" class="template-btn primary">Use Template</a>
+                                <a href="#" class="template-btn secondary" onclick="downloadTemplate('ai-blueprint')">Download</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Security Tools Template -->
+                    <article class="template-card" data-category="security">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
+                            <div class="template-preview-icon">🔐</div>
+                            <div class="template-overlay">
+                                <div class="preview-actions">
+                                    <a href="pki-stuff-template.html" class="preview-btn">Live Demo</a>
+                                    <a href="#" class="preview-btn" onclick="viewTemplateSource('pki-stuff')">View Code</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-content">
+                            <div class="template-header">
+                                <div>
+                                    <h3 class="template-title">PKI Crypto Tools</h3>
+                                    <p class="template-creator">Inspired by rahpi/pki-stuff</p>
+                                </div>
+                                <span class="template-badge">Security</span>
+                            </div>
+                            <p class="template-description">
+                                Comprehensive cryptographic toolkit with visual encryption,
+                                key generation, digital signatures, and educational security visualization.
+                            </p>
+                            <div class="template-features">
+                                <span class="feature-tag">Cryptography</span>
+                                <span class="feature-tag">Visualization</span>
+                                <span class="feature-tag">Education</span>
+                                <span class="feature-tag">Client-side</span>
+                            </div>
+                            <div class="template-actions">
+                                <a href="pki-stuff-template.html" class="template-btn primary">Use Template</a>
+                                <a href="#" class="template-btn secondary" onclick="downloadTemplate('pki-stuff')">Download</a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistics -->
+        <section class="stats-section">
+            <div class="container">
+                <h2>Template Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number" data-count="5">0</span>
+                        <span class="stat-label">Templates</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-count="1240">0</span>
+                        <span class="stat-label">Downloads</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-count="98">0</span>
+                        <span class="stat-label">Satisfaction</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-count="24">0</span>
+                        <span class="stat-label">Contributors</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to Build Something Amazing?</h2>
+                <p class="cta-description">
+                    Choose a template and start creating your next generative art project,
+                    AI application, or creative technology experience.
+                </p>
+                <div class="cta-actions">
+                    <a href="../showcase/index.html" class="cta-btn primary">Browse Gallery</a>
+                    <a href="README.md" class="cta-btn secondary">Documentation</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Binary Ring Templates</h3>
+                    <p>Professional templates for creative technology applications, inspired by the best of Hugging Face Spaces.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="README.md">Documentation</a></li>
+                        <li><a href="#examples">Examples</a></li>
+                        <li><a href="#support">Support</a></li>
+                        <li><a href="#contribute">Contribute</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Community</h3>
+                    <ul class="footer-links">
+                        <li><a href="../community/index.html">Gallery</a></li>
+                        <li><a href="#discussions">Discussions</a></li>
+                        <li><a href="#showcase">Showcase</a></li>
+                        <li><a href="#tutorials">Tutorials</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Binary Ring Templates. Open source and community driven.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Template filtering
+        function initializeTemplateGallery() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const templateCards = document.querySelectorAll('.template-card');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update active filter
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    // Filter templates
+                    const filter = btn.dataset.filter;
+                    templateCards.forEach(card => {
+                        if (filter === 'all' || card.dataset.category === filter) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            // Animate statistics
+            const statNumbers = document.querySelectorAll('[data-count]');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const target = parseInt(entry.target.dataset.count);
+                        animateCounter(entry.target, target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+
+            statNumbers.forEach(stat => observer.observe(stat));
+        }
+
+        function animateCounter(element, target) {
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current);
+                }
+            }, 30);
+        }
+
+        function viewTemplateSource(templateName) {
+            // Open template source code in new tab
+            window.open(`${templateName}-template.html`, '_blank');
+        }
+
+        function downloadTemplate(templateName) {
+            // Create download for template files
+            const files = [
+                `${templateName}-template.html`,
+                `${templateName}.css`,
+                `${templateName}.js`
+            ];
+
+            // Simulate download (in real implementation, would create zip file)
+            console.log(`Downloading template: ${templateName}`);
+
+            // Track download event
+            if (window.BinaryRing) {
+                BinaryRing.trackEvent('Template Download', {
+                    template: templateName,
+                    timestamp: Date.now()
+                });
+            }
+
+            // Show download notification
+            showNotification(`Downloading ${templateName} template...`, 'info');
+        }
+
+        function showNotification(message, type) {
+            // Simple notification system
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 12px 20px;
+                background: var(--color-primary);
+                color: white;
+                border-radius: 8px;
+                z-index: 1000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeTemplateGallery();
+
+            // Track page view
+            if (window.BinaryRing) {
+                BinaryRing.trackEvent('Template Gallery View', {
+                    timestamp: Date.now()
+                });
+            }
+        });
+
+        // Initialize icons
+        if (typeof feather !== 'undefined') {
+            feather.replace();
+        }
+    </script>
+</body>
+</html>

@@ -12,6 +12,7 @@ const FileIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-
 const UrlIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>;
 const TrashIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>;
 const MailIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>;
+const BatchIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h18M3 12h18M3 17h18M8 5v2M8 10v4M8 16v3" /></svg>;
 
 export const RagSourceManager: React.FC<RagSourceManagerProps> = ({ isOpen, onClose, sources, onSourcesChange }) => {
     const [urlInput, setUrlInput] = useState('');
@@ -141,8 +142,19 @@ export const RagSourceManager: React.FC<RagSourceManagerProps> = ({ isOpen, onCl
                             {sources.map(s => (
                                 <div key={s.id} className="flex items-center justify-between bg-gray-900/50 p-2 rounded-md border border-gray-700/50">
                                     <div className="flex items-center gap-2 overflow-hidden">
-                                        {s.type === 'file' ? <FileIcon /> : <UrlIcon />}
-                                        <span className="text-sm text-gray-300 truncate">{s.name}</span>
+                                        {s.type === 'file' ? <FileIcon /> : s.type === 'url' ? <UrlIcon /> : <BatchIcon />}
+                                        <div className="flex flex-col">
+                                            <span className="text-sm text-gray-300 truncate">{s.name}</span>
+                                            {s.metadata?.tags && s.metadata.tags.length > 0 && (
+                                                <div className="flex flex-wrap gap-1 mt-1">
+                                                    {s.metadata.tags.slice(0, 3).map(tag => (
+                                                        <span key={tag} className="text-[10px] uppercase tracking-wide text-blue-200 bg-blue-600/20 border border-blue-500/30 px-1.5 py-0.5 rounded-full">
+                                                            {tag}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                     <div className="flex items-center gap-2 flex-shrink-0">
                                         {s.status === 'loading' && <div className="w-4 h-4 border-2 border-purple-400 border-t-transparent rounded-full animate-spin"></div>}

@@ -1,6 +1,9 @@
 import React, { useMemo } from 'react';
 import { UserProgress, Achievement, DailyChallenge, LevelReward } from '../types';
 import { ACHIEVEMENTS, LEVEL_REWARDS, getXPForNextLevel, getCurrentLevelReward } from '../data/gamification';
+import BashingArena from './BashingArena';
+import UserProfileCard from './UserProfileCard';
+import SocialWorkerDashboard from './SocialWorkerDashboard';
 
 interface GamificationDashboardProps {
   userProgress: UserProgress;
@@ -78,6 +81,12 @@ export const GamificationDashboard: React.FC<GamificationDashboardProps> = ({ us
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto">
+      <UserProfileCard
+        displayName="Creator Collective"
+        handle="creator-collective"
+        headline="Community builders & viral navigators"
+      />
+
       {/* Header Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4 text-center">
@@ -253,6 +262,12 @@ export const GamificationDashboard: React.FC<GamificationDashboardProps> = ({ us
           </div>
         )}
       </div>
+
+      {/* Tag Bashing Arena */}
+      <BashingArena defaultChallengerHandle="You" />
+
+      {/* Social Workers */}
+      <SocialWorkerDashboard />
     </div>
   );
 };

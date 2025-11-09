@@ -1,0 +1,5 @@
+{
+  "name": "Cross-Platform Social Content Generator",
+  "description": "An AI-powered tool to generate tailored social media posts for LinkedIn, Twitter/X, and Instagram from a single idea. It crafts platform-specific text and generates unique images with optimal aspect ratios.",
+  "requestFramePermissions": []
+}

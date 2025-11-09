@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <!-- Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Binary Ring AX1 - Advanced neural art generation and algorithmic experimentation">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="color-scheme" content="light dark">
+
+    <!-- Title -->
+    <title>AX1 - Advanced Neural Art Generator | Binary Ring</title>
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "AX1 Neural Art Generator",
+      "description": "Advanced AI-powered generative art tool for creating neural network visualizations",
+      "url": "https://binaryring.art/tools/ax1",
+      "applicationCategory": "DesignApplication",
+      "creator": {
+        "@type": "Person",
+        "name": "hamadali1",
+        "url": "https://binaryring.art/users/hamadali1"
+      },
+      "featureList": [
+        "Neural Network Visualization",
+        "Real-time Parameter Control",
+        "Advanced Export Options",
+        "Collaborative Features",
+        "AI-Powered Generation"
+      ],
+      "screenshot": "https://binaryring.art/screenshots/ax1.jpg",
+      "operatingSystem": "Web Browser",
+      "browserRequirements": "Modern browser with WebGL support"
+    }
+    </script>
+
+    <!-- Preconnects -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://unpkg.com">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/templates/huggingface-theme.css">
+    <link rel="stylesheet" href="/templates/ax1-generator.css">
+
+    <!-- Configuration (inspired by HF ax1 patterns) -->
+    <script>
+        window.ax1Config = {
+            appId: 'ax1-generator',
+            version: '1.2.0',
+            creator: 'hamadali1',
+
+            // Feature flags inspired by HF spaces
+            features: {
+                realTimeGeneration: true,
+                collaborativeMode: true,
+                advancedExports: true,
+                neuralVisualization: true,
+                parameterPresets: true,
+                cloudSync: false
+            },
+
+            // Theme handling (from ax1 pattern)
+            theme: {
+                autoDetect: true,
+                cookieName: 'ax1-theme',
+                systemPreference: true,
+                transitions: true
+            },
+
+            // Neural generation parameters
+            generation: {
+                defaultModel: 'transformer-v2',
+                maxLayers: 12,
+                resolution: { width: 1024, height: 1024 },
+                batchSize: 4,
+                iterations: 100,
+                learningRate: 0.001
+            },
+
+            // Analytics (like HF implementation)
+            analytics: {
+                enabled: true,
+                provider: 'plausible',
+                domain: 'binaryring.art',
+                events: {
+                    generation: 'Generation Complete',
+                    export: 'Export Download',
+                    share: 'Art Share',
+                    preset: 'Preset Used'
+                }
+            },
+
+            // Performance settings
+            performance: {
+                webWorkers: true,
+                gpuAcceleration: true,
+                backgroundProcessing: true,
+                memoryOptimization: true
+            }
+        };
+
+        // Theme detection logic (inspired by ax1 implementation)
+        function initializeTheme() {
+            const savedTheme = getCookie(window.ax1Config.theme.cookieName);
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            let theme = savedTheme || (systemDark ? 'dark' : 'light');
+
+            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.classList.toggle('dark', theme === 'dark');
+        }
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        // Initialize immediately
+        initializeTheme();
+    </script>
+</head>
+<body class="ax1-generator">
+    <!-- Skip Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="ax1-header" role="banner">
+        <div class="header-container">
+            <!-- Branding -->
+            <div class="header-brand">
+                <a href="/" class="brand-link">
+                    <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                    <span class="brand-text">Binary Ring</span>
+                </a>
+                <div class="app-badge">
+                    <span class="app-name">AX1</span>
+                    <span class="app-version">v1.2</span>
+                </div>
+            </div>
+
+            <!-- Generation Status -->
+            <div class="generation-status" id="generationStatus">
+                <div class="status-indicator idle">
+                    <div class="status-dot"></div>
+                    <span class="status-text">Ready</span>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="header-actions">
+                <!-- Save/Load Presets -->
+                <div class="preset-controls">
+                    <button class="preset-btn" onclick="loadPreset()" title="Load Preset">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14,2 14,8 20,8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10,9 9,9 8,9"/>
+                        </svg>
+                    </button>
+                    <button class="preset-btn" onclick="savePreset()" title="Save Preset">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                            <polyline points="17,21 17,13 7,13 7,21"/>
+                            <polyline points="7,3 7,8 15,8"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Theme Toggle -->
+                <button class="theme-toggle btn-icon" onclick="toggleAx1Theme()" title="Toggle Theme">
+                    <span class="theme-icon theme-icon-light">☀️</span>
+                    <span class="theme-icon theme-icon-dark">🌙</span>
+                </button>
+
+                <!-- Share -->
+                <button class="share-btn btn-icon" onclick="shareGeneration()" title="Share">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="18" cy="5" r="3"/>
+                        <circle cx="6" cy="12" r="3"/>
+                        <circle cx="18" cy="19" r="3"/>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                    </svg>
+                </button>
+
+                <!-- Settings -->
+                <button class="settings-btn btn-icon" onclick="openSettings()" title="Settings">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="ax1-main" role="main">
+        <div class="generator-layout">
+            <!-- Control Panel -->
+            <aside class="control-panel" role="complementary">
+                <div class="panel-header">
+                    <h2>Neural Parameters</h2>
+                    <button class="panel-toggle" onclick="togglePanel()" aria-label="Toggle panel">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="6,9 12,15 18,9"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="panel-content">
+                    <!-- Model Selection -->
+                    <div class="control-group">
+                        <label for="modelSelect" class="control-label">
+                            Neural Model
+                            <span class="label-info" title="Choose the base neural network architecture">ℹ️</span>
+                        </label>
+                        <select id="modelSelect" class="control-select" onchange="updateModel(this.value)">
+                            <option value="transformer-v2">Transformer v2</option>
+                            <option value="resnet-deep">ResNet Deep</option>
+                            <option value="gan-artistic">GAN Artistic</option>
+                            <option value="vae-creative">VAE Creative</option>
+                            <option value="diffusion-xl">Diffusion XL</option>
+                        </select>
+                    </div>
+
+                    <!-- Layer Configuration -->
+                    <div class="control-group">
+                        <label for="layersSlider" class="control-label">
+                            Network Layers: <span id="layersValue">6</span>
+                        </label>
+                        <input
+                            type="range"
+                            id="layersSlider"
+                            class="control-slider"
+                            min="3"
+                            max="12"
+                            value="6"
+                            oninput="updateLayers(this.value)"
+                        >
+                    </div>
+
+                    <!-- Learning Rate -->
+                    <div class="control-group">
+                        <label for="learningRate" class="control-label">
+                            Learning Rate: <span id="learningValue">0.001</span>
+                        </label>
+                        <input
+                            type="range"
+                            id="learningRate"
+                            class="control-slider"
+                            min="0.0001"
+                            max="0.01"
+                            step="0.0001"
+                            value="0.001"
+                            oninput="updateLearningRate(this.value)"
+                        >
+                    </div>
+
+                    <!-- Creativity Parameters -->
+                    <div class="control-group">
+                        <label for="creativitySlider" class="control-label">
+                            Creativity: <span id="creativityValue">0.7</span>
+                        </label>
+                        <input
+                            type="range"
+                            id="creativitySlider"
+                            class="control-slider"
+                            min="0"
+                            max="1"
+                            step="0.1"
+                            value="0.7"
+                            oninput="updateCreativity(this.value)"
+                        >
+                    </div>
+
+                    <!-- Style Transfer -->
+                    <div class="control-group">
+                        <label for="styleInput" class="control-label">Style Input</label>
+                        <div class="file-input-container">
+                            <input type="file" id="styleInput" accept="image/*" onchange="loadStyleImage(this)">
+                            <label for="styleInput" class="file-input-label">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <polyline points="21,15 16,10 5,21"/>
+                                </svg>
+                                Upload Style Image
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Generation Controls -->
+                    <div class="generation-controls">
+                        <button class="generate-btn primary" onclick="startGeneration()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polygon points="5,3 19,12 5,21"/>
+                            </svg>
+                            Generate Art
+                        </button>
+
+                        <div class="control-row">
+                            <button class="control-btn" onclick="pauseGeneration()" title="Pause">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect x="6" y="4" width="4" height="16"/>
+                                    <rect x="14" y="4" width="4" height="16"/>
+                                </svg>
+                            </button>
+                            <button class="control-btn" onclick="stopGeneration()" title="Stop">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect x="6" y="6" width="12" height="12"/>
+                                </svg>
+                            </button>
+                            <button class="control-btn" onclick="randomizeParams()" title="Randomize">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="23,4 23,10 17,10"/>
+                                    <polyline points="1,20 1,14 7,14"/>
+                                    <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Presets -->
+                    <div class="preset-gallery">
+                        <h3 class="preset-title">Quick Presets</h3>
+                        <div class="preset-grid">
+                            <button class="preset-card" onclick="applyPreset('abstract')" data-preset="abstract">
+                                <img src="/presets/abstract-thumb.jpg" alt="Abstract preset">
+                                <span>Abstract</span>
+                            </button>
+                            <button class="preset-card" onclick="applyPreset('realistic')" data-preset="realistic">
+                                <img src="/presets/realistic-thumb.jpg" alt="Realistic preset">
+                                <span>Realistic</span>
+                            </button>
+                            <button class="preset-card" onclick="applyPreset('surreal')" data-preset="surreal">
+                                <img src="/presets/surreal-thumb.jpg" alt="Surreal preset">
+                                <span>Surreal</span>
+                            </button>
+                            <button class="preset-card" onclick="applyPreset('minimal')" data-preset="minimal">
+                                <img src="/presets/minimal-thumb.jpg" alt="Minimal preset">
+                                <span>Minimal</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Canvas Area -->
+            <section class="canvas-section" role="main">
+                <div class="canvas-container">
+                    <!-- Progress Overlay -->
+                    <div class="progress-overlay" id="progressOverlay" style="display: none;">
+                        <div class="progress-content">
+                            <div class="progress-spinner"></div>
+                            <h3>Generating Neural Art...</h3>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <p class="progress-text" id="progressText">Initializing neural network...</p>
+                            <div class="progress-stats">
+                                <span>Iteration: <span id="currentIteration">0</span>/<span id="totalIterations">100</span></span>
+                                <span>Time: <span id="elapsedTime">0:00</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Canvas -->
+                    <canvas id="artCanvas" class="art-canvas" width="1024" height="1024"></canvas>
+
+                    <!-- Canvas Controls -->
+                    <div class="canvas-controls">
+                        <div class="zoom-controls">
+                            <button class="zoom-btn" onclick="zoomIn()" title="Zoom In">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <path d="M21 21l-4.35-4.35"/>
+                                    <line x1="11" y1="8" x2="11" y2="14"/>
+                                    <line x1="8" y1="11" x2="14" y2="11"/>
+                                </svg>
+                            </button>
+                            <span class="zoom-level" id="zoomLevel">100%</span>
+                            <button class="zoom-btn" onclick="zoomOut()" title="Zoom Out">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <path d="M21 21l-4.35-4.35"/>
+                                    <line x1="8" y1="11" x2="14" y2="11"/>
+                                </svg>
+                            </button>
+                            <button class="zoom-btn" onclick="resetZoom()" title="Reset Zoom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M2.5 2v6h6M21.5 22v-6h-6"/>
+                                    <path d="M22 11.5A10.5 10.5 0 1 1 11.5 1a10.5 10.5 0 0 1 10.5 10.5z"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="export-controls">
+                            <button class="export-btn" onclick="exportImage('png')" title="Export PNG">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7,10 12,15 17,10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                PNG
+                            </button>
+                            <button class="export-btn" onclick="exportImage('svg')" title="Export SVG">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7,10 12,15 17,10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                SVG
+                            </button>
+                            <button class="export-btn" onclick="exportVideo()" title="Export Video">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polygon points="23,7 16,12 23,17"/>
+                                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                                </svg>
+                                Video
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Neural Network Visualization -->
+                <div class="network-viz-container" id="networkViz">
+                    <h3>Network Activity</h3>
+                    <canvas id="networkCanvas" class="network-canvas" width="300" height="200"></canvas>
+                </div>
+            </section>
+
+            <!-- Results Panel -->
+            <aside class="results-panel" role="complementary">
+                <div class="panel-header">
+                    <h2>Generation Results</h2>
+                    <button class="panel-toggle" onclick="toggleResultsPanel()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="18,9 12,15 6,9"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="results-content">
+                    <div class="results-grid" id="resultsGrid">
+                        <!-- Generated results will appear here -->
+                        <div class="result-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21,15 16,10 5,21"/>
+                            </svg>
+                            <p>Generated artworks will appear here</p>
+                        </div>
+                    </div>
+
+                    <div class="results-actions">
+                        <button class="action-btn" onclick="clearResults()" title="Clear All">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="3,6 5,6 21,6"/>
+                                <path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn" onclick="saveAll()" title="Save All">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                <polyline points="17,21 17,13 7,13 7,21"/>
+                                <polyline points="7,3 7,8 15,8"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer" aria-live="polite"></div>
+
+    <!-- Scripts -->
+    <script src="/templates/huggingface-config.js"></script>
+    <script src="/templates/ax1-generator.js"></script>
+
+    <!-- Initialize -->
+    <script>
+        // Theme toggle function (inspired by ax1 pattern)
+        function toggleAx1Theme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            document.documentElement.setAttribute('data-theme', newTheme);
+            document.documentElement.classList.toggle('dark', newTheme === 'dark');
+
+            // Save preference
+            document.cookie = `${window.ax1Config.theme.cookieName}=${newTheme}; path=/; max-age=31536000; SameSite=Lax`;
+
+            // Track event
+            if (window.BinaryRing) {
+                BinaryRing.trackEvent('Theme Toggle', { theme: newTheme, app: 'ax1' });
+            }
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeAX1();
+
+            // Track app launch
+            if (window.BinaryRing) {
+                BinaryRing.trackEvent('App Launch', { app: 'ax1', timestamp: Date.now() });
+            }
+        });
+    </script>
+</body>
+</html>

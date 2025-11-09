@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Ring Keyword System - Working Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            color: #b0b0b0;
+            font-size: 1.2rem;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .content-section {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .search-section {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: #2a2a2a;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: #4f46e5;
+        }
+
+        .search-results {
+            margin-top: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .keyword-result {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #2a2a2a;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: background 0.3s;
+        }
+
+        .keyword-result:hover {
+            background: #333;
+        }
+
+        .keyword-info {
+            flex: 1;
+        }
+
+        .keyword-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .keyword-category {
+            background: #4f46e5;
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+
+        .keyword-description {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+        }
+
+        .collect-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .collect-btn:hover:not(:disabled) {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        .collect-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        .collected-keywords {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .keyword-chip {
+            background: #2a2a2a;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            padding: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .keyword-chip:hover {
+            border-color: #4f46e5;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #ef4444;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .remove-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .recommendations {
+            margin-top: 1.5rem;
+        }
+
+        .rec-item {
+            background: #2a2a2a;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .rec-item:hover {
+            border-color: #7c3aed;
+        }
+
+        .rec-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .rec-title {
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .rec-score {
+            background: #10b981;
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+        }
+
+        .rec-description {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .view-btn {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+
+        .view-btn:hover {
+            background: #3730a3;
+        }
+
+        .demo-actions {
+            background: #333;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .demo-btn {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0.25rem;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+
+        .demo-btn:hover {
+            background: #3730a3;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: relative;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🏷️ Keyword Collection System</h1>
+            <p>Collect keywords from Binary Ring projects and get personalized recommendations</p>
+        </header>
+
+        <div class="demo-actions">
+            <p><strong>Quick Demo Actions:</strong></p>
+            <button class="demo-btn" onclick="quickCollect('audio-reactive')">+ audio-reactive</button>
+            <button class="demo-btn" onclick="quickCollect('particle-systems')">+ particle-systems</button>
+            <button class="demo-btn" onclick="quickCollect('generative-art')">+ generative-art</button>
+            <button class="demo-btn" onclick="quickCollect('mindfulness')">+ mindfulness</button>
+            <button class="demo-btn" onclick="clearAllKeywords()">Clear All</button>
+        </div>
+
+        <div class="main-grid">
+            <div class="main-content">
+                <!-- Search Section -->
+                <section class="content-section">
+                    <h2 style="margin-bottom: 1.5rem; color: #e0e0e0;">🔍 Search Keywords</h2>
+                    <div class="search-section">
+                        <input
+                            type="text"
+                            class="search-input"
+                            id="keywordSearch"
+                            placeholder="Search for keywords to add to your collection..."
+                            oninput="searchKeywords(this.value)"
+                        />
+                        <div class="search-results" id="searchResults"></div>
+                    </div>
+                </section>
+
+                <!-- Collected Keywords Section -->
+                <section class="content-section">
+                    <h2 style="margin-bottom: 1.5rem; color: #e0e0e0;">
+                        📚 Your Collection (<span id="keywordCount">0</span>)
+                    </h2>
+                    <div class="collected-keywords" id="collectedKeywords">
+                        <div class="empty-state">
+                            <div class="empty-icon">🏷️</div>
+                            <h3>Start Your Collection</h3>
+                            <p>Search for keywords above or use the demo buttons to begin building your interest profile.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="sidebar">
+                <h3 style="margin-bottom: 1rem; color: #e0e0e0;">🎯 Personalized</h3>
+                <div class="recommendations" id="recommendations">
+                    <div style="text-align: center; color: #666; padding: 1rem;">
+                        <p>Collect keywords to see personalized recommendations!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <span id="notificationText">Keyword collected!</span>
+    </div>
+
+    <script>
+        // Mock data
+        const MOCK_KEYWORDS = [
+            {
+                id: '1',
+                keyword: 'audio-reactive',
+                category: 'Audio',
+                description: 'Visual elements that respond to sound input in real-time'
+            },
+            {
+                id: '2',
+                keyword: 'particle-systems',
+                category: 'Visual',
+                description: 'Simulation of many small objects for creating visual effects'
+            },
+            {
+                id: '3',
+                keyword: 'generative-art',
+                category: 'Creative',
+                description: 'Art created through algorithmic and computational processes'
+            },
+            {
+                id: '4',
+                keyword: 'real-time',
+                category: 'Interactive',
+                description: 'Processing that happens without noticeable delay'
+            },
+            {
+                id: '5',
+                keyword: 'mindfulness',
+                category: 'Wellness',
+                description: 'Present-moment awareness and meditation practices'
+            },
+            {
+                id: '6',
+                keyword: 'frequency-analysis',
+                category: 'Audio',
+                description: 'Breaking down audio signals into component frequencies'
+            },
+            {
+                id: '7',
+                keyword: 'machine-learning',
+                category: 'AI/ML',
+                description: 'Algorithms that learn patterns from data'
+            },
+            {
+                id: '8',
+                keyword: 'fractals',
+                category: 'Mathematics',
+                description: 'Self-similar patterns that repeat at different scales'
+            },
+            {
+                id: '9',
+                keyword: 'cosmic-visualization',
+                category: 'Visual',
+                description: 'Visual representations of cosmic and celestial concepts'
+            },
+            {
+                id: '10',
+                keyword: 'procedural-generation',
+                category: 'Creative',
+                description: 'Content created through automated algorithmic processes'
+            }
+        ];
+
+        // State management
+        let collectedKeywords = JSON.parse(localStorage.getItem('br_demo_keywords') || '[]');
+        let searchTimeout;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCollectedKeywords();
+            updateRecommendations();
+        });
+
+        // Search functionality
+        function searchKeywords(query) {
+            clearTimeout(searchTimeout);
+
+            if (!query.trim()) {
+                document.getElementById('searchResults').innerHTML = '';
+                return;
+            }
+
+            searchTimeout = setTimeout(() => {
+                const results = MOCK_KEYWORDS.filter(keyword =>
+                    keyword.keyword.toLowerCase().includes(query.toLowerCase()) ||
+                    keyword.description.toLowerCase().includes(query.toLowerCase())
+                );
+
+                displaySearchResults(results);
+            }, 300);
+        }
+
+        // Display search results
+        function displaySearchResults(results) {
+            const container = document.getElementById('searchResults');
+
+            if (results.length === 0) {
+                container.innerHTML = '<div style="color: #666; text-align: center; padding: 1rem;">No keywords found</div>';
+                return;
+            }
+
+            container.innerHTML = results.map(keyword => `
+                <div class="keyword-result">
+                    <div class="keyword-info">
+                        <div class="keyword-name">
+                            ${keyword.keyword}
+                            <span class="keyword-category">${keyword.category}</span>
+                        </div>
+                        <div class="keyword-description">${keyword.description}</div>
+                    </div>
+                    <button
+                        class="collect-btn"
+                        onclick="collectKeyword('${keyword.keyword}')"
+                        ${collectedKeywords.includes(keyword.keyword) ? 'disabled' : ''}
+                    >
+                        ${collectedKeywords.includes(keyword.keyword) ? '✓ Collected' : '+ Collect'}
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Collect keyword
+        function collectKeyword(keyword) {
+            if (collectedKeywords.includes(keyword)) {
+                return;
+            }
+
+            collectedKeywords.push(keyword);
+            localStorage.setItem('br_demo_keywords', JSON.stringify(collectedKeywords));
+
+            updateCollectedKeywords();
+            updateRecommendations();
+            showNotification(`Collected "${keyword}"`);
+
+            // Update search results
+            const searchValue = document.getElementById('keywordSearch').value;
+            if (searchValue) {
+                searchKeywords(searchValue);
+            }
+        }
+
+        // Quick collect for demo
+        function quickCollect(keyword) {
+            collectKeyword(keyword);
+        }
+
+        // Remove keyword
+        function removeKeyword(keyword) {
+            collectedKeywords = collectedKeywords.filter(k => k !== keyword);
+            localStorage.setItem('br_demo_keywords', JSON.stringify(collectedKeywords));
+
+            updateCollectedKeywords();
+            updateRecommendations();
+            showNotification(`Removed "${keyword}"`);
+        }
+
+        // Update collected keywords display
+        function updateCollectedKeywords() {
+            const container = document.getElementById('collectedKeywords');
+            const countElement = document.getElementById('keywordCount');
+
+            countElement.textContent = collectedKeywords.length;
+
+            if (collectedKeywords.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🏷️</div>
+                        <h3>Start Your Collection</h3>
+                        <p>Search for keywords above or use the demo buttons to begin building your interest profile.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = collectedKeywords.map(keyword => {
+                const keywordData = MOCK_KEYWORDS.find(k => k.keyword === keyword);
+                return `
+                    <div class="keyword-chip">
+                        <div>
+                            <div style="font-weight: bold; margin-bottom: 0.25rem;">${keyword}</div>
+                            <div style="color: #888; font-size: 0.8rem;">${keywordData?.category || 'Unknown'}</div>
+                        </div>
+                        <button class="remove-btn" onclick="removeKeyword('${keyword}')" title="Remove keyword">×</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update recommendations
+        function updateRecommendations() {
+            const container = document.getElementById('recommendations');
+
+            if (collectedKeywords.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; color: #666; padding: 1rem;">
+                        <p>Collect keywords to see personalized recommendations!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Generate recommendations based on collected keywords
+            const recommendations = [];
+
+            if (collectedKeywords.includes('audio-reactive') || collectedKeywords.includes('particle-systems')) {
+                recommendations.push({
+                    title: 'Sonic Sculptor',
+                    description: 'Real-time audio-visual particle effects',
+                    match: 95,
+                    url: '/apps/sonic-sculptor/'
+                });
+            }
+
+            if (collectedKeywords.includes('generative-art') || collectedKeywords.includes('procedural-generation')) {
+                recommendations.push({
+                    title: 'AI Art Generator Template',
+                    description: 'Create algorithmic art with AI assistance',
+                    match: 87,
+                    url: '/templates/ai-generator/'
+                });
+            }
+
+            if (collectedKeywords.includes('mindfulness') || collectedKeywords.includes('cosmic-visualization')) {
+                recommendations.push({
+                    title: 'Kosmos Journey',
+                    description: 'Mindful exploration through cosmic maps',
+                    match: 82,
+                    url: '/apps/kosmos-mindful-journey/'
+                });
+            }
+
+            if (collectedKeywords.includes('frequency-analysis') || collectedKeywords.includes('audio-reactive')) {
+                recommendations.push({
+                    title: 'Celestial Harmonies',
+                    description: 'Transform celestial mechanics into harmonic compositions',
+                    match: 78,
+                    url: '/apps/celestial-harmonies/'
+                });
+            }
+
+            if (recommendations.length === 0) {
+                recommendations.push({
+                    title: 'Binary Ring Templates',
+                    description: 'Explore our collection of creative templates',
+                    match: 65,
+                    url: '/templates/'
+                });
+            }
+
+            container.innerHTML = `
+                <h4 style="margin-bottom: 1rem; color: #e0e0e0;">Recommendations</h4>
+                ${recommendations.slice(0, 3).map(rec => `
+                    <div class="rec-item">
+                        <div class="rec-header">
+                            <div class="rec-title">${rec.title}</div>
+                            <div class="rec-score">${rec.match}%</div>
+                        </div>
+                        <div class="rec-description">${rec.description}</div>
+                        <button class="view-btn" onclick="viewRecommendation('${rec.title}', '${rec.url}')">
+                            View Project
+                        </button>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        // View recommendation
+        function viewRecommendation(title, url) {
+            showNotification(`Opening ${title}...`);
+            // In a real implementation, this would navigate to the URL
+            console.log(`Navigate to: ${url}`);
+        }
+
+        // Clear all keywords
+        function clearAllKeywords() {
+            if (confirm('Are you sure you want to clear all collected keywords?')) {
+                collectedKeywords = [];
+                localStorage.removeItem('br_demo_keywords');
+                updateCollectedKeywords();
+                updateRecommendations();
+                document.getElementById('searchResults').innerHTML = '';
+                document.getElementById('keywordSearch').value = '';
+                showNotification('All keywords cleared');
+            }
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+
+            text.textContent = message;
+            notification.classList.add('show');
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

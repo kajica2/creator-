@@ -1,0 +1,108 @@
+
+<div class="flex flex-col h-screen bg-gray-900 font-sans">
+  <header class="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700 p-3 shadow-lg z-10">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-4">
+        <h1 class="text-2xl font-bold text-cyan-400 tracking-wider">Sonic Sculptor</h1>
+        <div class="w-px h-8 bg-gray-600"></div>
+        <div class="flex items-center gap-4">
+          <label for="audio-upload" class="bg-gray-700 hover:bg-cyan-500 hover:text-white transition-colors duration-200 text-gray-200 font-semibold py-2 px-4 rounded-md cursor-pointer flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
+            Upload Audio
+          </label>
+          <input id="audio-upload" type="file" accept="audio/*" class="hidden" (change)="onFileSelected($event)">
+
+          <button (click)="useMicrophone()" [class]="audioService.sourceType() === 'microphone' ? 'bg-cyan-500 text-white' : 'bg-gray-700 hover:bg-cyan-500 hover:text-white'" class="transition-colors duration-200 text-gray-200 font-semibold py-2 px-4 rounded-md flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z" /><path fill-rule="evenodd" d="M5.5 8.5A.5.5 0 016 9v1a4 4 0 004 4h.5a.5.5 0 010 1H10a5 5 0 01-5-5V9a.5.5 0 01.5-.5z" clip-rule="evenodd" /></svg>
+            Use Mic
+          </button>
+        </div>
+      </div>
+      
+      @if (fileName()) {
+        <div class="text-sm text-gray-400 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-cyan-400" viewBox="0 0 20 20" fill="currentColor"><path d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 00-3 3v2a3 3 0 003 3h3.763l7.79 3.894A1 1 0 0018 17V3z" /></svg>
+          <span>Now Playing: <span class="font-semibold text-gray-200">{{ fileName() }}</span></span>
+        </div>
+      }
+
+      <div class="flex items-center gap-4">
+        @if (audioService.isInitialized()) {
+          <button (click)="togglePlay()" class="bg-green-500 hover:bg-green-400 text-white font-bold w-12 h-12 rounded-full flex items-center justify-center text-2xl shadow-lg transition-transform duration-200 transform hover:scale-105">
+            @if(audioService.isPlaying()) {
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6" /></svg>
+            } @else {
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /></svg>
+            }
+          </button>
+        } @else {
+          <div class="text-sm text-gray-500">Select an audio source to begin</div>
+        }
+      </div>
+    </div>
+  </header>
+  
+  <div class="flex flex-1 overflow-hidden">
+    <aside class="w-72 bg-gray-800/30 p-4 border-r border-gray-700 overflow-y-auto z-10">
+      <h2 class="text-lg font-semibold mb-4 text-cyan-300">Controls</h2>
+      
+      <div class="space-y-6">
+        <div>
+          <label for="particle-count" class="block text-sm font-medium text-gray-400 mb-2">Particle Count: {{ particleCount() }}</label>
+          <input id="particle-count" type="range" min="50" max="1000" [value]="particleCount()" (input)="particleCount.set(+$any($event.target).value)" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-cyan-500">
+        </div>
+        
+        <div>
+          <label for="bass-sensitivity" class="block text-sm font-medium text-gray-400 mb-2">Bass Sensitivity: {{ bassSensitivity() }}%</label>
+          <input id="bass-sensitivity" type="range" min="10" max="200" [value]="bassSensitivity()" (input)="bassSensitivity.set(+$any($event.target).value)" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-red-500">
+        </div>
+
+        <div>
+          <label for="mid-sensitivity" class="block text-sm font-medium text-gray-400 mb-2">Mids Sensitivity: {{ midSensitivity() }}%</label>
+          <input id="mid-sensitivity" type="range" min="10" max="200" [value]="midSensitivity()" (input)="midSensitivity.set(+$any($event.target).value)" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-yellow-500">
+        </div>
+
+        <div>
+          <label for="treble-sensitivity" class="block text-sm font-medium text-gray-400 mb-2">Treble Sensitivity: {{ trebleSensitivity() }}%</label>
+          <input id="treble-sensitivity" type="range" min="10" max="200" [value]="trebleSensitivity()" (input)="trebleSensitivity.set(+$any($event.target).value)" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
+        </div>
+      </div>
+
+      <h2 class="text-lg font-semibold mt-8 mb-4 text-cyan-300">Audio Analysis</h2>
+      <div class="space-y-4">
+        <div class="w-full">
+          <span class="text-sm font-medium text-red-400">Bass</span>
+          <div class="w-full bg-gray-700 rounded-full h-4 mt-1 overflow-hidden">
+            <div class="bg-red-500 h-4 rounded-full transition-all duration-75" [style.width.%]="audioService.bass()"></div>
+          </div>
+        </div>
+        <div class="w-full">
+          <span class="text-sm font-medium text-yellow-400">Mids</span>
+          <div class="w-full bg-gray-700 rounded-full h-4 mt-1 overflow-hidden">
+            <div class="bg-yellow-500 h-4 rounded-full transition-all duration-75" [style.width.%]="audioService.mids()"></div>
+          </div>
+        </div>
+        <div class="w-full">
+          <span class="text-sm font-medium text-blue-400">Treble</span>
+          <div class="w-full bg-gray-700 rounded-full h-4 mt-1 overflow-hidden">
+            <div class="bg-blue-500 h-4 rounded-full transition-all duration-75" [style.width.%]="audioService.treble()"></div>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <main class="flex-1 relative">
+      <canvas #visualizerCanvas class="absolute top-0 left-0 w-full h-full"></canvas>
+      @if (errorMessage()) {
+        <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
+            <div class="bg-red-800/90 text-white p-6 rounded-lg shadow-2xl max-w-md text-center">
+                <h3 class="text-xl font-bold mb-2">An Error Occurred</h3>
+                <p>{{ errorMessage() }}</p>
+                <button (click)="errorMessage.set('')" class="mt-4 bg-red-600 hover:bg-red-500 px-4 py-2 rounded-md transition-colors">Close</button>
+            </div>
+        </div>
+      }
+    </main>
+  </div>
+</div>

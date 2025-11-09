@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Ring APIs - Developer Documentation</title>
+    <link rel="stylesheet" href="../styles/community.css">
+    <link rel="stylesheet" href="../styles/docs.css">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-dark.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="docs-header">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="../index.html">Community</a>
+                <span class="separator">/</span>
+                <span class="current">APIs</span>
+            </nav>
+
+            <div class="docs-title">
+                <h1>Binary Ring API Documentation</h1>
+                <p>Complete reference for integrating generative art into your applications</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- API Overview -->
+    <section class="api-overview">
+        <div class="container">
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <div class="card-icon">🎨</div>
+                    <h3>Generation API</h3>
+                    <p>Create generative art programmatically with customizable parameters</p>
+                    <div class="endpoint-count">12 endpoints</div>
+                </div>
+
+                <div class="overview-card">
+                    <div class="card-icon">📤</div>
+                    <h3>Export API</h3>
+                    <p>Export artwork in multiple formats: PNG, SVG, WebM, and more</p>
+                    <div class="endpoint-count">8 endpoints</div>
+                </div>
+
+                <div class="overview-card">
+                    <div class="card-icon">🔍</div>
+                    <h3>Search API</h3>
+                    <p>Search and filter through the complete project catalog</p>
+                    <div class="endpoint-count">6 endpoints</div>
+                </div>
+
+                <div class="overview-card">
+                    <div class="card-icon">👥</div>
+                    <h3>Community API</h3>
+                    <p>Integrate voting, comments, and social features</p>
+                    <div class="endpoint-count">10 endpoints</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Start -->
+    <section class="quick-start">
+        <div class="container">
+            <h2>Quick Start</h2>
+
+            <div class="start-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Get API Key</h3>
+                        <p>Register for a free API key to access generation and export features</p>
+                        <button class="api-key-btn">Get API Key</button>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Install SDK</h3>
+                        <div class="code-block">
+                            <pre><code class="language-javascript">npm install @binaryring/api-sdk</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Generate Art</h3>
+                        <div class="code-block">
+<pre><code class="language-javascript">import { BinaryRingAPI } from '@binaryring/api-sdk';
+
+const api = new BinaryRingAPI('your-api-key');
+
+// Generate a Buddhabrot fractal
+const result = await api.generate('buddhabrot', {
+  iterations: 5000,
+  samples: 10000000,
+  zoom: 2.5
+});
+
+console.log('Generated:', result.imageUrl);</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- API Reference -->
+    <section class="api-reference">
+        <div class="container">
+            <div class="reference-layout">
+                <!-- Sidebar Navigation -->
+                <nav class="api-sidebar">
+                    <h3>API Reference</h3>
+                    <ul class="api-nav">
+                        <li><a href="#authentication">Authentication</a></li>
+                        <li><a href="#projects">Projects API</a></li>
+                        <li><a href="#generation">Generation API</a></li>
+                        <li><a href="#export">Export API</a></li>
+                        <li><a href="#community">Community API</a></li>
+                        <li><a href="#analytics">Analytics API</a></li>
+                        <li><a href="#webhooks">Webhooks</a></li>
+                        <li><a href="#rate-limits">Rate Limits</a></li>
+                        <li><a href="#errors">Error Handling</a></li>
+                    </ul>
+                </nav>
+
+                <!-- API Documentation Content -->
+                <main class="api-content">
+
+                    <!-- Authentication -->
+                    <section id="authentication" class="api-section">
+                        <h2>Authentication</h2>
+                        <p>The Binary Ring API uses API keys for authentication. Include your API key in the Authorization header:</p>
+
+                        <div class="code-example">
+                            <div class="example-tabs">
+                                <button class="tab active" data-tab="curl">cURL</button>
+                                <button class="tab" data-tab="javascript">JavaScript</button>
+                                <button class="tab" data-tab="python">Python</button>
+                            </div>
+
+                            <div class="tab-content active" id="curl">
+<pre><code class="language-bash">curl -H "Authorization: Bearer YOUR_API_KEY" \
+     -H "Content-Type: application/json" \
+     https://api.binaryring.art/v1/projects</code></pre>
+                            </div>
+
+                            <div class="tab-content" id="javascript">
+<pre><code class="language-javascript">const headers = {
+  'Authorization': 'Bearer YOUR_API_KEY',
+  'Content-Type': 'application/json'
+};
+
+const response = await fetch('https://api.binaryring.art/v1/projects', {
+  headers
+});</code></pre>
+                            </div>
+
+                            <div class="tab-content" id="python">
+<pre><code class="language-python">import requests
+
+headers = {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+}
+
+response = requests.get('https://api.binaryring.art/v1/projects', headers=headers)</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Projects API -->
+                    <section id="projects" class="api-section">
+                        <h2>Projects API</h2>
+                        <p>Access project information, parameters, and metadata for all 36 Binary Ring projects.</p>
+
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method get">GET</span>
+                                <span class="path">/v1/projects</span>
+                                <span class="description">List all projects</span>
+                            </div>
+
+                            <div class="endpoint-details">
+                                <h4>Parameters</h4>
+                                <table class="params-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>category</td>
+                                            <td>string</td>
+                                            <td>Filter by category (fractals, attractors, particles, etc.)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>featured</td>
+                                            <td>boolean</td>
+                                            <td>Show only featured projects</td>
+                                        </tr>
+                                        <tr>
+                                            <td>limit</td>
+                                            <td>integer</td>
+                                            <td>Maximum number of results (default: 20, max: 100)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <h4>Example Response</h4>
+<pre><code class="language-json">{
+  "projects": [
+    {
+      "id": "buddhabrot",
+      "title": "Buddhabrot",
+      "description": "Fractal path tracing in the Mandelbrot set",
+      "category": "fractals",
+      "featured": true,
+      "parameters": {
+        "iterations": {
+          "type": "integer",
+          "min": 1000,
+          "max": 10000,
+          "default": 5000
+        }
+      },
+      "api": {
+        "generate": "/api/v1/generate/buddhabrot",
+        "export": "/api/v1/export/buddhabrot"
+      }
+    }
+  ],
+  "total": 36,
+  "page": 1,
+  "limit": 20
+}</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method get">GET</span>
+                                <span class="path">/v1/projects/{project_id}</span>
+                                <span class="description">Get specific project details</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Generation API -->
+                    <section id="generation" class="api-section">
+                        <h2>Generation API</h2>
+                        <p>Generate artwork programmatically with customizable parameters for each project.</p>
+
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method post">POST</span>
+                                <span class="path">/v1/generate/{project_id}</span>
+                                <span class="description">Create generative artwork</span>
+                            </div>
+
+                            <div class="endpoint-details">
+                                <h4>Request Body</h4>
+<pre><code class="language-json">{
+  "parameters": {
+    "iterations": 5000,
+    "samples": 10000000,
+    "zoom": 2.5,
+    "centerX": -0.7,
+    "centerY": 0
+  },
+  "format": "png",
+  "resolution": {
+    "width": 1920,
+    "height": 1080
+  },
+  "async": true
+}</code></pre>
+
+                                <h4>Response</h4>
+<pre><code class="language-json">{
+  "job_id": "gen_123456789",
+  "status": "processing",
+  "estimated_time": 30,
+  "created_at": "2024-11-09T12:00:00Z",
+  "parameters": {...},
+  "webhook_url": "https://your-app.com/webhook"
+}</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method get">GET</span>
+                                <span class="path">/v1/generate/{job_id}/status</span>
+                                <span class="description">Check generation status</span>
+                            </div>
+
+                            <div class="endpoint-details">
+                                <h4>Response</h4>
+<pre><code class="language-json">{
+  "job_id": "gen_123456789",
+  "status": "completed",
+  "progress": 100,
+  "result": {
+    "image_url": "https://cdn.binaryring.art/gen/gen_123456789.png",
+    "thumbnail_url": "https://cdn.binaryring.art/gen/gen_123456789_thumb.jpg",
+    "metadata": {
+      "generation_time": 28.4,
+      "parameters_used": {...},
+      "resolution": "1920x1080"
+    }
+  },
+  "created_at": "2024-11-09T12:00:00Z",
+  "completed_at": "2024-11-09T12:00:28Z"
+}</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Export API -->
+                    <section id="export" class="api-section">
+                        <h2>Export API</h2>
+                        <p>Export generated artwork in various formats including high-resolution images and video animations.</p>
+
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method post">POST</span>
+                                <span class="path">/v1/export/{project_id}/{format}</span>
+                                <span class="description">Export artwork in specific format</span>
+                            </div>
+
+                            <div class="endpoint-details">
+                                <h4>Supported Formats</h4>
+                                <ul class="format-list">
+                                    <li><strong>png</strong> - High-quality PNG images (up to 8K)</li>
+                                    <li><strong>jpg</strong> - Compressed JPEG images</li>
+                                    <li><strong>svg</strong> - Vector graphics (where applicable)</li>
+                                    <li><strong>webm</strong> - Video animations</li>
+                                    <li><strong>gif</strong> - Animated GIFs</li>
+                                    <li><strong>pdf</strong> - Print-ready PDFs</li>
+                                </ul>
+
+                                <h4>Request Body</h4>
+<pre><code class="language-json">{
+  "parameters": {...},
+  "export_options": {
+    "resolution": "4k",
+    "quality": 95,
+    "animation": {
+      "duration": 10,
+      "fps": 30
+    },
+    "metadata": true
+  }
+}</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Community API -->
+                    <section id="community" class="api-section">
+                        <h2>Community API</h2>
+                        <p>Integrate social features including likes, comments, sharing, and user collections.</p>
+
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method post">POST</span>
+                                <span class="path">/v1/community/like/{project_id}</span>
+                                <span class="description">Like/unlike a project</span>
+                            </div>
+                        </div>
+
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method get">GET</span>
+                                <span class="path">/v1/community/collections</span>
+                                <span class="description">Get curated collections</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Rate Limits -->
+                    <section id="rate-limits" class="api-section">
+                        <h2>Rate Limits</h2>
+                        <p>API rate limits help ensure fair usage and optimal performance for all users.</p>
+
+                        <div class="rate-limits-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Endpoint Type</th>
+                                        <th>Rate Limit</th>
+                                        <th>Burst Limit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>General API</td>
+                                        <td>1000 req/hour</td>
+                                        <td>100 req/minute</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Generation</td>
+                                        <td>10 req/minute</td>
+                                        <td>5 concurrent</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Export</td>
+                                        <td>5 req/minute</td>
+                                        <td>2 concurrent</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Community</td>
+                                        <td>100 req/minute</td>
+                                        <td>20 req/second</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <!-- SDK Examples -->
+    <section class="sdk-examples">
+        <div class="container">
+            <h2>SDK Examples</h2>
+
+            <div class="examples-grid">
+                <div class="example-card">
+                    <h3>Generate Buddhabrot</h3>
+<pre><code class="language-javascript">const api = new BinaryRingAPI(process.env.BINARY_RING_API_KEY);
+
+// Generate a custom Buddhabrot
+const job = await api.generate('buddhabrot', {
+  iterations: 8000,
+  samples: 50000000,
+  zoom: 5,
+  centerX: -0.75,
+  centerY: 0.1
+});
+
+// Wait for completion
+const result = await api.waitForCompletion(job.job_id);
+console.log('Artwork ready:', result.image_url);</code></pre>
+                </div>
+
+                <div class="example-card">
+                    <h3>Interactive Node Garden</h3>
+<pre><code class="language-javascript">// Create an interactive node garden
+const garden = await api.generate('node.garden', {
+  maxNodes: 200,
+  connectionDistance: 150,
+  growthRate: 0.03,
+  interactive: true
+});
+
+// Get real-time updates
+api.subscribeToUpdates(garden.job_id, (update) => {
+  console.log('Network state:', update.nodeCount, 'nodes');
+});</code></pre>
+                </div>
+
+                <div class="example-card">
+                    <h3>Export High-Resolution Art</h3>
+<pre><code class="language-javascript">// Export 8K version
+const exportJob = await api.export('substrate', 'png', {
+  resolution: '8k',
+  parameters: {
+    initialCracks: 8,
+    growthRate: 1.5,
+    spawnChance: 0.4
+  }
+});
+
+const downloadUrl = await api.getExportResult(exportJob.job_id);
+// downloadUrl contains the high-res image</code></pre>
+                </div>
+
+                <div class="example-card">
+                    <h3>Search and Filter</h3>
+<pre><code class="language-javascript">// Search for interactive fractal projects
+const results = await api.search({
+  query: 'fractal',
+  filters: {
+    category: 'fractals',
+    interactive: true,
+    difficulty: ['beginner', 'intermediate']
+  },
+  sort: 'popularity',
+  limit: 10
+});
+
+results.projects.forEach(project => {
+  console.log(`${project.title}: ${project.likes} likes`);
+});</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="docs-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>API Resources</h3>
+                    <ul>
+                        <li><a href="#quick-start">Quick Start Guide</a></li>
+                        <li><a href="#authentication">Authentication</a></li>
+                        <li><a href="#rate-limits">Rate Limits</a></li>
+                        <li><a href="../changelog.html">API Changelog</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Developer Tools</h3>
+                    <ul>
+                        <li><a href="#" class="api-key-btn">Get API Key</a></li>
+                        <li><a href="../playground.html">API Playground</a></li>
+                        <li><a href="../sdks.html">SDK Downloads</a></li>
+                        <li><a href="../postman.html">Postman Collection</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="../support.html">Documentation</a></li>
+                        <li><a href="#" onclick="window.$crisp.push(['do', 'chat:open'])">Live Chat</a></li>
+                        <li><a href="mailto:api@binaryring.art">Email Support</a></li>
+                        <li><a href="https://github.com/binaryring/api-issues">Report Issues</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../scripts/projects-data.js"></script>
+    <script>
+        // Initialize syntax highlighting
+        Prism.highlightAll();
+
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.dataset.tab;
+                const parent = this.closest('.code-example');
+
+                // Remove active class from all tabs and content
+                parent.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                parent.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+                // Add active class to clicked tab and corresponding content
+                this.classList.add('active');
+                parent.querySelector(`#${tabId}`).classList.add('active');
+            });
+        });
+
+        // Smooth scrolling for sidebar links
+        document.querySelectorAll('.api-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+
+                // Update active state
+                document.querySelectorAll('.api-nav a').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // API Key modal (placeholder)
+        document.querySelectorAll('.api-key-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('API Key registration would open here. Demo purposes only.');
+            });
+        });
+
+        // Initialize feather icons
+        feather.replace();
+
+        // Highlight current section in sidebar
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.6
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    const navLink = document.querySelector(`.api-nav a[href="#${id}"]`);
+                    if (navLink) {
+                        document.querySelectorAll('.api-nav a').forEach(l => l.classList.remove('active'));
+                        navLink.classList.add('active');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.api-section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

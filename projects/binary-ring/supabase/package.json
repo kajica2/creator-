@@ -1,0 +1,52 @@
+{
+  "name": "binary-ring-content-management",
+  "version": "1.0.0",
+  "description": "Comprehensive content management system for Binary Ring generative art projects",
+  "type": "module",
+  "main": "content-manager.js",
+  "scripts": {
+    "migrate": "node migrate-content-data.js",
+    "verify": "node -e \"import('./migrate-content-data.js').then(m => new m.default(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY).verifyMigration())\"",
+    "export-content": "node -e \"import('./content-manager.js').then(m => new m.default(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY).exportAllContent().then(data => console.log(JSON.stringify(data, null, 2))))\"",
+    "refresh-views": "node -e \"import('./content-manager.js').then(m => new m.default(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY).refreshContentSummary())\"",
+    "search-test": "node -e \"import('./content-manager.js').then(m => new m.default(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY).searchContent('fractal').then(r => console.log('Search results:', r.length)))\"",
+    "analytics": "node -e \"import('./content-manager.js').then(m => new m.default(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY).getContentAnalytics().then(a => console.log('Content analytics:', a.length, 'projects')))\"",
+    "test": "npm run search-test && npm run analytics",
+    "setup": "echo 'Please set SUPABASE_URL and SUPABASE_ANON_KEY environment variables'"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.3.1"
+  },
+  "keywords": [
+    "supabase",
+    "content-management",
+    "generative-art",
+    "binary-ring",
+    "cms",
+    "versioning",
+    "search",
+    "postgresql"
+  ],
+  "author": "Binary Ring Collective",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/binaryring/content-management"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "exports": {
+    "./content-manager": "./content-manager.js",
+    "./migrator": "./migrate-content-data.js"
+  },
+  "files": [
+    "content-manager.js",
+    "migrate-content-data.js",
+    "migrations/",
+    "README.md"
+  ]
+}

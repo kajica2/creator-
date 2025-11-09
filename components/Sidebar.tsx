@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Page } from '../types';
+import { fetchUserRatingSummary, UserRatingSummary } from '../supabase/utils';
 
 interface SidebarProps {
   activePage: Page;
@@ -28,19 +29,27 @@ const RoadmapIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5
 const TrophyIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>;
 const ChevronDownIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>;
 const CloseIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>;
+const CloudIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" /></svg>;
 
 // Page groupings
 const dashboardPages: Page[] = ['Gamification'];
-const creationSuitePages: Page[] = ['Hashtag Manager', 'AI Story', 'AI Lyrics', 'AI Strategy', 'AI Skill', 'AI Mutator', 'AI Concept', 'Text-to-Image', 'Image Edit', 'Batch Images', 'Batch Prompts', 'AI Website', 'Thinking Mode', 'Audio Transcriber'];
+const creationSuitePages: Page[] = ['Hashtag Manager', 'AI Story', 'AI Lyrics', 'AI Strategy', 'AI Skill', 'AI Mutator', 'AI Concept', 'Text-to-Image', 'Image Edit', 'Batch Images', 'Batch Prompts', 'AI Website', 'Thinking Mode', 'Audio Transcriber', 'Audio Agents', 'Synaptic Symphony'];
 const contentCreationPages: Page[] = ['AI Story', 'AI Lyrics', 'AI Strategy', 'AI Skill', 'AI Mutator', 'AI Concept'];
 const imageStudioPages: Page[] = ['Text-to-Image', 'Image Edit', 'Batch Images', 'Batch Prompts'];
-const advancedToolsPages: Page[] = ['Thinking Mode', 'Audio Transcriber'];
+const advancedToolsPages: Page[] = ['Thinking Mode', 'Audio Transcriber', 'Audio Agents', 'Synaptic Symphony'];
 const personaPages: Page[] = ['Persona Templates'];
-const galleryPages: Page[] = ['Gallery', 'Website Manager'];
+const galleryPages: Page[] = ['Media Library', 'Gallery', 'Website Manager', 'Sentry Navigation Cloud'];
 const accountPages: Page[] = ['History', 'Subscription', 'Settings', 'Roadmap'];
 
 export const Sidebar: React.FC<SidebarProps> = ({ activePage, onPageChange, isOpen, onClose }) => {
     const [isDashboardOpen, setIsDashboardOpen] = useState(dashboardPages.includes(activePage));
+    const [ratingSummary, setRatingSummary] = useState<UserRatingSummary | null>(null);
+
+    useEffect(() => {
+        fetchUserRatingSummary('creator-collective')
+            .then(setRatingSummary)
+            .catch(() => setRatingSummary(null));
+    }, []);
     const [isCreationSuiteOpen, setIsCreationSuiteOpen] = useState(creationSuitePages.includes(activePage));
     const [isContentOpen, setIsContentOpen] = useState(contentCreationPages.includes(activePage));
     const [isImageOpen, setIsImageOpen] = useState(imageStudioPages.includes(activePage));
@@ -115,11 +124,28 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePage, onPageChange, isOp
 
     const sidebarContent = (
         <div className="flex flex-col h-full">
-            <div className="p-4 flex justify-between items-center border-b border-gray-700">
-                 <h1 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
-                    AV Assistant
-                </h1>
-                <button onClick={onClose} className="md:hidden text-gray-400 hover:text-white"><CloseIcon /></button>
+            <div className="p-4 border-b border-gray-700">
+                <div className="flex justify-between items-center">
+                    <h1 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
+                        KaiDjuric Tools
+                    </h1>
+                    <button onClick={onClose} className="md:hidden text-gray-400 hover:text-white"><CloseIcon /></button>
+                </div>
+                {ratingSummary && (
+                    <div className="mt-3 bg-gray-900/60 border border-gray-700 rounded-lg px-3 py-2 text-xs text-gray-300">
+                        <div className="flex items-center gap-2">
+                            <span className="text-yellow-300 font-semibold">
+                                ★ {ratingSummary.averageScore ? ratingSummary.averageScore.toFixed(1) : '—'}
+                            </span>
+                            <span className="text-gray-500">
+                                {ratingSummary.totalRatings} ratings
+                            </span>
+                        </div>
+                        <p className="text-[10px] text-gray-500 mt-1">
+                            Community trust score
+                        </p>
+                    </div>
+                )}
             </div>
             <nav className="flex-1 p-4 space-y-4 overflow-y-auto">
                 {/* Dashboard */}

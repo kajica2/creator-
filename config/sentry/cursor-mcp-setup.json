@@ -1,0 +1,98 @@
+{
+  "mcpServers": {
+    "sentry": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-sentry",
+        "--auth-token",
+        "${SENTRY_AUTH_TOKEN}",
+        "--organization",
+        "${SENTRY_ORG}",
+        "--project",
+        "viral-hashtag-image-ai"
+      ],
+      "description": "Sentry MCP server for AI-powered debugging and error analysis",
+      "features": [
+        "Real-time error investigation",
+        "Production context analysis",
+        "AI-driven root cause analysis",
+        "Performance monitoring integration",
+        "User impact assessment"
+      ]
+    },
+    "sentry-remote": {
+      "command": "npx",
+      "args": [
+        "@sentry/mcp",
+        "--remote",
+        "https://mcp.sentry.io/v1",
+        "--auth-token",
+        "${SENTRY_AUTH_TOKEN}"
+      ],
+      "description": "Remote Sentry MCP server (fallback option)",
+      "enabled": false
+    }
+  },
+  "environment": {
+    "SENTRY_AUTH_TOKEN": {
+      "description": "Your Sentry authentication token",
+      "required": true,
+      "source": "https://sentry.io/settings/account/api/auth-tokens/"
+    },
+    "SENTRY_ORG": {
+      "description": "Your Sentry organization slug",
+      "required": true,
+      "example": "your-org-name"
+    },
+    "SENTRY_PROJECT": {
+      "description": "Your Sentry project slug",
+      "required": false,
+      "default": "viral-hashtag-image-ai"
+    }
+  },
+  "setup_instructions": {
+    "1": "Install MCP server: uvx mcp-server-sentry",
+    "2": "Get Sentry auth token from: https://sentry.io/settings/account/api/auth-tokens/",
+    "3": "Set environment variables in your .env.local file",
+    "4": "Add this configuration to Cursor → Settings → MCP",
+    "5": "Restart Cursor IDE",
+    "6": "Test with: Ask Cursor to 'Show me recent errors from Sentry'"
+  },
+  "cursor_commands": {
+    "investigate_error": "@sentry investigate error [ERROR_ID]",
+    "analyze_performance": "@sentry analyze performance issues",
+    "show_recent_errors": "@sentry show recent errors",
+    "error_trends": "@sentry show error trends for the last 24 hours",
+    "user_impact": "@sentry show user impact for recent issues",
+    "ai_generation_errors": "@sentry show errors related to AI generation",
+    "supabase_errors": "@sentry show database-related errors"
+  },
+  "ai_debugging_workflows": {
+    "hashtag_generation_issues": {
+      "query": "@sentry show errors in hashtag generation with AI context",
+      "context": "Include prompt templates, model responses, and user feedback"
+    },
+    "image_generation_failures": {
+      "query": "@sentry investigate image generation timeouts and failures",
+      "context": "Include Stability AI response codes and generation parameters"
+    },
+    "audio_generation_problems": {
+      "query": "@sentry analyze audio generation errors and quota limits",
+      "context": "Include ElevenLabs API responses and voice model usage"
+    },
+    "supabase_performance": {
+      "query": "@sentry show slow database queries and connection issues",
+      "context": "Include query performance metrics and row counts"
+    },
+    "authentication_issues": {
+      "query": "@sentry investigate user authentication and session problems",
+      "context": "Include Supabase auth errors and user flow breakdowns"
+    }
+  },
+  "monitoring_alerts": {
+    "error_rate_threshold": "5% increase in error rate",
+    "response_time_threshold": "500ms increase in AI generation time",
+    "quota_usage_threshold": "80% of API quota used",
+    "user_impact_threshold": "10+ users affected by same error"
+  }
+}

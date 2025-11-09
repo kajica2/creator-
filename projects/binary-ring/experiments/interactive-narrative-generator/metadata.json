@@ -1,0 +1,5 @@
+{
+  "name": "Interactive Narrative Generator",
+  "description": "Create interactive narratives and storytelling experiences that adapt to user choices. This application uses Gemini to generate branching narratives, allowing users to guide the story.",
+  "requestFramePermissions": []
+}

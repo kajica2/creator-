@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyword System Integration Example</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+        }
+
+        .content-area {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid #333;
+        }
+
+        .sidebar {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid #333;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .project-card {
+            background: #2a2a2a;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .project-card:hover {
+            border-color: #4f46e5;
+            transform: translateY(-1px);
+        }
+
+        .project-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-description {
+            color: #b0b0b0;
+            margin-bottom: 1rem;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: #4f46e5;
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .floating-widget {
+            position: fixed;
+            top: 50%;
+            right: 2rem;
+            transform: translateY(-50%);
+            z-index: 1000;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .demo-actions {
+            background: #333;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 2rem 0;
+        }
+
+        .demo-btn {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .demo-btn:hover {
+            background: #3730a3;
+        }
+
+        .keyword-highlight {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.3), rgba(124, 58, 237, 0.3));
+            padding: 0.1rem 0.3rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .keyword-highlight:hover {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.6), rgba(124, 58, 237, 0.6));
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .floating-widget {
+                position: relative;
+                top: auto;
+                right: auto;
+                transform: none;
+                margin-top: 2rem;
+            }
+        }
+    </style>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🏷️ Keyword Collection Demo</h1>
+            <p>See how users collect keywords and get personalized recommendations across the Binary Ring ecosystem</p>
+        </header>
+
+        <div class="main-content">
+            <div class="content-area">
+                <h2>Binary Ring Projects</h2>
+
+                <div class="demo-actions">
+                    <p><strong>Demo Actions:</strong></p>
+                    <button class="demo-btn" onclick="simulateClick('sonic-sculptor')">View Sonic Sculptor</button>
+                    <button class="demo-btn" onclick="simulateClick('ai-music-director')">View AI Music Director</button>
+                    <button class="demo-btn" onclick="simulateClick('kosmos-journey')">View Kosmos Journey</button>
+                    <button class="demo-btn" onclick="collectKeyword('generative-art')">Collect "generative-art"</button>
+                    <button class="demo-btn" onclick="collectKeyword('audio-visual')">Collect "audio-visual"</button>
+                </div>
+
+                <!-- Project Cards -->
+                <div class="project-card" data-project-id="sonic-sculptor" onclick="viewProject('sonic-sculptor')">
+                    <div class="project-title">Sonic Sculptor</div>
+                    <div class="project-description">
+                        A modular creative sandbox to sculpt real-time visuals driven by <span class="keyword-highlight" onclick="collectKeyword('audio-reactive', event)">audio-reactive</span>
+                        effects. Create mesmerizing <span class="keyword-highlight" onclick="collectKeyword('particle-systems', event)">particle systems</span>
+                        that respond to <span class="keyword-highlight" onclick="collectKeyword('frequency-analysis', event)">frequency analysis</span>
+                        and generate <span class="keyword-highlight" onclick="collectKeyword('real-time', event)">real-time</span> visual art.
+                    </div>
+                    <div class="project-tags">
+                        <span class="tag">Audio-Visual</span>
+                        <span class="tag">Angular</span>
+                        <span class="tag">Web Audio API</span>
+                    </div>
+                </div>
+
+                <div class="project-card" data-project-id="ai-music-director" onclick="viewProject('ai-music-director')">
+                    <div class="project-title">AI Music Video Director</div>
+                    <div class="project-description">
+                        An <span class="keyword-highlight" onclick="collectKeyword('ai-powered', event)">AI-powered</span> assistant that helps artists conceptualize
+                        <span class="keyword-highlight" onclick="collectKeyword('music-videos', event)">music videos</span>. Generate
+                        <span class="keyword-highlight" onclick="collectKeyword('storyboards', event)">storyboards</span>,
+                        <span class="keyword-highlight" onclick="collectKeyword('visual-treatments', event)">visual treatments</span>, and production briefs.
+                    </div>
+                    <div class="project-tags">
+                        <span class="tag">AI Tools</span>
+                        <span class="tag">React</span>
+                        <span class="tag">Gemini API</span>
+                    </div>
+                </div>
+
+                <div class="project-card" data-project-id="kosmos-journey" onclick="viewProject('kosmos-journey')">
+                    <div class="project-title">Kosmos - A Mindful Journey</div>
+                    <div class="project-description">
+                        A guided <span class="keyword-highlight" onclick="collectKeyword('mindfulness', event)">mindfulness</span> and
+                        <span class="keyword-highlight" onclick="collectKeyword('philosophical-journaling', event)">philosophical journaling</span> app.
+                        Visualize personal growth through <span class="keyword-highlight" onclick="collectKeyword('cosmic-maps', event)">cosmic maps</span>
+                        and <span class="keyword-highlight" onclick="collectKeyword('alchemical-symbols', event)">alchemical symbols</span>.
+                    </div>
+                    <div class="project-tags">
+                        <span class="tag">Wellness</span>
+                        <span class="tag">Philosophy</span>
+                        <span class="tag">Personal Growth</span>
+                    </div>
+                </div>
+
+                <div class="project-card" data-project-id="algorithmic-composer" onclick="viewProject('algorithmic-composer')">
+                    <div class="project-title">Algorithmic Music Composer</div>
+                    <div class="project-description">
+                        Explore <span class="keyword-highlight" onclick="collectKeyword('procedural-generation', event)">procedural generation</span>
+                        methods for <span class="keyword-highlight" onclick="collectKeyword('algorithmic-composition', event)">algorithmic composition</span>.
+                        Create infinite <span class="keyword-highlight" onclick="collectKeyword('generative-music', event)">generative music</span>
+                        with interactive <span class="keyword-highlight" onclick="collectKeyword('parameter-controls', event)">parameter controls</span>.
+                    </div>
+                    <div class="project-tags">
+                        <span class="tag">Music Generation</span>
+                        <span class="tag">Algorithms</span>
+                        <span class="tag">Interactive</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div id="keyword-widget">
+                    <!-- Keyword widget will be inserted here -->
+                    <div style="text-align: center; color: #666; padding: 2rem;">
+                        <div style="font-size: 2rem; margin-bottom: 1rem;">🏷️</div>
+                        <p>Loading keyword system...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Widget Example -->
+    <div class="floating-widget" id="floating-widget" style="display: none;">
+        <div style="background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 1rem; width: 300px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <span style="font-weight: 600;">🎯 Quick Collect</span>
+                <button onclick="hideFloatingWidget()" style="background: none; border: none; color: #888; font-size: 1.2rem; cursor: pointer;">×</button>
+            </div>
+            <div id="floating-content">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock keyword service for demo
+        class MockKeywordService {
+            constructor() {
+                this.userKeywords = new Set(JSON.parse(localStorage.getItem('demo_keywords') || '[]'));
+                this.interactions = JSON.parse(localStorage.getItem('demo_interactions') || '[]');
+            }
+
+            async collectKeyword(keyword, source = 'demo') {
+                this.userKeywords.add(keyword);
+                this.interactions.push({
+                    keyword,
+                    source,
+                    timestamp: Date.now()
+                });
+
+                localStorage.setItem('demo_keywords', JSON.stringify([...this.userKeywords]));
+                localStorage.setItem('demo_interactions', JSON.stringify(this.interactions));
+
+                this.updateWidget();
+                this.showCollectionFeedback(keyword);
+            }
+
+            async getRecommendations() {
+                // Mock recommendations based on collected keywords
+                const keywords = [...this.userKeywords];
+                const recommendations = [];
+
+                if (keywords.includes('audio-reactive') || keywords.includes('particle-systems')) {
+                    recommendations.push({
+                        title: 'Celestial Harmonies',
+                        type: 'app',
+                        match: 85,
+                        reason: 'Similar audio-visual concepts'
+                    });
+                }
+
+                if (keywords.includes('mindfulness') || keywords.includes('philosophical-journaling')) {
+                    recommendations.push({
+                        title: 'Path of Spheres Visualization',
+                        type: 'app',
+                        match: 78,
+                        reason: 'Personal development themes'
+                    });
+                }
+
+                if (keywords.includes('ai-powered') || keywords.includes('generative-music')) {
+                    recommendations.push({
+                        title: 'Neural Art Generator Template',
+                        type: 'template',
+                        match: 72,
+                        reason: 'AI and generative techniques'
+                    });
+                }
+
+                return recommendations.slice(0, 3);
+            }
+
+            updateWidget() {
+                const widget = document.getElementById('keyword-widget');
+                const keywords = [...this.userKeywords];
+                const recommendations = [];
+
+                // Simulate async recommendations
+                this.getRecommendations().then(recs => {
+                    widget.innerHTML = `
+                        <div style="padding: 1rem; color: #fff;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #333;">
+                                <span style="font-weight: 600; color: #e0e0e0;">🏷️ Your Keywords</span>
+                                <span style="background: #4f46e5; color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.8rem;">${keywords.length}</span>
+                            </div>
+
+                            ${keywords.length > 0 ? `
+                                <div style="margin-bottom: 1rem;">
+                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                                        ${keywords.slice(0, 8).map(keyword => `
+                                            <span style="background: #2a2a2a; color: #fff; padding: 0.3rem 0.6rem; border-radius: 12px; font-size: 0.8rem; border: 1px solid #404040;">
+                                                ${keyword}
+                                            </span>
+                                        `).join('')}
+                                        ${keywords.length > 8 ? `<span style="color: #888; font-size: 0.8rem;">+${keywords.length - 8} more</span>` : ''}
+                                    </div>
+                                </div>
+                            ` : `
+                                <div style="text-align: center; color: #666; padding: 1rem;">
+                                    <p style="margin: 0;">Click on highlighted keywords to start collecting!</p>
+                                </div>
+                            `}
+
+                            ${recs.length > 0 ? `
+                                <div style="border-top: 1px solid #333; padding-top: 1rem;">
+                                    <h4 style="margin: 0 0 0.5rem 0; color: #e0e0e0; font-size: 0.9rem;">🎯 Recommended</h4>
+                                    ${recs.map(rec => `
+                                        <div style="background: #2a2a2a; border-radius: 6px; padding: 0.8rem; margin-bottom: 0.5rem; border: 1px solid #404040;">
+                                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
+                                                <span style="font-weight: 500; color: #fff; font-size: 0.9rem;">${rec.title}</span>
+                                                <span style="background: #10b981; color: white; padding: 0.1rem 0.4rem; border-radius: 8px; font-size: 0.7rem;">${rec.match}%</span>
+                                            </div>
+                                            <div style="color: #888; font-size: 0.8rem; margin-bottom: 0.5rem;">${rec.reason}</div>
+                                            <button onclick="viewRecommendation('${rec.title}')" style="background: #4f46e5; color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">View</button>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+
+                            <div style="margin-top: 1rem;">
+                                <button onclick="openKeywordCollection()" style="width: 100%; background: #333; border: 1px solid #555; color: #ccc; padding: 0.6rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">
+                                    📚 View Full Collection
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            showCollectionFeedback(keyword) {
+                // Create temporary feedback
+                const feedback = document.createElement('div');
+                feedback.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: #10b981;
+                    color: white;
+                    padding: 1rem 1.5rem;
+                    border-radius: 8px;
+                    z-index: 10000;
+                    animation: slideInRight 0.3s ease-out;
+                    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+                `;
+
+                feedback.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span>✓</span>
+                        <span>Collected "${keyword}"</span>
+                    </div>
+                `;
+
+                document.body.appendChild(feedback);
+
+                setTimeout(() => {
+                    feedback.style.animation = 'slideOutRight 0.3s ease-in';
+                    setTimeout(() => feedback.remove(), 300);
+                }, 2000);
+            }
+        }
+
+        // Initialize demo
+        const keywordService = new MockKeywordService();
+
+        // Global functions
+        window.collectKeyword = async function(keyword, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+
+            await keywordService.collectKeyword(keyword, 'manual');
+        };
+
+        window.viewProject = function(projectId) {
+            console.log(`Viewing project: ${projectId}`);
+
+            // Track interaction
+            keywordService.interactions.push({
+                type: 'view',
+                projectId,
+                timestamp: Date.now()
+            });
+
+            // Show floating widget with project-specific keywords
+            showProjectKeywords(projectId);
+        };
+
+        window.simulateClick = function(projectId) {
+            document.querySelector(`[data-project-id="${projectId}"]`).click();
+        };
+
+        window.viewRecommendation = function(title) {
+            alert(`Opening: ${title}\n\nThis would navigate to the recommended content in a real implementation.`);
+        };
+
+        window.openKeywordCollection = function() {
+            alert('This would open the full keyword collection interface with advanced filtering and management features.');
+        };
+
+        function showProjectKeywords(projectId) {
+            const floatingWidget = document.getElementById('floating-widget');
+            const content = document.getElementById('floating-content');
+
+            const projectKeywords = {
+                'sonic-sculptor': ['audio-reactive', 'particle-systems', 'real-time', 'frequency-analysis'],
+                'ai-music-director': ['ai-powered', 'music-videos', 'storyboards', 'visual-treatments'],
+                'kosmos-journey': ['mindfulness', 'philosophical-journaling', 'cosmic-maps', 'alchemical-symbols'],
+                'algorithmic-composer': ['procedural-generation', 'algorithmic-composition', 'generative-music']
+            };
+
+            const keywords = projectKeywords[projectId] || [];
+
+            content.innerHTML = `
+                <div style="margin-bottom: 0.5rem;">
+                    <strong>Suggested keywords:</strong>
+                </div>
+                ${keywords.map(keyword => `
+                    <button onclick="collectKeyword('${keyword}')" style="
+                        background: ${keywordService.userKeywords.has(keyword) ? '#4f46e5' : '#2a2a2a'};
+                        color: white;
+                        border: 1px solid #404040;
+                        padding: 0.3rem 0.8rem;
+                        margin: 0.2rem;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        font-size: 0.8rem;
+                    ">
+                        ${keywordService.userKeywords.has(keyword) ? '✓' : '+'} ${keyword}
+                    </button>
+                `).join('')}
+            `;
+
+            floatingWidget.style.display = 'block';
+
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                floatingWidget.style.display = 'none';
+            }, 5000);
+        }
+
+        window.hideFloatingWidget = function() {
+            document.getElementById('floating-widget').style.display = 'none';
+        };
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize widget
+        keywordService.updateWidget();
+
+        // Add some demo keywords for first-time visitors
+        if (keywordService.userKeywords.size === 0) {
+            setTimeout(() => {
+                keywordService.collectKeyword('generative-art', 'demo-auto');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

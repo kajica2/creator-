@@ -1,0 +1,275 @@
+{
+  "apps": [
+    {
+      "id": "ai-music-video-director",
+      "name": "AI Music Video Director",
+      "description": "An AI-powered assistant to help artists and directors conceptualize, plan, and optimize music videos. It provides production briefs, storyboards, visual treatments, and more based on your song and vision.",
+      "category": "AI Tools",
+      "tags": ["music", "video", "ai", "storyboard", "production"],
+      "tech": ["React", "TypeScript", "AI"],
+      "status": "active",
+      "creator": "Binary Ring Community",
+      "difficulty": "intermediate",
+      "features": [
+        "AI-powered storyboard generation",
+        "Production brief creation",
+        "Visual treatment planning",
+        "Song analysis integration",
+        "Creative direction assistance"
+      ],
+      "path": "./ai-music-video-director/",
+      "demo": "./ai-music-video-director/index.html",
+      "image": "./ai-music-video-director/preview.png",
+      "dateAdded": "2024-11-09",
+      "lastUpdated": "2024-11-09"
+    },
+    {
+      "id": "algorithmic-music-composer",
+      "name": "Algorithmic Music Composer",
+      "description": "An interactive web application to explore, configure, and visualize various analog and computational music generation methods, complete with AI-powered explanations for each technique.",
+      "category": "Music Generation",
+      "tags": ["music", "algorithmic", "composition", "visualization", "education"],
+      "tech": ["JavaScript", "Web Audio API", "Canvas"],
+      "status": "active",
+      "creator": "Binary Ring Community",
+      "difficulty": "advanced",
+      "features": [
+        "Multiple algorithmic composition methods",
+        "Real-time visualization",
+        "Interactive parameter control",
+        "AI-powered technique explanations",
+        "Export functionality"
+      ],
+      "path": "./algorithmic-music-composer/",
+      "demo": "./algorithmic-music-composer/index.html",
+      "image": "./algorithmic-music-composer/preview.png",
+      "dateAdded": "2024-11-09",
+      "lastUpdated": "2024-11-09"
+    },
+    {
+      "id": "celestial-harmonies",
+      "name": "Celestial Harmonies",
+      "description": "An immersive audio-visual experience that transforms celestial mechanics into harmonic compositions, blending astronomy with generative music.",
+      "category": "Audio-Visual",
+      "tags": ["astronomy", "music", "visualization", "harmony", "celestial"],
+      "tech": ["WebGL", "Web Audio API", "Three.js"],
+      "status": "active",
+      "creator": "Binary Ring Community",
+      "difficulty": "advanced",
+      "features": [
+        "Real-time celestial simulation",
+        "Harmonic frequency generation",
+        "3D astronomical visualization",
+        "Interactive orbital controls",
+        "Audio-reactive visuals"
+      ],
+      "path": "./celestial-harmonies/",
+      "demo": "./celestial-harmonies/index.html",
+      "image": "./celestial-harmonies/preview.png",
+      "dateAdded": "2024-11-09",
+      "lastUpdated": "2024-11-09"
+    },
+    {
+      "id": "image-to-code",
+      "name": "Image to Code",
+      "description": "AI-powered tool that converts images and designs into functional code, supporting multiple frameworks and styling approaches.",
+      "category": "AI Tools",
+      "tags": ["ai", "code-generation", "design", "conversion", "automation"],
+      "tech": ["AI/ML", "Computer Vision", "Code Generation"],
+      "status": "active",
+      "creator": "Binary Ring Community",
+      "difficulty": "intermediate",
+      "features": [
+        "Image to HTML/CSS conversion",
+        "Multiple framework support",
+        "Design pattern recognition",
+        "Responsive code generation",
+        "Export to various formats"
+      ],
+      "path": "./image-to-code/",
+      "demo": "./image-to-code/index.html",
+      "image": "./image-to-code/preview.png",
+      "dateAdded": "2024-11-09",
+      "lastUpdated": "2024-11-09"
+    },
+    {
+      "id": "kosmos-mindful-journey",
+      "name": "Kosmos - A Mindful Journey",
+      "description": "A guided mindfulness and philosophical journaling app that visualizes your personal growth as a journey through historical and metaphysical 'maps' of the cosmos, framed as an alchemical path of self-discovery.",
+      "category": "Wellness & Growth",
+      "tags": ["mindfulness", "wellness", "philosophy", "journaling", "personal-growth"],
+      "tech": ["React", "TypeScript", "Visualization"],
+      "status": "active",
+      "creator": "Binary Ring Community",
+      "difficulty": "intermediate",
+      "features": [
+        "Guided meditation sessions",
+        "Philosophical journaling",
+        "Cosmic visualization maps",
+        "Personal growth tracking",
+        "Alchemical symbolism integration"
+      ],
+      "path": "./kosmos-mindful-journey/",
+      "demo": "./kosmos-mindful-journey/index.html",
+      "image": "./kosmos-mindful-journey/preview.png",
+      "dateAdded": "2024-11-09",
+      "lastUpdated": "2024-11-09"
+    },
+    {
+      "id": "path-of-spheres",
+      "name": "The Journey: Path of Spheres Visualization",
+      "description": "An interactive visualization of Dante's Cosmos, mapping personal growth through celestial spheres. Each sphere represents a unique stage of self-reflection and development within the Kosmos app.",
+      "category": "Visualization",
+      "tags": ["dante", "cosmos", "visualization", "spheres", "personal-development"],
+      "tech": ["React", "TypeScript", "3D Visualization"],
+      "status": "active",
+      "creator": "Binary Ring Community",
+      "difficulty": "advanced",
+      "features": [
+        "Interactive celestial spheres",
+        "Dante's cosmic structure",
+        "Personal development mapping",
+        "3D visualization interface",
+        "Progressive journey tracking"
+      ],
+      "path": "./path-of-spheres/",
+      "demo": "./path-of-spheres/index.html",
+      "image": "./path-of-spheres/preview.png",
+      "dateAdded": "2024-11-09",
+      "lastUpdated": "2024-11-09"
+    },
+    {
+      "id": "sonic-sculptor",
+      "name": "Sonic Sculptor",
+      "description": "A modular creative sandbox to sculpt real-time visuals driven by audio. Upload your own audio or use a microphone to generate mesmerizing particle effects that react to bass, mids, and treble frequencies.",
+      "category": "Audio-Visual",
+      "tags": ["audio", "visual", "particles", "microphone", "real-time"],
+      "tech": ["Angular", "TypeScript", "Web Audio API", "Canvas"],
+      "status": "active",
+      "creator": "Binary Ring Community",
+      "difficulty": "advanced",
+      "features": [
+        "Real-time audio analysis",
+        "Particle system visualization",
+        "Microphone input support",
+        "Frequency-responsive effects",
+        "Customizable visual parameters"
+      ],
+      "path": "./sonic-sculptor/",
+      "demo": "./sonic-sculptor/index.html",
+      "image": "./sonic-sculptor/preview.png",
+      "dateAdded": "2024-11-09",
+      "lastUpdated": "2024-11-09"
+    }
+  ],
+  "experiments": [
+    {
+      "id": "gembooth",
+      "name": "GemBooth",
+      "description": "Experimental photo booth application with AI-powered effects and generative enhancements for creating unique visual experiences.",
+      "category": "Experimental",
+      "tags": ["photo", "ai", "effects", "experimental", "visual"],
+      "tech": ["WebRTC", "Canvas", "AI"],
+      "status": "experimental",
+      "creator": "Binary Ring Community",
+      "difficulty": "intermediate",
+      "features": [
+        "Real-time camera effects",
+        "AI-powered enhancements",
+        "Generative filters",
+        "Photo capture and export",
+        "Interactive controls"
+      ],
+      "path": "../experiments/gembooth/",
+      "demo": "../experiments/gembooth/index.html",
+      "image": "../experiments/gembooth/preview.png",
+      "dateAdded": "2024-11-09",
+      "lastUpdated": "2024-11-09"
+    },
+    {
+      "id": "interactive-narrative-generator",
+      "name": "Interactive Narrative Generator",
+      "description": "Experimental tool for creating branching narratives with AI assistance, featuring dynamic story generation and interactive choice systems.",
+      "category": "Experimental",
+      "tags": ["narrative", "interactive", "ai", "storytelling", "generation"],
+      "tech": ["JavaScript", "AI/ML", "Graph Theory"],
+      "status": "experimental",
+      "creator": "Binary Ring Community",
+      "difficulty": "advanced",
+      "features": [
+        "AI-powered story generation",
+        "Branching narrative trees",
+        "Interactive choice systems",
+        "Character development tools",
+        "Export to multiple formats"
+      ],
+      "path": "../experiments/interactive-narrative-generator/",
+      "demo": "../experiments/interactive-narrative-generator/index.html",
+      "image": "../experiments/interactive-narrative-generator/preview.png",
+      "dateAdded": "2024-11-09",
+      "lastUpdated": "2024-11-09"
+    },
+    {
+      "id": "cross-platform-social-content-generator",
+      "name": "Cross-Platform Social Content Generator",
+      "description": "Experimental tool for generating optimized content across multiple social media platforms with AI-driven adaptation and scheduling.",
+      "category": "Experimental",
+      "tags": ["social-media", "content", "ai", "cross-platform", "automation"],
+      "tech": ["AI/ML", "API Integration", "Content Management"],
+      "status": "experimental",
+      "creator": "Binary Ring Community",
+      "difficulty": "intermediate",
+      "features": [
+        "Multi-platform optimization",
+        "AI content adaptation",
+        "Scheduling integration",
+        "Analytics tracking",
+        "Template management"
+      ],
+      "path": "../experiments/cross-platform-social-content-generator/",
+      "demo": "../experiments/cross-platform-social-content-generator/index.html",
+      "image": "../experiments/cross-platform-social-content-generator/preview.png",
+      "dateAdded": "2024-11-09",
+      "lastUpdated": "2024-11-09"
+    }
+  ],
+  "categories": {
+    "AI Tools": {
+      "description": "Applications powered by artificial intelligence for creative and productivity tasks",
+      "count": 2,
+      "color": "#4f46e5"
+    },
+    "Music Generation": {
+      "description": "Tools and applications for algorithmic and generative music composition",
+      "count": 1,
+      "color": "#059669"
+    },
+    "Audio-Visual": {
+      "description": "Immersive experiences combining audio and visual elements",
+      "count": 2,
+      "color": "#dc2626"
+    },
+    "Wellness & Growth": {
+      "description": "Mindfulness and personal development applications",
+      "count": 1,
+      "color": "#10b981"
+    },
+    "Visualization": {
+      "description": "Interactive data and concept visualization tools",
+      "count": 1,
+      "color": "#f59e0b"
+    },
+    "Experimental": {
+      "description": "Cutting-edge experiments and proof-of-concept applications",
+      "count": 3,
+      "color": "#7c3aed"
+    }
+  },
+  "stats": {
+    "totalApps": 7,
+    "totalExperiments": 3,
+    "totalProjects": 10,
+    "lastUpdated": "2024-11-09",
+    "featuredProject": "sonic-sculptor"
+  }
+}

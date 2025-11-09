@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buddhabrot - Binary Ring Project Showcase</title>
+
+    <!-- Meta Tags -->
+    <meta name="description" content="Interactive Buddhabrot fractal visualization - explore the hidden paths of the Mandelbrot set">
+    <meta name="keywords" content="buddhabrot, fractal, mandelbrot, generative art, mathematical visualization">
+    <meta name="author" content="Binary Ring">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Buddhabrot - Fractal Path Visualization">
+    <meta property="og:description" content="Explore the hidden trajectories of points escaping the Mandelbrot set">
+    <meta property="og:type" content="website">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../../assets/css/showcase.css">
+    <link rel="stylesheet" href="project-showcase.css">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax for mathematical notation -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="project-nav">
+        <div class="nav-container">
+            <a href="../../index.html" class="nav-back">
+                ← Back to Showcase
+            </a>
+            <div class="nav-title">Buddhabrot</div>
+            <div class="nav-actions">
+                <button class="share-btn" id="shareBtn">Share</button>
+                <button class="fullscreen-btn" id="fullscreenBtn">Fullscreen</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Project Header -->
+    <header class="project-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="project-meta">
+                    <span class="project-category">Fractals</span>
+                    <div class="project-stats">
+                        <span>👁 2,847 views</span>
+                        <span>❤ 156 likes</span>
+                        <span>⬇ 89 downloads</span>
+                    </div>
+                </div>
+
+                <h1 class="project-title">Buddhabrot</h1>
+                <p class="project-description">
+                    Fractal path tracing in the Mandelbrot set creating organic, Buddha-like silhouettes
+                </p>
+
+                <div class="project-tags">
+                    <span class="tag">#fractal</span>
+                    <span class="tag">#mandelbrot</span>
+                    <span class="tag">#mathematical</span>
+                    <span class="tag">#organic</span>
+                    <span class="tag">#buddha</span>
+                </div>
+
+                <div class="project-actions">
+                    <button class="btn-primary" id="generateBtn">Generate New</button>
+                    <button class="btn-secondary" id="exportBtn">Export Image</button>
+                    <button class="btn-secondary" id="savePresetBtn">Save Preset</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Interactive Visualization -->
+    <main class="project-main">
+        <div class="visualization-container">
+            <div class="canvas-container">
+                <canvas id="buddhabrotCanvas" class="main-canvas"></canvas>
+                <div class="canvas-overlay">
+                    <div class="rendering-progress" id="renderProgress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <span class="progress-text" id="progressText">Initializing...</span>
+                    </div>
+
+                    <div class="zoom-controls">
+                        <button class="zoom-btn" id="zoomIn">+</button>
+                        <button class="zoom-btn" id="zoomOut">-</button>
+                        <button class="zoom-btn" id="resetZoom">⌂</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parameter Controls -->
+            <div class="controls-panel" id="controlsPanel">
+                <div class="controls-header">
+                    <h3>Parameters</h3>
+                    <button class="toggle-controls" id="toggleControls">−</button>
+                </div>
+
+                <div class="controls-content" id="controlsContent">
+                    <!-- Iteration Controls -->
+                    <div class="control-group">
+                        <label for="iterationsSlider">Iterations</label>
+                        <div class="slider-container">
+                            <input type="range" id="iterationsSlider" min="1000" max="10000" value="5000" step="100">
+                            <span class="slider-value" id="iterationsValue">5000</span>
+                        </div>
+                        <p class="control-description">Maximum iterations before considering a point as part of the set</p>
+                    </div>
+
+                    <!-- Sample Count Controls -->
+                    <div class="control-group">
+                        <label for="samplesSlider">Samples</label>
+                        <div class="slider-container">
+                            <input type="range" id="samplesSlider" min="1000000" max="100000000" value="10000000" step="1000000">
+                            <span class="slider-value" id="samplesValue">10M</span>
+                        </div>
+                        <p class="control-description">Number of random points to test and trace</p>
+                    </div>
+
+                    <!-- Zoom Controls -->
+                    <div class="control-group">
+                        <label for="zoomSlider">Zoom Level</label>
+                        <div class="slider-container">
+                            <input type="range" id="zoomSlider" min="1" max="1000" value="1" step="0.1">
+                            <span class="slider-value" id="zoomValue">1x</span>
+                        </div>
+                    </div>
+
+                    <!-- Center Coordinates -->
+                    <div class="control-group">
+                        <label>Center Coordinates</label>
+                        <div class="coordinate-inputs">
+                            <div class="coordinate-input">
+                                <label for="centerX">X:</label>
+                                <input type="number" id="centerX" value="-0.7" step="0.01" min="-2" max="2">
+                            </div>
+                            <div class="coordinate-input">
+                                <label for="centerY">Y:</label>
+                                <input type="number" id="centerY" value="0" step="0.01" min="-2" max="2">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Color Scheme -->
+                    <div class="control-group">
+                        <label for="colorScheme">Color Scheme</label>
+                        <select id="colorScheme">
+                            <option value="classic">Classic Red</option>
+                            <option value="monochrome">Monochrome</option>
+                            <option value="spectral">Spectral</option>
+                            <option value="fire">Fire</option>
+                            <option value="ocean">Ocean</option>
+                        </select>
+                    </div>
+
+                    <!-- Presets -->
+                    <div class="control-group">
+                        <label>Presets</label>
+                        <div class="preset-buttons">
+                            <button class="preset-btn" data-preset="default">Default</button>
+                            <button class="preset-btn" data-preset="detailed">High Detail</button>
+                            <button class="preset-btn" data-preset="quick">Quick Preview</button>
+                            <button class="preset-btn" data-preset="artistic">Artistic</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Information -->
+        <section class="technical-section">
+            <div class="container">
+                <div class="tech-grid">
+                    <!-- Algorithm Explanation -->
+                    <div class="tech-card">
+                        <h3>Algorithm Details</h3>
+                        <div class="algorithm-content">
+                            <p>The Buddhabrot algorithm reveals the hidden beauty within the Mandelbrot set by tracing the escape paths of points that eventually diverge to infinity.</p>
+
+                            <h4>Mathematical Foundation</h4>
+                            <p>For each point $c$ in the complex plane, we iterate:</p>
+                            <div class="equation">
+                                $$z_{n+1} = z_n^2 + c$$
+                            </div>
+                            <p>where $z_0 = 0$. Instead of simply checking if $|z_n| > 2$, we record every point along the trajectory.</p>
+
+                            <h4>The Process</h4>
+                            <ol>
+                                <li>Generate random points in the complex plane</li>
+                                <li>Test if the point escapes the Mandelbrot set</li>
+                                <li>If it escapes, trace and record the entire trajectory</li>
+                                <li>Accumulate all trajectories in a 2D histogram</li>
+                                <li>Render the accumulated density as brightness</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- Performance Metrics -->
+                    <div class="tech-card">
+                        <h3>Performance Metrics</h3>
+                        <div class="metrics-grid">
+                            <div class="metric">
+                                <span class="metric-label">Complexity</span>
+                                <span class="metric-value">O(n²)</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Render Time</span>
+                                <span class="metric-value" id="renderTime">2-30 sec</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Memory Usage</span>
+                                <span class="metric-value" id="memoryUsage">~200MB</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Max Resolution</span>
+                                <span class="metric-value">8K (7680×4320)</span>
+                            </div>
+                        </div>
+
+                        <div class="performance-tips">
+                            <h4>Optimization Tips</h4>
+                            <ul>
+                                <li>Start with fewer samples for quick previews</li>
+                                <li>Use higher iteration counts for detailed structures</li>
+                                <li>Zoom into interesting areas for better detail</li>
+                                <li>Enable WebGL acceleration in browser settings</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Features -->
+                    <div class="tech-card">
+                        <h3>Interactive Features</h3>
+                        <div class="features-list">
+                            <div class="feature">
+                                <div class="feature-icon">🖱️</div>
+                                <div class="feature-content">
+                                    <h4>Click to Zoom</h4>
+                                    <p>Click anywhere on the fractal to zoom into that region</p>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-icon">⚙️</div>
+                                <div class="feature-content">
+                                    <h4>Real-time Parameters</h4>
+                                    <p>Adjust iterations, samples, and colors in real-time</p>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-icon">💾</div>
+                                <div class="feature-content">
+                                    <h4>Export & Share</h4>
+                                    <p>Export high-resolution images and share parameters</p>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-icon">🎨</div>
+                                <div class="feature-content">
+                                    <h4>Color Schemes</h4>
+                                    <p>Multiple color palettes and custom gradients</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Educational Content -->
+        <section class="educational-section">
+            <div class="container">
+                <h2>Understanding the Buddhabrot</h2>
+
+                <div class="educational-grid">
+                    <div class="edu-card">
+                        <h3>Historical Context</h3>
+                        <p>The Buddhabrot was discovered by Melinda Green in 1993 while experimenting with the Mandelbrot set. The name comes from the Buddha-like silhouette that emerges from the accumulated trajectories.</p>
+
+                        <p>Unlike traditional Mandelbrot renderings that color points based on escape time, the Buddhabrot reveals the actual paths taken by escaping points, creating flowing, organic forms.</p>
+                    </div>
+
+                    <div class="edu-card">
+                        <h3>Mathematical Beauty</h3>
+                        <p>The Buddhabrot demonstrates several mathematical concepts:</p>
+                        <ul>
+                            <li><strong>Chaos Theory:</strong> Small changes in initial conditions lead to vastly different trajectories</li>
+                            <li><strong>Self-Similarity:</strong> The same patterns repeat at different scales</li>
+                            <li><strong>Fractal Geometry:</strong> Infinite detail at every level of magnification</li>
+                            <li><strong>Complex Dynamics:</strong> The interplay between bounded and unbounded behavior</li>
+                        </ul>
+                    </div>
+
+                    <div class="edu-card">
+                        <h3>Artistic Interpretation</h3>
+                        <p>The Buddhabrot bridges mathematics and art, showing how algorithmic processes can create profound aesthetic experiences. The flowing forms suggest:</p>
+                        <ul>
+                            <li>Meditation and contemplation</li>
+                            <li>The flow of consciousness</li>
+                            <li>Natural growth patterns</li>
+                            <li>Spiritual iconography</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Neural Connections -->
+        <section class="neural-connections">
+            <div class="container">
+                <h2>Related Projects</h2>
+                <div class="neural-canvas-container">
+                    <canvas id="neuralCanvas"></canvas>
+                    <div class="neural-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #FF6B6B;"></div>
+                            <span>Mathematical</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #4ECDC4;"></div>
+                            <span>Fractal</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #FFE66D;"></div>
+                            <span>Contemplative</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community & Merchandise -->
+        <section class="community-section">
+            <div class="container">
+                <div class="community-grid">
+                    <!-- Comments -->
+                    <div class="comments-section">
+                        <h3>Community Comments</h3>
+                        <div class="comments-container" id="commentsContainer">
+                            <!-- Comments will be loaded here -->
+                        </div>
+                        <div class="comment-form">
+                            <textarea placeholder="Share your thoughts about this fractal..." id="commentText"></textarea>
+                            <button class="btn-primary" id="postComment">Post Comment</button>
+                        </div>
+                    </div>
+
+                    <!-- Merchandise -->
+                    <div class="merchandise-section">
+                        <h3>Merchandise</h3>
+                        <div class="merch-grid">
+                            <div class="merch-item">
+                                <div class="merch-image">
+                                    <div class="placeholder-image">🖼️</div>
+                                </div>
+                                <h4>Buddhabrot Print</h4>
+                                <p class="merch-price">$24.99</p>
+                                <button class="btn-secondary">View Options</button>
+                            </div>
+                            <div class="merch-item">
+                                <div class="merch-image">
+                                    <div class="placeholder-image">👕</div>
+                                </div>
+                                <h4>Fractal T-Shirt</h4>
+                                <p class="merch-price">$19.99</p>
+                                <button class="btn-secondary">View Options</button>
+                            </div>
+                            <div class="merch-item">
+                                <div class="merch-image">
+                                    <div class="placeholder-image">☕</div>
+                                </div>
+                                <h4>Mathematical Mug</h4>
+                                <p class="merch-price">$14.99</p>
+                                <button class="btn-secondary">View Options</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Export Modal -->
+    <div class="modal-overlay" id="exportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Export Image</h3>
+                <button class="modal-close" id="closeExport">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="export-options">
+                    <div class="option-group">
+                        <label>Resolution</label>
+                        <select id="exportResolution">
+                            <option value="1920x1080">Full HD (1920×1080)</option>
+                            <option value="2560x1440">2K (2560×1440)</option>
+                            <option value="3840x2160">4K (3840×2160)</option>
+                            <option value="7680x4320">8K (7680×4320)</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label>Format</label>
+                        <select id="exportFormat">
+                            <option value="png">PNG</option>
+                            <option value="jpg">JPEG</option>
+                            <option value="svg">SVG</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label>Quality</label>
+                        <input type="range" id="exportQuality" min="50" max="100" value="95">
+                        <span id="qualityValue">95%</span>
+                    </div>
+                </div>
+                <div class="export-actions">
+                    <button class="btn-secondary" id="cancelExport">Cancel</button>
+                    <button class="btn-primary" id="confirmExport">Export</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../assets/js/neural-connections.js"></script>
+    <script src="buddhabrot-renderer.js"></script>
+    <script src="buddhabrot-controls.js"></script>
+    <script src="project-showcase.js"></script>
+
+    <!-- Initialize -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            window.BuddhabrotShowcase = new ProjectShowcase('buddhabrot');
+            window.BuddhabrotShowcase.init();
+        });
+    </script>
+</body>
+</html>

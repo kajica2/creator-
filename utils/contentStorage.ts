@@ -4,6 +4,7 @@ const DEFAULT_PERSONA: Persona = {
   id: 'default',
   name: 'Default Persona',
   context: '',
+  isDefault: true,
   createdAt: Date.now(),
   updatedAt: Date.now(),
   contentCount: 0
@@ -61,7 +62,7 @@ export const addContent = (
   };
 
   // Update persona content count
-  const updatedPersonas = storage.personas.map(persona => 
+  const updatedPersonas = storage.personas.map(persona =>
     persona.id === personaId 
       ? { ...persona, contentCount: persona.contentCount + 1, updatedAt: Date.now() }
       : persona
@@ -84,6 +85,7 @@ export const createPersona = (
     id: crypto.randomUUID(),
     name,
     context,
+    isDefault: false,
     createdAt: Date.now(),
     updatedAt: Date.now(),
     contentCount: 0

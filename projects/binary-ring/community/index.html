@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Ring Community - Generative Art Collective</title>
+    <link rel="stylesheet" href="styles/community.css">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>BINARY RING</h1>
+                    <span class="subtitle">Community</span>
+                </div>
+
+                <nav class="main-nav">
+                    <a href="#gallery" class="nav-link active">Gallery</a>
+                    <a href="#collections" class="nav-link">Collections</a>
+                    <a href="#artists" class="nav-link">Artists</a>
+                    <a href="#submit" class="nav-link">Submit</a>
+                    <a href="#about" class="nav-link">About</a>
+                </nav>
+
+                <div class="header-actions">
+                    <button class="search-btn" onclick="toggleSearch()">
+                        <i data-feather="search"></i>
+                    </button>
+                    <button class="grid-toggle" onclick="toggleGridView()">
+                        <i data-feather="grid"></i>
+                    </button>
+                    <button class="theme-toggle" onclick="toggleTheme()">
+                        <i data-feather="moon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-container" id="searchContainer">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search projects, artists, techniques...">
+                    <div class="search-filters">
+                        <select id="categoryFilter">
+                            <option value="">All Categories</option>
+                            <option value="fractals">Fractals</option>
+                            <option value="attractors">Attractors</option>
+                            <option value="particles">Particles</option>
+                            <option value="organic">Organic</option>
+                            <option value="networks">Networks</option>
+                            <option value="geometric">Geometric</option>
+                            <option value="space">Space</option>
+                            <option value="emotional">Emotional</option>
+                        </select>
+                        <select id="sortBy">
+                            <option value="recent">Most Recent</option>
+                            <option value="popular">Most Popular</option>
+                            <option value="alphabetical">A-Z</option>
+                            <option value="complexity">Complexity</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Stats Dashboard -->
+    <section class="stats-dashboard">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🎨</div>
+                    <div class="stat-number" id="totalProjects">36</div>
+                    <div class="stat-label">Total Projects</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✨</div>
+                    <div class="stat-number" id="newProjects">10</div>
+                    <div class="stat-label">New This Month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-number" id="contributors">24</div>
+                    <div class="stat-label">Contributors</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-number" id="totalViews">12.3K</div>
+                    <div class="stat-label">Total Views</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Collection -->
+    <section class="featured-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Featured Collection: Algorithmic Explorations</h2>
+                <p>Handpicked works showcasing the intersection of mathematics and art</p>
+            </div>
+
+            <div class="featured-carousel" id="featuredCarousel">
+                <!-- Featured items will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Gallery -->
+    <section class="gallery-section" id="gallery">
+        <div class="container">
+            <div class="section-header">
+                <h2>Community Gallery</h2>
+                <div class="gallery-controls">
+                    <div class="view-toggles">
+                        <button class="view-btn active" data-view="grid" onclick="setGridView('grid')">
+                            <i data-feather="grid"></i> Grid
+                        </button>
+                        <button class="view-btn" data-view="list" onclick="setGridView('list')">
+                            <i data-feather="list"></i> List
+                        </button>
+                        <button class="view-btn" data-view="masonry" onclick="setGridView('masonry')">
+                            <i data-feather="layout"></i> Masonry
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Tags -->
+            <div class="filter-tags">
+                <button class="filter-tag active" data-filter="all">All</button>
+                <button class="filter-tag" data-filter="new">New</button>
+                <button class="filter-tag" data-filter="interactive">Interactive</button>
+                <button class="filter-tag" data-filter="audio-reactive">Audio Reactive</button>
+                <button class="filter-tag" data-filter="3d">3D</button>
+                <button class="filter-tag" data-filter="realtime">Real-time</button>
+            </div>
+
+            <!-- Gallery Grid -->
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Projects will be loaded dynamically -->
+            </div>
+
+            <!-- Load More -->
+            <div class="load-more-section">
+                <button class="load-more-btn" onclick="loadMoreProjects()">
+                    Load More Projects
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Collections Section -->
+    <section class="collections-section" id="collections">
+        <div class="container">
+            <div class="section-header">
+                <h2>Curated Collections</h2>
+                <p>Explore themed collections of generative artworks</p>
+            </div>
+
+            <div class="collections-grid">
+                <div class="collection-card" data-collection="new-releases">
+                    <div class="collection-preview">
+                        <div class="preview-images">
+                            <img src="assets/previews/node-garden-thumb.jpg" alt="Node Garden">
+                            <img src="assets/previews/happy-place-thumb.jpg" alt="Happy Place">
+                            <img src="assets/previews/orbitals-thumb.jpg" alt="Orbitals">
+                        </div>
+                    </div>
+                    <div class="collection-info">
+                        <h3>New Releases</h3>
+                        <p>Latest additions to the Binary Ring collection</p>
+                        <div class="collection-meta">
+                            <span class="project-count">10 projects</span>
+                            <span class="update-date">Updated today</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collection-card" data-collection="interactive">
+                    <div class="collection-preview">
+                        <div class="preview-images">
+                            <img src="assets/previews/substrate-thumb.jpg" alt="Substrate">
+                            <img src="assets/previews/bubble-chamber-thumb.jpg" alt="Bubble Chamber">
+                            <img src="assets/previews/city-traveler-thumb.jpg" alt="City Traveler">
+                        </div>
+                    </div>
+                    <div class="collection-info">
+                        <h3>Interactive Experiences</h3>
+                        <p>Projects with real-time user interaction</p>
+                        <div class="collection-meta">
+                            <span class="project-count">8 projects</span>
+                            <span class="update-date">Updated 2 days ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collection-card" data-collection="mathematical">
+                    <div class="collection-preview">
+                        <div class="preview-images">
+                            <img src="assets/previews/buddhabrot-thumb.jpg" alt="Buddhabrot">
+                            <img src="assets/previews/deep-lorenz-thumb.jpg" alt="Deep Lorenz">
+                            <img src="assets/previews/peter-de-jong-thumb.jpg" alt="Peter de Jong">
+                        </div>
+                    </div>
+                    <div class="collection-info">
+                        <h3>Mathematical Explorations</h3>
+                        <p>Pure mathematical visualizations and attractors</p>
+                        <div class="collection-meta">
+                            <span class="project-count">12 projects</span>
+                            <span class="update-date">Updated weekly</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collection-card" data-collection="organic">
+                    <div class="collection-preview">
+                        <div class="preview-images">
+                            <img src="assets/previews/bone-piles-thumb.jpg" alt="Bone Piles">
+                            <img src="assets/previews/guts-thumb.jpg" alt="Guts">
+                            <img src="assets/previews/tree-garden-thumb.jpg" alt="Tree Garden">
+                        </div>
+                    </div>
+                    <div class="collection-info">
+                        <h3>Organic Forms</h3>
+                        <p>Nature-inspired growth and biological patterns</p>
+                        <div class="collection-meta">
+                            <span class="project-count">9 projects</span>
+                            <span class="update-date">Updated 3 days ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Stats -->
+    <section class="community-stats">
+        <div class="container">
+            <h2>Community Activity</h2>
+            <div class="activity-grid">
+                <div class="activity-chart">
+                    <h3>Projects Created</h3>
+                    <canvas id="projectsChart" width="300" height="150"></canvas>
+                </div>
+                <div class="popular-tags">
+                    <h3>Popular Tags</h3>
+                    <div class="tag-cloud">
+                        <span class="tag large">generative</span>
+                        <span class="tag medium">fractal</span>
+                        <span class="tag large">interactive</span>
+                        <span class="tag small">webgl</span>
+                        <span class="tag medium">algorithm</span>
+                        <span class="tag small">particle</span>
+                        <span class="tag large">mathematical</span>
+                        <span class="tag medium">organic</span>
+                        <span class="tag small">3d</span>
+                        <span class="tag medium">audio-reactive</span>
+                    </div>
+                </div>
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-feed" id="activityFeed">
+                        <!-- Activity items will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Submit Section -->
+    <section class="submit-section" id="submit">
+        <div class="container">
+            <div class="section-header">
+                <h2>Submit Your Work</h2>
+                <p>Share your generative art with the community</p>
+            </div>
+
+            <div class="submit-form-container">
+                <form class="submit-form" id="submitForm">
+                    <div class="form-group">
+                        <label for="projectTitle">Project Title</label>
+                        <input type="text" id="projectTitle" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectDescription">Description</label>
+                        <textarea id="projectDescription" rows="4" required></textarea>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="projectCategory">Category</label>
+                            <select id="projectCategory" required>
+                                <option value="">Select Category</option>
+                                <option value="fractals">Fractals</option>
+                                <option value="attractors">Attractors</option>
+                                <option value="particles">Particles</option>
+                                <option value="organic">Organic</option>
+                                <option value="networks">Networks</option>
+                                <option value="geometric">Geometric</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="projectTags">Tags</label>
+                            <input type="text" id="projectTags" placeholder="interactive, webgl, realtime">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectCode">Source Code URL (GitHub, CodePen, etc.)</label>
+                        <input type="url" id="projectCode">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectDemo">Live Demo URL</label>
+                        <input type="url" id="projectDemo">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectImages">Images/Screenshots</label>
+                        <input type="file" id="projectImages" multiple accept="image/*">
+                        <div class="file-upload-hint">Upload up to 5 images (PNG, JPG, GIF)</div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="submit-btn">Submit Project</button>
+                        <button type="button" class="preview-btn" onclick="previewSubmission()">Preview</button>
+                    </div>
+                </form>
+
+                <div class="submission-guidelines">
+                    <h3>Submission Guidelines</h3>
+                    <ul>
+                        <li>Original generative art works only</li>
+                        <li>Include source code or detailed algorithm description</li>
+                        <li>Provide high-quality screenshots or recordings</li>
+                        <li>Interactive demos preferred but not required</li>
+                        <li>Attribution for any referenced algorithms or techniques</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Binary Ring Community</h3>
+                    <p>A collaborative space for generative art enthusiasts, algorithmic artists, and creative coders.</p>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#gallery">Gallery</a></li>
+                        <li><a href="#collections">Collections</a></li>
+                        <li><a href="#submit">Submit Work</a></li>
+                        <li><a href="pages/documentation.html">Documentation</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link">Twitter</a>
+                        <a href="#" class="social-link">GitHub</a>
+                        <a href="#" class="social-link">Discord</a>
+                        <a href="#" class="social-link">YouTube</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 Binary Ring Community. Open source and community driven.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="scripts/community.js"></script>
+    <script src="scripts/gallery.js"></script>
+    <script src="scripts/projects-data.js"></script>
+    <script>
+        // Initialize page
+        feather.replace();
+        initializeCommunityPage();
+    </script>
+</body>
+</html>
