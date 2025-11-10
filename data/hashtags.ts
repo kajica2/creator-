@@ -151,7 +151,6 @@ export const readySets: ReadySet[] = [
         isFavorite: false,
         createdAt: Date.now(),
         updatedAt: Date.now()
-    }
     },
     {
         id: generateSetId('template_urban_shredder'),

@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { hashtagCategories, readySets } from './data/hashtags';
-import { Hashtag, HashtagSize, PromptHistoryItem, PromptType, RagSource, User, SubscriptionPlan, Page, GeneratedContentStore } from './types';
+import { Hashtag, HashtagSize, PromptHistoryItem, PromptType, RagSource, User, SubscriptionPlan, Page, GeneratedContentStore, UserProgress } from './types';
 import { SelectedTray } from './components/SelectedTray';
 import { AIStoryGenerator } from './components/AIStoryGenerator';
 import { SunoLyricsGenerator } from './components/SunoLyricsGenerator';
@@ -26,14 +26,14 @@ import { BatchImageGenerator } from './components/BatchImageGenerator';
 import { BatchPromptGenerator } from './components/BatchPromptGenerator';
 import { Sidebar } from './components/Sidebar';
 import { HashtagManager } from './components/HashtagManager';
-import { OnboardingModal } from './components/OnboardingModal';
+import { OnboardingScreen } from './components/OnboardingScreen';
+import { GamificationDashboard } from './components/GamificationDashboard';
 import { ThinkingMode } from './components/ThinkingMode';
 import { AudioTranscriber } from './components/AudioTranscriber';
 import AudioAgentIntegrationExample from './components/audio/AudioAgentIntegrationExample';
 import { SentryNavigationCloud } from './components/SentryNavigationCloud';
 import SynapticSymphony from './projects/synaptic-symphony/SynapticSymphony';
 import { MediaLibrary } from './components/MediaLibrary';
-
 
 const PersonaIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -53,54 +53,48 @@ const MenuIcon = () => (
     </svg>
 );
 
-
 const App: React.FC = () => {
-    const [activePage, setActivePage] = useState<Page>('Hashtag Manager');
-    const [selectedHashtags, setSelectedHashtags] = useState<Set<string>>(new Set());
-    const [promptHistory, setPromptHistory] = useState<PromptHistoryItem[]>(() => {
+    const [hasSeenOnboarding, setHasSeenOnboarding] = useState(() => {
+        if (typeof window === 'undefined') {
+            return false;
+        }
         try {
-            const savedHistory = localStorage.getItem('promptHistory');
-            return savedHistory ? JSON.parse(savedHistory) : [];
-        } catch (error) {
-            console.error("Could not load prompt history from localStorage", error);
-            return [];
+            return window.localStorage.getItem('hasSeenOnboarding') === 'true';
+        } catch {
+            return false;
         }
     });
-    const [language, setLanguage] = useState<'en' | 'sr'>('en');
-    const [aiContext, setAiContext] = useState<string>('');
+    const [activePage, setActivePage] = useState<Page>(() => (typeof window !== 'undefined' && window.localStorage.getItem('hasSeenOnboarding') === 'true' ? 'Hashtag Manager' : 'Onboarding'));
+    const [selectedHashtags, setSelectedHashtags] = useState<Set<string>>(new Set());
+    const [promptHistory, setPromptHistory] = useState<PromptHistoryItem[]>([]);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isContextModalOpen, setIsContextModalOpen] = useState(false);
-    const [ragSources, setRagSources] = useState<RagSource[]>([]);
     const [isRagModalOpen, setIsRagModalOpen] = useState(false);
     const [isBatchImportModalOpen, setIsBatchImportModalOpen] = useState(false);
-    const [user, setUser] = useState<User | null>(null);
-    const [subscriptionPlan, setSubscriptionPlan] = useState<SubscriptionPlan>('free');
-    const [credits, setCredits] = useState(10);
     const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
+
+    const [user, setUser] = useState<User | null>(null);
+    const [language, setLanguage] = useState<'English' | 'Spanish'>('English');
+    const [aiContext, setAiContext] = useState<string>('');
+    const [ragSources, setRagSources] = useState<RagSource[]>([]);
+    const [subscriptionPlan, setSubscriptionPlan] = useState<SubscriptionPlan>('free');
+    const [credits, setCredits] = useState(5);
     const [generatedContent, setGeneratedContent] = useState<GeneratedContentStore>({});
-    
-    const allHashtags = useMemo(() => hashtagCategories.flatMap(c => c.hashtags), []);
 
-    useEffect(() => {
-        try {
-            localStorage.setItem('promptHistory', JSON.stringify(promptHistory));
-        } catch (error) {
-            console.error("Could not save prompt history to localStorage", error);
-        }
-    }, [promptHistory]);
-
-    useEffect(() => {
-        const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
-        if (!hasSeenOnboarding) {
-            setIsOnboardingOpen(true);
-        }
+    const allHashtags = useMemo(() => {
+        return hashtagCategories.flatMap(cat => cat.hashtags);
     }, []);
 
-    const handleCloseOnboarding = () => {
-        localStorage.setItem('hasSeenOnboarding', 'true');
-        setIsOnboardingOpen(false);
-    };
+    useEffect(() => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+        try {
+            window.localStorage.setItem('hasSeenOnboarding', hasSeenOnboarding ? 'true' : 'false');
+        } catch {
+            // noop
+        }
+    }, [hasSeenOnboarding]);
 
     const handleHashtagSelect = useCallback((name: string) => {
         setSelectedHashtags(prev => {
@@ -120,81 +114,119 @@ const App: React.FC = () => {
 
     const handleSelectSet = useCallback((hashtags: string[]) => {
         setSelectedHashtags(new Set(hashtags));
-        setActivePage('AI Story'); // Navigate to a relevant tab after selecting a set
+        setActivePage('AI Story');
+    }, []);
+
+    const handleLaunchDemo = useCallback(() => {
+        setHasSeenOnboarding(true);
+        setActivePage('Hashtag Manager');
+    }, []);
+
+    const handleRequestInvite = useCallback(() => {
+        setHasSeenOnboarding(true);
+        setActivePage('Subscription');
+    }, []);
+
+    const handleSkipOnboarding = useCallback(() => {
+        setHasSeenOnboarding(true);
+        setActivePage('Hashtag Manager');
     }, []);
 
     const handleAddPromptToHistory = useCallback((prompt: { type: PromptType; prompt: string }) => {
         const newHistoryItem: PromptHistoryItem = {
-            id: crypto.randomUUID(),
-            timestamp: Date.now(),
-            ...prompt,
+            id: Date.now().toString(),
+            type: prompt.type,
+            prompt: prompt.prompt,
+            timestamp: Date.now()
         };
-        setPromptHistory(prev => [newHistoryItem, ...prev].slice(0, 50));
-    }, []);
-    
-    const handleContentGenerated = useCallback((page: Page, content: any) => {
-        setGeneratedContent(prev => ({
-            ...prev,
-            [page]: content
-        }));
+        setPromptHistory(prev => [newHistoryItem, ...prev.slice(0, 49)]);
     }, []);
 
     const handleClearHistory = useCallback(() => {
         setPromptHistory([]);
     }, []);
 
-    const handleSetAiContext = (context: string) => {
-        setAiContext(context);
-        setIsContextModalOpen(false);
-    };
-
-    const handleAuthSuccess = useCallback((authedUser: User) => {
-        setUser(authedUser);
-        setActivePage('Media Library');
+    const handleAuthSuccess = useCallback((userData: User) => {
+        setUser(userData);
     }, []);
 
     const handleSignOut = useCallback(() => {
         setUser(null);
-        setActivePage('Hashtag Manager');
     }, []);
-    
-    const handleAttemptGeneration = useCallback((generationFn: () => Promise<void>, count: number = 1) => {
-        if (subscriptionPlan === 'free' && credits < count) {
+
+    const handleSetAiContext = useCallback((context: string) => {
+        setAiContext(context);
+    }, []);
+
+    const handleUpgradePlan = useCallback((newPlan: SubscriptionPlan) => {
+        setSubscriptionPlan(newPlan);
+    }, []);
+
+    const handleAddCredits = useCallback((additionalCredits: number) => {
+        setCredits(prev => prev + additionalCredits);
+    }, []);
+
+    const handleAttemptGeneration = useCallback(() => {
+        if (subscriptionPlan === 'free' && credits <= 0) {
             setIsUpgradeModalOpen(true);
-            return;
+            return false;
         }
-
         if (subscriptionPlan === 'free') {
-            setCredits(prev => prev - count);
+            setCredits(prev => prev - 1);
         }
-
-        generationFn();
+        return true;
     }, [subscriptionPlan, credits]);
 
-    const handleUpgradePlan = (plan: SubscriptionPlan) => {
-        setSubscriptionPlan(plan);
-        if (plan !== 'free') {
-            setCredits(Infinity); 
-        } else {
-            setCredits(10);
-        }
-        setActivePage('Subscription');
-    };
-    
-    const handleAddCredits = (amount: number) => {
-        setCredits(prev => prev + amount);
-    };
+    const handleContentGenerated = useCallback((content: any) => {
+        const contentId = Date.now().toString();
+        setGeneratedContent(prev => ({
+            ...prev,
+            [contentId]: content
+        }));
+    }, []);
 
     const selectedHashtagObjects = useMemo(() => {
         return allHashtags.filter(h => selectedHashtags.has(h.name));
     }, [selectedHashtags, allHashtags]);
-    
+
+    const toolUsage = useMemo(() => {
+        return promptHistory.reduce<Record<string, number>>((acc, entry) => {
+            const key = entry.type;
+            acc[key] = (acc[key] || 0) + 1;
+            return acc;
+        }, {});
+    }, [promptHistory]);
+
+    const userProgress = useMemo<UserProgress>(() => {
+        const xpBase = promptHistory.length * 15 + selectedHashtagObjects.length * 5;
+        const xp = Math.max(60, xpBase);
+        const level = Math.max(1, Math.floor(xp / 200) + 1);
+        const streak =
+            promptHistory.length === 0
+                ? 1
+                : Math.min(30, Math.floor(promptHistory.length / 2) + 1);
+        const lastActivity = promptHistory[0]?.timestamp
+            ? new Date(promptHistory[0].timestamp).toISOString()
+            : new Date().toISOString();
+
+        return {
+            xp,
+            level,
+            achievements: [],
+            streak,
+            lastActivityDate: lastActivity,
+            totalGenerations: promptHistory.length,
+            toolUsage,
+            completedChallenges: [],
+        };
+    }, [promptHistory, selectedHashtagObjects, toolUsage]);
+
     const activeRagSources = useMemo(() => ragSources.filter(s => s.status === 'ready'), [ragSources]);
 
-    const handlePageChange = (page: Page) => {
+    const handlePageChange = useCallback((page: Page) => {
         setActivePage(page);
         setIsSidebarOpen(false);
-    }
+    }, []);
 
     const handleBatchImportComplete = useCallback((importedSources: RagSource[]) => {
         setRagSources(prev => {
@@ -204,16 +236,47 @@ const App: React.FC = () => {
         });
     }, []);
 
-    const renderContent = () => {
+    const renderContent = useCallback(() => {
+        const commonProps = {
+            user,
+            onPromptGenerated: handleAddPromptToHistory,
+            language,
+            aiContext,
+            ragSources: activeRagSources,
+            onAttemptGeneration: handleAttemptGeneration,
+            onContentGenerated: handleContentGenerated
+        };
+
         switch (activePage) {
+            case 'Onboarding':
+                return (
+                    <OnboardingScreen
+                        onLaunchDemo={handleLaunchDemo}
+                        onRequestInvite={handleRequestInvite}
+                        onSkipTour={!hasSeenOnboarding ? handleSkipOnboarding : undefined}
+                    />
+                );
             case 'Roadmap':
                 return <ProductRoadmap />;
             case 'Settings':
                 return <Settings />;
             case 'Subscription':
-                return <Subscription currentPlan={subscriptionPlan} onUpgradePlan={handleUpgradePlan} onAddCredits={handleAddCredits} />;
+                return (
+                    <Subscription
+                        currentPlan={subscriptionPlan}
+                        onUpgradePlan={handleUpgradePlan}
+                        onAddCredits={handleAddCredits}
+                    />
+                );
+            case 'Gamification':
+                return (
+                    <GamificationDashboard
+                        userProgress={userProgress}
+                        onAddCredits={handleAddCredits}
+                    />
+                );
             case 'Hashtag Manager':
-                return <HashtagManager 
+                return <HashtagManager
                     hashtagCategories={hashtagCategories}
                     readySets={readySets}
                     selectedHashtags={selectedHashtags}
@@ -221,57 +284,76 @@ const App: React.FC = () => {
                     onSelectSet={handleSelectSet}
                 />;
             case 'AI Story':
-                return <AIStoryGenerator user={user} selectedHashtags={selectedHashtagObjects} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
+                return <AIStoryGenerator {...commonProps} selectedHashtags={selectedHashtagObjects} />;
             case 'AI Lyrics':
-                return <SunoLyricsGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
+                return <SunoLyricsGenerator {...commonProps} />;
             case 'AI Strategy':
-                return <WebsiteStrategyGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
+                return <WebsiteStrategyGenerator {...commonProps} />;
             case 'AI Skill':
-                return <AISkillGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
+                return <AISkillGenerator {...commonProps} />;
             case 'AI Mutator':
-                 return <TensorMutator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
+                return <TensorMutator {...commonProps} />;
             case 'AI Concept':
-                return <AIConceptGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
+                return <AIConceptGenerator {...commonProps} />;
             case 'Text-to-Image':
-                return <TextToImageGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
+                return <TextToImageGenerator {...commonProps} />;
             case 'Image Edit':
-                return <ImageEditor user={user} onPromptGenerated={handleAddPromptToHistory} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
-             case 'Batch Images':
-                return <BatchImageGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
+                return (
+                    <ImageEditor
+                        user={user}
+                        onPromptGenerated={handleAddPromptToHistory}
+                        aiContext={aiContext}
+                        ragSources={activeRagSources}
+                        onAttemptGeneration={handleAttemptGeneration}
+                        onContentGenerated={handleContentGenerated}
+                    />
+                );
+            case 'Batch Images':
+                return <BatchImageGenerator {...commonProps} />;
             case 'Batch Prompts':
-                return <BatchPromptGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
+                return <BatchPromptGenerator {...commonProps} />;
             case 'AI Website':
-                return <AIWebsiteGenerator user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} generatedContent={generatedContent} />;
+                return <AIWebsiteGenerator {...commonProps} generatedContent={generatedContent} />;
             case 'Thinking Mode':
-                return <ThinkingMode user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
+                return <ThinkingMode {...commonProps} />;
             case 'Audio Transcriber':
-                return <AudioTranscriber user={user} onPromptGenerated={handleAddPromptToHistory} language={language} aiContext={aiContext} ragSources={activeRagSources} onAttemptGeneration={handleAttemptGeneration} onContentGenerated={handleContentGenerated} />;
+                return <AudioTranscriber {...commonProps} />;
             case 'Audio Agents':
                 return <AudioAgentIntegrationExample userId={user?.id} />;
             case 'Synaptic Symphony':
                 return <SynapticSymphony />;
             case 'Sentry Navigation Cloud':
-                return <SentryNavigationCloud
-                    width={1200}
-                    height={700}
-                    showCategories={true}
-                    interactive={true}
-                    onItemClick={(item) => {
-                        console.log('Sentry navigation item clicked:', item);
-                        // In a real app, this would navigate to the actual page
-                        alert(`Would navigate to: ${item.name}\nURL: ${item.url}\nDescription: ${item.description}`);
-                    }}
-                />;
+                return (
+                    <SentryNavigationCloud
+                        width={1200}
+                        height={700}
+                        showCategories={true}
+                        interactive={true}
+                        onItemClick={(item) => {
+                            console.log('Sentry navigation item clicked:', item);
+                            alert(`Would navigate to: ${item.name}\nURL: ${item.url}\nDescription: ${item.description}`);
+                        }}
+                    />
+                );
             case 'Gallery':
                 return <GalleryComponent />;
             case 'Media Library':
                 return <MediaLibrary user={user} onOpenBatchImport={() => setIsBatchImportModalOpen(true)} />;
+            case 'Documentation':
+                return (
+                    <div className="space-y-6">
+                        <div className="p-6 bg-gray-50 rounded-lg">
+                            <h2 className="text-2xl font-bold mb-4">Documentation</h2>
+                            <p>Documentation components coming soon...</p>
+                        </div>
+                    </div>
+                );
             case 'History':
                 return <PromptHistory history={promptHistory} onClear={handleClearHistory} />;
             default:
                 return null;
         }
-    };
+    }, [activePage, user, handleAddPromptToHistory, language, aiContext, activeRagSources, handleAttemptGeneration, handleContentGenerated, subscriptionPlan, handleUpgradePlan, handleAddCredits, hashtagCategories, readySets, selectedHashtags, handleHashtagSelect, handleSelectSet, selectedHashtagObjects, generatedContent, promptHistory, handleClearHistory, handleLaunchDemo, handleRequestInvite, handleSkipOnboarding, hasSeenOnboarding, userProgress, setIsBatchImportModalOpen]);
 
     return (
         <div className="bg-gray-900 text-white min-h-screen font-sans">
@@ -294,8 +376,7 @@ const App: React.FC = () => {
                                  <div className="flex items-center">
                                     <button
                                         onClick={() => setIsSidebarOpen(true)}
-                                        className="md:hidden mr-3 p-2 text-gray-400 hover:text-white rounded-md hover:bg-gray-800 transition-colors"
-                                        aria-label="Open sidebar"
+                                        className="md:hidden mr-3 p-2 text-gray-400 hover:text-white rounded-md hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
                                     >
                                         <MenuIcon />
                                     </button>
@@ -309,7 +390,8 @@ const App: React.FC = () => {
                                     </div>
                                    <button
                                         onClick={() => setIsRagModalOpen(true)}
-                                        className={`relative hidden sm:flex items-center text-sm font-semibold py-1.5 px-3 rounded-full transition-all border ${activeRagSources.length > 0 ? 'bg-green-500/20 border-green-500 text-green-300 shadow-lg shadow-green-500/10' : 'bg-gray-700 hover:bg-gray-600 border-gray-600'}`}>
+                                        className={`relative hidden sm:flex items-center text-sm font-semibold py-1.5 px-3 rounded-full transition-all border ${activeRagSources.length > 0 ? 'bg-green-500/20 border-green-500 text-green-300 shadow-lg shadow-green-500/10' : 'bg-gray-700 hover:bg-gray-600 border-gray-600'}`}
+                                    >
                                        <ContextIcon />
                                        Add Context
                                        {activeRagSources.length > 0 && (
@@ -318,9 +400,16 @@ const App: React.FC = () => {
                                    </button>
                                    <button
                                         onClick={() => setIsContextModalOpen(true)}
-                                        className={`hidden sm:flex items-center text-sm font-semibold py-1.5 px-3 rounded-full transition-all border ${aiContext ? 'bg-purple-500/20 border-purple-500 text-purple-300 shadow-lg shadow-purple-500/10' : 'bg-gray-700 hover:bg-gray-600 border-gray-600'}`}>
+                                        className={`hidden sm:flex items-center text-sm font-semibold py-1.5 px-3 rounded-full transition-all border ${aiContext ? 'bg-purple-500/20 border-purple-500 text-purple-300 shadow-lg shadow-purple-500/10' : 'bg-gray-700 hover:bg-gray-600 border-gray-600'}`}
+                                    >
                                        <PersonaIcon />
                                        Set Persona
+                                   </button>
+                                   <button
+                                        onClick={() => handlePageChange('Onboarding')}
+                                        className="hidden sm:flex items-center text-sm font-semibold py-1.5 px-3 rounded-full transition-all border bg-purple-600/20 border-purple-500 text-purple-200 hover:bg-purple-500/30 hover:text-white"
+                                    >
+                                        Product Tour
                                    </button>
                                    <button
                                         onClick={() => handlePageChange('Media Library')}
@@ -344,43 +433,43 @@ const App: React.FC = () => {
                 </div>
             </div>
 
-            {/* Selected Hashtag Tray - Fixed Position */}
+            {/* Selected Hashtag Tray */}
             <SelectedTray
                 selectedHashtags={selectedHashtagObjects}
                 onRemove={handleHashtagSelect}
                 onClear={handleClearSelected}
             />
 
-            {/* Modals - High Z-Index */}
+            {/* Modals */}
             <ContextModifier
                 isOpen={isContextModalOpen}
                 onClose={() => setIsContextModalOpen(false)}
                 currentContext={aiContext}
                 onSetContext={handleSetAiContext}
             />
-            <RagSourceManager
-                isOpen={isRagModalOpen}
-                onClose={() => setIsRagModalOpen(false)}
-                sources={ragSources}
-                onSourcesChange={setRagSources}
-            />
-            <BatchMediaImportModal
-                isOpen={isBatchImportModalOpen}
-                onClose={() => setIsBatchImportModalOpen(false)}
-                onImportComplete={handleBatchImportComplete}
-                user={user}
-            />
-             <UpgradeModal
+            {isRagModalOpen && (
+                <RagSourceManager
+                    isOpen={isRagModalOpen}
+                    onClose={() => setIsRagModalOpen(false)}
+                    sources={ragSources}
+                    onSourcesChange={setRagSources}
+                />
+            )}
+            {isBatchImportModalOpen && (
+                <BatchMediaImportModal
+                    isOpen={isBatchImportModalOpen}
+                    onClose={() => setIsBatchImportModalOpen(false)}
+                    onImportComplete={handleBatchImportComplete}
+                    user={user}
+                />
+            )}
+            <UpgradeModal
                 isOpen={isUpgradeModalOpen}
                 onClose={() => setIsUpgradeModalOpen(false)}
                 onUpgrade={() => {
                     setActivePage('Subscription');
                     setIsUpgradeModalOpen(false);
                 }}
-            />
-            <OnboardingModal
-                isOpen={isOnboardingOpen}
-                onClose={handleCloseOnboarding}
             />
         </div>
     );

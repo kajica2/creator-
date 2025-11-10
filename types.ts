@@ -202,7 +202,7 @@ export interface AIWebsiteResponse {
 }
 
 // App-level types
-export type Page = 'Roadmap' | 'Hashtag Manager' | 'AI Story' | 'AI Lyrics' | 'Text-to-Image' | 'Image Edit' | 'Batch Images' | 'Batch Prompts' | 'AI Website' | 'AI Strategy' | 'AI Skill' | 'AI Mutator' | 'AI Concept' | 'Gallery' | 'History' | 'Settings' | 'Subscription' | 'Thinking Mode' | 'Audio Transcriber' | 'Audio Agents' | 'Live Mixer' | 'Synaptic Symphony' | 'Gamification' | 'Persona Templates' | 'Website Manager' | 'Sentry Navigation Cloud' | 'Media Library';
+export type Page = 'Landing' | 'Onboarding' | 'Roadmap' | 'Hashtag Manager' | 'AI Story' | 'AI Lyrics' | 'Text-to-Image' | 'Image Edit' | 'Batch Images' | 'Batch Prompts' | 'AI Website' | 'AI Strategy' | 'AI Skill' | 'AI Mutator' | 'AI Concept' | 'Gallery' | 'History' | 'Settings' | 'Subscription' | 'Thinking Mode' | 'Audio Transcriber' | 'Audio Agents' | 'Live Mixer' | 'Synaptic Symphony' | 'Gamification' | 'Persona Templates' | 'Website Manager' | 'Sentry Navigation Cloud' | 'Media Library' | 'Documentation';
 
 export type GeneratedContentStore = Partial<Record<Page, any>>;
 

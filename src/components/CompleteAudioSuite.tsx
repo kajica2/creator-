@@ -104,7 +104,7 @@ export default function CompleteAudioSuite() {
 
   const playSampleShruti = async () => {
     try {
-      const audio = new Audio('/audio/shruti-box-samples/SHRUTI_DRONE_C2.wav')
+      const audio = new Audio('/audio/shruti-box-samples/SHRUTI_DRONE_C2.ogg')
       audio.play()
       console.log('🎵 Playing Shruti Box sample')
     } catch (error) {

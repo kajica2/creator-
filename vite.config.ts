@@ -53,14 +53,63 @@ export default defineConfig(({ mode }) => {
       },
       plugins,
 
-      // Build configuration for better source maps
+      // Build configuration for performance optimization
       build: {
-        sourcemap: true,
+        sourcemap: mode === 'production' ? false : true, // Disable sourcemaps in production
+        target: 'es2015',
+        minify: 'terser',
+        terserOptions: {
+          compress: {
+            drop_console: mode === 'production', // Remove console logs in production
+            drop_debugger: true,
+            pure_funcs: ['console.log', 'console.debug']
+          },
+          mangle: true,
+          format: {
+            comments: false
+          }
+        },
         rollupOptions: {
           output: {
             sourcemapExcludeSources: false,
+            // Code splitting strategy
+            manualChunks: {
+              // Vendor chunks
+              'vendor-react': ['react', 'react-dom'],
+              'vendor-ui': ['@tanstack/react-query'],
+              'vendor-audio': ['tone', '@magenta/music'],
+              'vendor-google': ['@google/genai'],
+              'vendor-sentry': ['@sentry/react', '@sentry/tracing'],
+              'vendor-supabase': ['@supabase/supabase-js'],
+              'vendor-utils': ['axios', 'file-saver', 'jszip']
+            },
+            // Optimize chunk file names
+            chunkFileNames: (chunkInfo) => {
+              if (chunkInfo.name.includes('vendor')) {
+                return 'assets/vendor/[name].[hash].js';
+              }
+              if (chunkInfo.name.includes('components')) {
+                return 'assets/components/[name].[hash].js';
+              }
+              return 'assets/[name].[hash].js';
+            },
+            assetFileNames: (assetInfo) => {
+              if (assetInfo.name?.endsWith('.css')) {
+                return 'assets/css/[name].[hash][extname]';
+              }
+              if (/\.(png|jpe?g|gif|svg|webp|ico)$/.test(assetInfo.name || '')) {
+                return 'assets/images/[name].[hash][extname]';
+              }
+              if (/\.(woff2?|eot|ttf|otf)$/.test(assetInfo.name || '')) {
+                return 'assets/fonts/[name].[hash][extname]';
+              }
+              return 'assets/[name].[hash][extname]';
+            }
           },
         },
+        // Optimize bundle size
+        chunkSizeWarningLimit: 1000,
+        assetsInlineLimit: 4096 // Inline assets smaller than 4kb
       },
 
       define: {
@@ -68,9 +117,29 @@ export default defineConfig(({ mode }) => {
         '__SENTRY_DEBUG__': mode === 'development',
         '__SENTRY_TRACING__': true,
       },
+      // Performance optimizations
+      optimizeDeps: {
+        include: [
+          'react',
+          'react-dom',
+          '@tanstack/react-query'
+        ],
+        exclude: [
+          'tone', // Lazy load audio dependencies
+          '@magenta/music',
+          '@google/genai' // Lazy load AI dependencies
+        ]
+      },
       resolve: {
         alias: {
           '@': path.resolve(__dirname, '.'),
+        }
+      },
+      // Enable CSS code splitting
+      css: {
+        codeSplit: true,
+        preprocessorOptions: {
+          // Optimize CSS processing
         }
       }
     };

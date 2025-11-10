@@ -6,9 +6,9 @@ const AUDIO_CACHE = 'audio-samples-v1'
 
 // Cache audio samples for offline use
 const AUDIO_FILES = [
-  '/audio/shruti-box-samples/SHRUTI_DRONE_C2.wav',
-  '/audio/shruti-box-samples/SHRUTI_MANTRA_A2.wav',
-  '/audio/shruti-box-samples/SHRUTI_MOTOPERP_G2_DYN1_RR1.wav'
+  '/audio/shruti-box-samples/SHRUTI_DRONE_C2.ogg',
+  '/audio/shruti-box-samples/SHRUTI_MANTRA_A2.ogg',
+  '/audio/shruti-box-samples/SHRUTI_MOTOPERP_G2_DYN1_RR1.ogg'
 ]
 
 self.addEventListener('install', (event) => {

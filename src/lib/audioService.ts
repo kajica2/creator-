@@ -126,9 +126,9 @@ export class PersistentAudioService {
 
   async processShrutiBoxSamples() {
     const sampleFiles = [
-      'audio/shruti-box-samples/SHRUTI_DRONE_C2.wav',
-      'audio/shruti-box-samples/SHRUTI_MANTRA_A2.wav',
-      'audio/shruti-box-samples/SHRUTI_MOTOPERP_G2_DYN1_RR1.wav'
+      'audio/shruti-box-samples/SHRUTI_DRONE_C2.ogg',
+      'audio/shruti-box-samples/SHRUTI_MANTRA_A2.ogg',
+      'audio/shruti-box-samples/SHRUTI_MOTOPERP_G2_DYN1_RR1.ogg'
       // Add more sample paths as needed
     ]
 
