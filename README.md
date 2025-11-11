@@ -80,3 +80,4 @@ The `Batch Import` button in the app header opens a new workflow that accepts a 
 2. Open the URL Hashtag Generator tool, enter a valid URL, and verify a Supabase-authenticated request succeeds (check the network request includes an `Authorization` header and the response populates hashtag sets).
 3. Sign out and attempt the same request—confirm the UI blocks generation and reports that sign-in is required.
 4. (Optional) Inspect `/api/scrape-url` responses in your deployment logs to ensure unauthorized requests are rejected with HTTP 401.
+# creator-
