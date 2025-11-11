@@ -24,9 +24,8 @@ dist-ssr
 *.sw?
 .vercel
 
-# Audio backup files (original WAV files compressed to OGG)
-audio/shruti-box-samples-backup/
-audio/shruti-box-samples-compressed/
+# Audio files (too large for GitHub)
+audio/
 
 # Environment variables
 .env
