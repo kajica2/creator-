@@ -54,10 +54,9 @@ export const SunoLyricsGenerator: React.FC<SunoLyricsGeneratorProps> = ({ onProm
             
             const prompt = `${ragContext}${contextPrefix}Generate song lyrics for Suno AI based on this theme: "${topic}". The structure should be clear and ready for music generation, using tags like [Verse], [Chorus], [Bridge], [Instrumental], [Intro], [Outro]. Create a catchy title and the full lyrics. ${language === 'sr' ? 'The entire response, including all keys and values in the JSON schema, must be in Serbian. Note that structural tags like [Verse], [Chorus] should remain in English.' : ''}`;
             
-            const response = await ai.models.generateContent({
-                model: 'gemini-2.5-flash',
-                contents: prompt,
-                config: {
+            const model = ai.getGenerativeModel({
+                model: 'gemini-1.5-flash',
+                generationConfig: {
                     responseMimeType: "application/json",
                     responseSchema: {
                         type: Type.OBJECT,
@@ -70,7 +69,8 @@ export const SunoLyricsGenerator: React.FC<SunoLyricsGeneratorProps> = ({ onProm
                 },
             });
 
-            const jsonStr = response.text.trim();
+            const response = await model.generateContent(prompt);
+            const jsonStr = response.response.text().trim();
             const parsedData = JSON.parse(jsonStr) as SunoLyricsResponse;
             setLyricsData(parsedData);
             onContentGenerated('AI Lyrics', parsedData);

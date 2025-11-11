@@ -78,10 +78,9 @@ export const AIStoryGenerator: React.FC<AIStoryGeneratorProps> = ({ selectedHash
                 prompt = `${ragContext}${contextPrefix}As a social media expert, refine the following Instagram caption: "${storyData.story}". The user wants to: "${tweakInstruction}". The core themes, based on hashtags, are: ${hashtagNames}. Generate a new, improved caption and a catchy title. ${language === 'sr' ? 'The entire response, including all keys and values in the JSON schema, must be in Serbian.' : ''}`;
             }
 
-            const response = await ai.models.generateContent({
-                model: 'gemini-2.5-flash',
-                contents: prompt,
-                config: {
+            const model = ai.getGenerativeModel({
+                model: 'gemini-1.5-flash',
+                generationConfig: {
                     responseMimeType: "application/json",
                     responseSchema: {
                         type: Type.OBJECT,
@@ -94,7 +93,8 @@ export const AIStoryGenerator: React.FC<AIStoryGeneratorProps> = ({ selectedHash
                 },
             });
 
-            const jsonStr = response.text.trim();
+            const response = await model.generateContent(prompt);
+            const jsonStr = response.response.text().trim();
             const parsedData = JSON.parse(jsonStr) as AIStoryResponse;
             setStoryData(parsedData);
             onContentGenerated('AI Story', parsedData);

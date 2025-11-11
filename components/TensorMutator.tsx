@@ -55,10 +55,9 @@ export const TensorMutator: React.FC<TensorMutatorProps> = ({ onPromptGenerated,
 
             const prompt = `${ragContext}You are an AI muse for avant-garde audio-visual artists. Your task is to perform a 'Tensor Mutation' on a given concept. This means you take a simple idea and expand it into multiple creative dimensions. ${contextPrefix}For the concept "${concept}", generate a new 'mutatedConcept' title and then break it down into four dimensions: 'Visual Cortex' (visual ideas), 'Sonic Spectrum' (sound & music ideas), 'Temporal Echo' (ideas about time, interaction, duration), and 'Philosophical Core' (the deeper meaning or question). Provide 3-4 concrete ideas for each dimension. The response must be structured and creative. ${language === 'sr' ? 'The entire response, including all keys and values in the JSON schema, must be in Serbian. The dimension names (Visual Cortex, Sonic Spectrum, etc.) can be translated as well.' : ''}`;
             
-            const response = await ai.models.generateContent({
-                model: 'gemini-2.5-flash',
-                contents: prompt,
-                config: {
+            const model = ai.getGenerativeModel({
+                model: 'gemini-1.5-flash',
+                generationConfig: {
                     responseMimeType: "application/json",
                     responseSchema: {
                         type: Type.OBJECT,
@@ -82,7 +81,8 @@ export const TensorMutator: React.FC<TensorMutatorProps> = ({ onPromptGenerated,
                 },
             });
 
-            const jsonStr = response.text.trim();
+            const response = await model.generateContent(prompt);
+            const jsonStr = response.response.text().trim();
             const parsedData = JSON.parse(jsonStr) as TensorMutationResponse;
             setMutationData(parsedData);
             onContentGenerated('AI Mutator', parsedData);

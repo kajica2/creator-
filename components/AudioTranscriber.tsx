@@ -89,20 +89,21 @@ export const AudioTranscriber: React.FC<AudioTranscriberProps> = ({ onPromptGene
                 
                 onPromptGenerated({ type: PromptType.AudioTranscriber, prompt: `[Audio input of ${(audioBlob.size / 1024).toFixed(2)} KB]` });
                 
-                const response = await ai.models.generateContent({
-                    model: 'gemini-2.5-flash',
-                    contents: [
-                        { text: prompt },
-                        {
-                            inlineData: {
-                                mimeType: 'audio/webm',
-                                data: base64Audio,
-                            },
-                        },
-                    ],
+                const model = ai.getGenerativeModel({
+                    model: 'gemini-1.5-flash'
                 });
-                
-                const transcriptText = response.text;
+
+                const response = await model.generateContent([
+                    prompt,
+                    {
+                        inlineData: {
+                            mimeType: 'audio/webm',
+                            data: base64Audio,
+                        },
+                    },
+                ]);
+
+                const transcriptText = response.response.text();
                 setTranscript(transcriptText);
                 onContentGenerated('Audio Transcriber', transcriptText);
 

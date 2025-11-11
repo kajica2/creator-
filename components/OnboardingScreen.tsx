@@ -4,6 +4,7 @@ interface OnboardingScreenProps {
   onRequestInvite: () => void;
   onLaunchDemo: () => void;
   onSkipTour?: () => void;
+  onSelectUserType: (userType: 'new-user' | 'visitor' | 'onboarding' | 'business') => void;
 }
 
 const features = [
@@ -63,10 +64,54 @@ const workflow = [
   },
 ];
 
+const userTypes = [
+  {
+    id: 'new-user' as const,
+    icon: '👋',
+    title: 'New User',
+    subtitle: 'First time here?',
+    description: 'Get started with a guided tour and learn how to amplify your reach with AI-powered content creation.',
+    features: ['Interactive tutorial', 'Sample projects', 'Basic templates'],
+    buttonText: 'Start Tutorial',
+    gradient: 'from-blue-500 to-cyan-500'
+  },
+  {
+    id: 'visitor' as const,
+    icon: '🔍',
+    title: 'Just Browsing',
+    subtitle: 'Exploring options?',
+    description: 'Take a quick look around with no commitment. Access limited features to see what re-amp can do.',
+    features: ['Demo workspace', 'Read-only access', 'Preview tools'],
+    buttonText: 'Browse Demo',
+    gradient: 'from-green-500 to-emerald-500'
+  },
+  {
+    id: 'onboarding' as const,
+    icon: '🚀',
+    title: 'Ready to Start',
+    subtitle: 'Let\'s set you up!',
+    description: 'Complete onboarding to unlock full access. Set up your profile, preferences, and start creating.',
+    features: ['Full feature access', 'Profile setup', 'Personalized dashboard'],
+    buttonText: 'Begin Setup',
+    gradient: 'from-purple-500 to-pink-500'
+  },
+  {
+    id: 'business' as const,
+    icon: '🏢',
+    title: 'Business Entity',
+    subtitle: 'Team or organization?',
+    description: 'Access enterprise features, team collaboration tools, and advanced analytics for organizations.',
+    features: ['Team management', 'Advanced analytics', 'API access', 'Priority support'],
+    buttonText: 'Enterprise Setup',
+    gradient: 'from-orange-500 to-red-500'
+  }
+];
+
 export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
   onRequestInvite,
   onLaunchDemo,
   onSkipTour,
+  onSelectUserType,
 }) => {
   return (
     <div className="space-y-12">
@@ -129,6 +174,56 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
               </li>
             </ul>
           </div>
+        </div>
+      </section>
+
+      {/* User Type Selection */}
+      <section className="space-y-8">
+        <div className="text-center space-y-4">
+          <h2 className="text-3xl font-bold text-white">Choose Your Path</h2>
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+            Select the option that best describes you to get a personalized experience
+          </p>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {userTypes.map((userType) => (
+            <div
+              key={userType.id}
+              className="group relative overflow-hidden rounded-2xl border border-gray-700/60 bg-gray-900/60 p-6 shadow-lg transition-all duration-300 hover:border-purple-500/40 hover:shadow-xl hover:shadow-purple-900/20 hover:-translate-y-1"
+            >
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-3xl">{userType.icon}</span>
+                  <div className={`h-2 w-2 rounded-full bg-gradient-to-r ${userType.gradient} opacity-60 group-hover:opacity-100 transition-opacity`} />
+                </div>
+
+                <div className="space-y-2">
+                  <h3 className="text-lg font-semibold text-white">{userType.title}</h3>
+                  <p className="text-sm text-purple-300 font-medium">{userType.subtitle}</p>
+                  <p className="text-sm text-gray-300 leading-relaxed">{userType.description}</p>
+                </div>
+
+                <div className="space-y-3">
+                  <ul className="space-y-1">
+                    {userType.features.map((feature, index) => (
+                      <li key={index} className="flex items-center gap-2 text-xs text-gray-400">
+                        <span className="h-1 w-1 rounded-full bg-purple-400" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <button
+                    onClick={() => onSelectUserType(userType.id)}
+                    className={`w-full rounded-xl bg-gradient-to-r ${userType.gradient} px-4 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:brightness-110 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-purple-300 focus:ring-offset-2 focus:ring-offset-gray-900 transform group-hover:scale-105`}
+                  >
+                    {userType.buttonText}
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 

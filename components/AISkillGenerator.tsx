@@ -48,10 +48,9 @@ export const AISkillGenerator: React.FC<AISkillGeneratorProps> = ({ onPromptGene
             
             const prompt = `${ragContext}${contextPrefix}Generate a comprehensive learning guide for the following skill: "${skillTopic}". ${language === 'sr' ? 'The entire response, including all keys and values in the JSON schema, must be in Serbian.' : ''}`;
             
-            const response = await ai.models.generateContent({
-                model: 'gemini-2.5-flash',
-                contents: prompt,
-                config: {
+            const model = ai.getGenerativeModel({
+                model: 'gemini-1.5-flash',
+                generationConfig: {
                     responseMimeType: "application/json",
                     responseSchema: {
                         type: Type.OBJECT,
@@ -85,7 +84,8 @@ export const AISkillGenerator: React.FC<AISkillGeneratorProps> = ({ onPromptGene
                 },
             });
 
-            const jsonStr = response.text.trim();
+            const response = await model.generateContent(prompt);
+            const jsonStr = response.response.text().trim();
             const parsedData = JSON.parse(jsonStr) as AISkillResponse;
             setSkillData(parsedData);
             onContentGenerated('AI Skill', parsedData);

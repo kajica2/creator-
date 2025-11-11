@@ -48,10 +48,9 @@ export const AIConceptGenerator: React.FC<AIConceptGeneratorProps> = ({ onPrompt
 
             const prompt = `${ragContext}${contextPrefix}Generate a creative concept for an audio-visual art piece based on the theme: "${theme}". Provide a new, evocative name for the concept, a short artistic description, a list of related keywords for social media, and three distinct visual prompts for an AI image generator. ${language === 'sr' ? 'The entire response, including all keys and values in the JSON schema, must be in Serbian.' : ''}`;
             
-            const response = await ai.models.generateContent({
-                model: 'gemini-2.5-flash',
-                contents: prompt,
-                config: {
+            const model = ai.getGenerativeModel({
+                model: 'gemini-1.5-flash',
+                generationConfig: {
                     responseMimeType: "application/json",
                     responseSchema: {
                         type: Type.OBJECT,
@@ -66,7 +65,8 @@ export const AIConceptGenerator: React.FC<AIConceptGeneratorProps> = ({ onPrompt
                 },
             });
 
-            const jsonStr = response.text.trim();
+            const response = await model.generateContent(prompt);
+            const jsonStr = response.response.text().trim();
             const parsedData = JSON.parse(jsonStr) as AIConceptResponse;
             setConceptData(parsedData);
             onContentGenerated('AI Concept', parsedData);

@@ -28,6 +28,7 @@ export const TextToImageGenerator: React.FC<TextToImageGeneratorProps> = ({ onPr
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+    const [enhancedPrompt, setEnhancedPrompt] = useState<string | null>(null);
 
     const handleGenerate = async () => {
         if (!prompt) {
@@ -37,6 +38,7 @@ export const TextToImageGenerator: React.FC<TextToImageGeneratorProps> = ({ onPr
         setIsLoading(true);
         setError(null);
         setGeneratedImage(null);
+        setEnhancedPrompt(null);
 
         onPromptGenerated({ type: PromptType.TextToImage, prompt });
 
@@ -45,29 +47,67 @@ export const TextToImageGenerator: React.FC<TextToImageGeneratorProps> = ({ onPr
             const contextPrefix = aiContext ? `Style context: ${aiContext}. ` : '';
             const textRagSources = ragSources.filter(s => s.mimeType.startsWith('text/'));
             const ragContext = textRagSources.length > 0
-                ? `REFERENCE CONTEXT:\n---\n${textRagSources.map(s => s.content).join('\n---\n')}\n---\n\nPROMPT: `
-                : 'PROMPT: ';
-            
-            const fullPrompt = `${ragContext}${contextPrefix}${prompt}`;
+                ? `REFERENCE CONTEXT:\n---\n${textRagSources.map(s => s.content).join('\n---\n')}\n---\n\n`
+                : '';
 
-            const response = await ai.models.generateImages({
-                model: 'imagen-4.0-generate-001',
-                prompt: fullPrompt,
-                config: {
-                  numberOfImages: 1,
-                  outputMimeType: 'image/jpeg',
-                  aspectRatio: aspectRatio,
-                },
+            // Since Gemini doesn't generate images directly, we'll create an enhanced prompt for external image generators
+            const enhancePrompt = `${ragContext}${contextPrefix}Enhance and expand the following image prompt for an AI image generator like DALL-E, Midjourney, or Stable Diffusion. Make it highly detailed, specific about style, lighting, composition, and artistic elements. Include technical photography terms and artistic styles that would create a stunning ${aspectRatio} aspect ratio image.
+
+Original prompt: ${prompt}
+
+Enhanced prompt:`;
+
+            const model = ai.getGenerativeModel({
+                model: 'gemini-1.5-flash'
             });
 
-            if (response.generatedImages && response.generatedImages.length > 0) {
-                const base64ImageBytes = response.generatedImages[0].image.imageBytes;
-                const imageUrl = `data:image/jpeg;base64,${base64ImageBytes}`;
-                setGeneratedImage(imageUrl);
-                onContentGenerated('Text-to-Image', imageUrl);
-            } else {
-                 setError('Image generation failed. The model returned no images.');
+            const response = await model.generateContent(enhancePrompt);
+            const enhancedPromptText = response.response.text().trim();
+            setEnhancedPrompt(enhancedPromptText);
+
+            // Create a placeholder image with the enhanced prompt
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            // Set canvas size based on aspect ratio
+            let width = 512, height = 512;
+            if (aspectRatio === '16:9') {
+                width = 640;
+                height = 360;
+            } else if (aspectRatio === '9:16') {
+                width = 360;
+                height = 640;
             }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            if (ctx) {
+                // Create gradient background
+                const gradient = ctx.createLinearGradient(0, 0, width, height);
+                gradient.addColorStop(0, '#6366f1');
+                gradient.addColorStop(1, '#ec4899');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, width, height);
+
+                // Add text overlay
+                ctx.fillStyle = 'white';
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Enhanced Prompt Generated', width/2, height/2 - 20);
+                ctx.font = '12px Arial';
+                ctx.fillText('Use the enhanced prompt below', width/2, height/2 + 10);
+                ctx.fillText('with your preferred AI image generator', width/2, height/2 + 30);
+            }
+
+            const imageUrl = canvas.toDataURL('image/jpeg');
+            setGeneratedImage(imageUrl);
+            onContentGenerated('Text-to-Image', {
+                enhancedPrompt: enhancedPromptText,
+                originalPrompt: prompt,
+                aspectRatio,
+                placeholderImage: imageUrl
+            });
 
         } catch (e) {
             console.error(e);
@@ -143,13 +183,33 @@ export const TextToImageGenerator: React.FC<TextToImageGeneratorProps> = ({ onPr
                     </div>
                 )}
             </div>
-            {user && generatedImage && !isLoading && (
+            {enhancedPrompt && !isLoading && (
+                <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4 space-y-4 animate-fade-in">
+                    <h3 className="text-lg font-bold text-purple-300">Enhanced Prompt for AI Image Generators</h3>
+                    <p className="text-sm text-gray-400">Copy this enhanced prompt to use with DALL-E, Midjourney, Stable Diffusion, or other AI image generators:</p>
+                    <div className="p-3 bg-gray-900 border border-gray-600 rounded-lg">
+                        <p className="text-gray-300 text-sm font-mono whitespace-pre-wrap">{enhancedPrompt}</p>
+                    </div>
+                    <button
+                        onClick={() => navigator.clipboard.writeText(enhancedPrompt)}
+                        className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors text-sm"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                            <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+                        </svg>
+                        Copy Enhanced Prompt
+                    </button>
+                </div>
+            )}
+
+            {user && enhancedPrompt && !isLoading && (
                  <div className="max-w-lg mx-auto">
                      <SaveToDriveButton
                         user={user}
-                        content={generatedImage}
-                        fileName={`${prompt.substring(0, 30).replace(/[^a-z0-9]/gi, '_').toLowerCase()}.jpg`}
-                        mimeType="image/jpeg"
+                        content={`Original Prompt: ${prompt}\n\nEnhanced Prompt:\n${enhancedPrompt}`}
+                        fileName={`enhanced_prompt_${prompt.substring(0, 30).replace(/[^a-z0-9]/gi, '_').toLowerCase()}.txt`}
+                        mimeType="text/plain"
                      />
                  </div>
             )}

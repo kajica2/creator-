@@ -63,10 +63,9 @@ export const WebsiteStrategyGenerator: React.FC<WebsiteStrategyGeneratorProps> =
             
             const prompt = `${ragContext}${contextPrefix}Generate a website strategy for an artist who creates: "${artistDescription}". The website needs to specifically target: ${Array.from(selectedTargets).join(', ')}. Focus on converting visitors from these groups into fans, clients, or collaborators. ${language === 'sr' ? 'The entire response, including all keys and values in the JSON schema, must be in Serbian.' : ''}`;
             
-            const response = await ai.models.generateContent({
-                model: 'gemini-2.5-flash',
-                contents: prompt,
-                config: {
+            const model = ai.getGenerativeModel({
+                model: 'gemini-1.5-flash',
+                generationConfig: {
                     responseMimeType: "application/json",
                     responseSchema: {
                         type: Type.OBJECT,
@@ -109,7 +108,8 @@ export const WebsiteStrategyGenerator: React.FC<WebsiteStrategyGeneratorProps> =
                 },
             });
 
-            const jsonStr = response.text.trim();
+            const response = await model.generateContent(prompt);
+            const jsonStr = response.response.text().trim();
             const parsedStrategy = JSON.parse(jsonStr) as WebsiteStrategyResponse;
             setStrategy(parsedStrategy);
             onContentGenerated('AI Strategy', parsedStrategy);
