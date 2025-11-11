@@ -27,3 +27,47 @@ dist-ssr
 # Audio backup files (original WAV files compressed to OGG)
 audio/shruti-box-samples-backup/
 audio/shruti-box-samples-compressed/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Testing
+coverage/
+*.lcov
+.nyc_output/
+
+# Cache files
+.cache/
+.parcel-cache/
+.vite/
+
+# Build outputs
+build/
+*.vitest-result.json
+
+# Sentry
+.sentryclirc
+
+# TypeScript
+*.tsbuildinfo
+
+# Package manager
+.npm/
+.yarn/
+
+# Obsidian sync cache
+obsidian-sync-cache/
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp

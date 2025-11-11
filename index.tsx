@@ -4,7 +4,9 @@ import ReactDOM from 'react-dom/client';
 import { QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
 import { SupabaseAuthProvider } from './hooks/useSupabaseAuth';
+import { AccessibilityProvider } from './src/hooks/useAccessibility';
 import { queryClient } from './utils/queryClient';
+import './src/index.css';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -14,10 +16,12 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <SupabaseAuthProvider>
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>
-    </SupabaseAuthProvider>
+    <AccessibilityProvider>
+      <SupabaseAuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <App />
+        </QueryClientProvider>
+      </SupabaseAuthProvider>
+    </AccessibilityProvider>
   </React.StrictMode>
 );

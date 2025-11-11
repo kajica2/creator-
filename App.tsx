@@ -34,6 +34,7 @@ import AudioAgentIntegrationExample from './components/audio/AudioAgentIntegrati
 import { SentryNavigationCloud } from './components/SentryNavigationCloud';
 import SynapticSymphony from './projects/synaptic-symphony/SynapticSymphony';
 import { MediaLibrary } from './components/MediaLibrary';
+import { ObsidianSync } from './components/ObsidianSync';
 
 const PersonaIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -340,14 +341,7 @@ const App: React.FC = () => {
             case 'Media Library':
                 return <MediaLibrary user={user} onOpenBatchImport={() => setIsBatchImportModalOpen(true)} />;
             case 'Documentation':
-                return (
-                    <div className="space-y-6">
-                        <div className="p-6 bg-gray-50 rounded-lg">
-                            <h2 className="text-2xl font-bold mb-4">Documentation</h2>
-                            <p>Documentation components coming soon...</p>
-                        </div>
-                    </div>
-                );
+                return <ObsidianSync />;
             case 'History':
                 return <PromptHistory history={promptHistory} onClear={handleClearHistory} />;
             default:
