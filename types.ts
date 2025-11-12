@@ -202,7 +202,6 @@ export interface AIWebsiteResponse {
 }
 
 // App-level types
-export type Page = 'Landing' | 'Onboarding' | 'Roadmap' | 'Hashtag Manager' | 'AI Story' | 'AI Lyrics' | 'Text-to-Image' | 'Image Edit' | 'Batch Images' | 'Batch Prompts' | 'AI Website' | 'AI Strategy' | 'AI Skill' | 'AI Mutator' | 'AI Concept' | 'Gallery' | 'History' | 'Settings' | 'Subscription' | 'Thinking Mode' | 'Audio Transcriber' | 'Audio Agents' | 'Live Mixer' | 'Synaptic Symphony' | 'Gamification' | 'Persona Templates' | 'Website Manager' | 'Sentry Navigation Cloud' | 'Media Library' | 'Documentation';
 
 export type GeneratedContentStore = Partial<Record<Page, any>>;
 
@@ -559,4 +558,107 @@ export type Page =
   | 'Settings'
   | 'Subscription'
   | 'Roadmap'
-  | 'Gamification';
+  | 'Gamification'
+  | 'React Projects Gallery'
+  | 'Tools Demo';
+
+// Credits System Types
+export interface CreditTransaction {
+    id: string;
+    userId: string;
+    amount: number;
+    type: 'earned' | 'spent' | 'purchased' | 'bonus' | 'refund';
+    description: string;
+    metadata?: {
+        feature?: string;
+        level?: number;
+        achievementId?: string;
+        [key: string]: any;
+    };
+    timestamp: Date;
+}
+
+export interface CreditBalance {
+    current: number;
+    lifetime: number;
+    spent: number;
+    earned: number;
+    purchased: number;
+}
+
+export interface CreditPack {
+    id: string;
+    name: string;
+    credits: number;
+    price: number;
+    bonus?: number;
+    popular?: boolean;
+}
+
+// Gamification Types
+export interface GameState {
+    credits: number;
+    xp: number;
+    level: number;
+    nextLevelXp: number;
+    achievements: Achievement[];
+    dailyStreak: number;
+    lastDailyBonus: Date | null;
+    totalEarned: number;
+    totalSpent: number;
+}
+
+export interface Achievement {
+    id: string;
+    name: string;
+    description: string;
+    icon: string;
+    unlocked: boolean;
+    unlockedAt?: number;
+    progress: number;
+    target: number;
+    xpReward: number;
+    creditsReward?: number;
+    tier: 'bronze' | 'silver' | 'gold' | 'platinum';
+}
+
+export interface XPEvent {
+    amount: number;
+    source: string;
+    multiplier?: number;
+    timestamp: Date;
+}
+
+// Credit Costs for Features
+export const CREDIT_COSTS = {
+    // Basic Operations
+    simpleHashtag: 10,
+    basicAnalysis: 10,
+
+    // Intermediate Operations
+    aiStory: 50,
+    sunoLyrics: 50,
+    complexHashtagSet: 50,
+
+    // Advanced Operations
+    imageGeneration: 100,
+    imageEditing: 150,
+    websiteStrategy: 200,
+    batchProcessing: 250,
+
+    // Premium Operations
+    multiAgentOperation: 500,
+    advancedImageAnalysis: 500,
+    customModelTraining: 1000
+} as const;
+
+// Analysis Levels (for earning credits)
+export interface AnalysisLevel {
+    level: number;
+    name: string;
+    creditsEarned: number;
+    color: string;
+    description: string;
+}
+
+export type BackgroundEffect = 'none' | 'particles' | 'gradient-shift' | 'geometric' | 'aurora' | 'matrix' | 'stars' | 'waves';

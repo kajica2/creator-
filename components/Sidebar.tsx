@@ -36,13 +36,13 @@ const DocsIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-
 const HomeIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>;
 
 // Page groupings
-const dashboardPages: Page[] = ['Landing', 'Onboarding', 'Gamification'];
-const creationSuitePages: Page[] = ['Hashtag Manager', 'AI Story', 'AI Lyrics', 'AI Strategy', 'AI Skill', 'AI Mutator', 'AI Concept', 'Text-to-Image', 'Image Edit', 'Batch Images', 'Batch Prompts', 'AI Website', 'Thinking Mode', 'Audio Transcriber', 'Audio Agents', 'Synaptic Symphony'];
+const dashboardPages: Page[] = ['Onboarding', 'Gamification'];
+const creationSuitePages: Page[] = ['Hashtag Manager', 'AI Story', 'AI Lyrics', 'AI Strategy', 'AI Skill', 'AI Mutator', 'AI Concept', 'Text-to-Image', 'Image Edit', 'Batch Images', 'Batch Prompts', 'AI Website', 'Thinking Mode', 'Audio Transcriber', 'Audio Agents', 'Synaptic Symphony', 'Tools Demo'];
 const contentCreationPages: Page[] = ['AI Story', 'AI Lyrics', 'AI Strategy', 'AI Skill', 'AI Mutator', 'AI Concept'];
 const imageStudioPages: Page[] = ['Text-to-Image', 'Image Edit', 'Batch Images', 'Batch Prompts'];
 const advancedToolsPages: Page[] = ['Thinking Mode', 'Audio Transcriber', 'Audio Agents', 'Synaptic Symphony'];
-const personaPages: Page[] = ['Persona Templates'];
-const galleryPages: Page[] = ['Media Library', 'Gallery', 'Website Manager', 'Sentry Navigation Cloud'];
+const personaPages: Page[] = [];
+const galleryPages: Page[] = ['Media Library', 'Gallery', 'Sentry Navigation Cloud', 'React Projects Gallery'];
 const accountPages: Page[] = ['History', 'Subscription', 'Settings', 'Roadmap'];
 const docsPages: Page[] = ['Documentation'];
 
@@ -343,8 +343,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePage, onPageChange, isOp
                             activeSubPages={[activePage]}
                         />
                          <NavItem page="AI Website" icon={<GlobeIcon />} />
-                    </ul>
-                </section>
+                         <NavItem page="Tools Demo" icon={<StarIcon />} />
+                     </ul>
+                 </section>
 
                 {/* Personas */}
                 <div>

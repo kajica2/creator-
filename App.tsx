@@ -43,6 +43,11 @@ import { GoogleDeveloperConsole } from './src/components/GoogleDeveloperConsole'
 import { MarkdownFileReader } from './src/components/MarkdownFileReader';
 import { AuthProvider } from './src/components/AuthProvider';
 import { LoginButton } from './src/components/LoginButton';
+import { ReactProjectsGallery } from './components/ReactProjectsGallery';
+import { CreditsProvider } from './src/contexts/CreditsContext';
+import { CreditsDisplay } from './src/components/Credits/CreditsDisplay';
+import { NewUserOffer } from './components/NewUserOffer';
+import ToolsDemoPage from './components/ToolsDemoPage';
 
 const PersonaIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -81,6 +86,7 @@ const App: React.FC = () => {
     const [isRagModalOpen, setIsRagModalOpen] = useState(false);
     const [isBatchImportModalOpen, setIsBatchImportModalOpen] = useState(false);
     const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
+    const [isWelcomeOfferOpen, setIsWelcomeOfferOpen] = useState(false);
 
     const [user, setUser] = useState<User | null>(null);
     const [language, setLanguage] = useState<'English' | 'Spanish'>('English');
@@ -89,6 +95,14 @@ const App: React.FC = () => {
     const [subscriptionPlan, setSubscriptionPlan] = useState<SubscriptionPlan>('free');
     const [credits, setCredits] = useState(5);
     const [generatedContent, setGeneratedContent] = useState<GeneratedContentStore>({});
+    const [hasClaimedWelcomeOffer, setHasClaimedWelcomeOffer] = useState(() => {
+        if (typeof window === 'undefined') return false;
+        try {
+            return localStorage.getItem('welcomeOfferClaimed') === 'true';
+        } catch {
+            return false;
+        }
+    });
 
     const allHashtags = useMemo(() => {
         return hashtagCategories.flatMap(cat => cat.hashtags);
@@ -194,6 +208,22 @@ const App: React.FC = () => {
         }));
     }, []);
 
+    const handleWelcomeOfferClaimed = useCallback((credits: number) => {
+        setHasClaimedWelcomeOffer(true);
+        setIsWelcomeOfferOpen(false);
+
+        try {
+            localStorage.setItem('welcomeOfferClaimed', 'true');
+        } catch {
+            // noop
+        }
+
+        // Show success message or navigate to a feature
+        setTimeout(() => {
+            setActivePage('AI Story');
+        }, 1500);
+    }, []);
+
     const selectedHashtagObjects = useMemo(() => {
         return allHashtags.filter(h => selectedHashtags.has(h.name));
     }, [selectedHashtags, allHashtags]);
@@ -229,6 +259,24 @@ const App: React.FC = () => {
             completedChallenges: [],
         };
     }, [promptHistory, selectedHashtagObjects, toolUsage]);
+
+    // Check if user should see welcome offer
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+
+        const shouldShowWelcomeOffer = !hasClaimedWelcomeOffer &&
+                                      promptHistory.length === 0 &&
+                                      hasSeenOnboarding;
+
+        if (shouldShowWelcomeOffer) {
+            // Show welcome offer after a brief delay
+            const timer = setTimeout(() => {
+                setIsWelcomeOfferOpen(true);
+            }, 2000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [hasSeenOnboarding, hasClaimedWelcomeOffer, promptHistory.length]);
 
     const activeRagSources = useMemo(() => ragSources.filter(s => s.status === 'ready'), [ragSources]);
 
@@ -356,6 +404,10 @@ const App: React.FC = () => {
                 return <MediaLibrary user={user} onOpenBatchImport={() => setIsBatchImportModalOpen(true)} />;
             case 'Documentation':
                 return <ObsidianSync />;
+            case 'React Projects Gallery':
+                return <ReactProjectsGallery />;
+            case 'Tools Demo':
+                return <ToolsDemoPage onPageChange={handlePageChange} />;
             case 'History':
                 return <PromptHistory history={promptHistory} onClear={handleClearHistory} />;
             default:
@@ -365,9 +417,10 @@ const App: React.FC = () => {
 
     return (
         <AuthProvider>
-            <SystemErrorBoundary>
-                <OfflineModeManager>
-                    <div className="bg-gray-900 text-white min-h-screen font-sans">
+            <CreditsProvider>
+                <SystemErrorBoundary>
+                    <OfflineModeManager>
+                        <div className="bg-gray-900 text-white min-h-screen font-sans">
             {/* Main Layout Container */}
             <div className="flex h-screen">
                 {/* Sidebar */}
@@ -396,9 +449,7 @@ const App: React.FC = () => {
                                     </h1>
                                 </div>
                                 <div className="flex items-center space-x-2">
-                                   <div className={`text-sm px-3 py-1.5 rounded-full ${credits < 1 && subscriptionPlan === 'free' ? 'text-red-400 bg-red-500/10' : 'text-gray-400'}`}>
-                                        Credits: {subscriptionPlan === 'free' ? credits : '∞'}
-                                    </div>
+                                   <CreditsDisplay />
                                    <button
                                         onClick={() => setIsRagModalOpen(true)}
                                         className={`relative hidden sm:flex items-center text-sm font-semibold py-1.5 px-3 rounded-full transition-all border ${activeRagSources.length > 0 ? 'bg-green-500/20 border-green-500 text-green-300 shadow-lg shadow-green-500/10' : 'bg-gray-700 hover:bg-gray-600 border-gray-600'}`}
@@ -483,6 +534,13 @@ const App: React.FC = () => {
                 }}
             />
 
+            {/* Welcome Offer Modal */}
+            <NewUserOffer
+                isVisible={isWelcomeOfferOpen}
+                onCreditsEarned={handleWelcomeOfferClaimed}
+                onClose={() => setIsWelcomeOfferOpen(false)}
+            />
+
             {/* Global Progress Display */}
             <div className="fixed bottom-4 right-4 z-40 max-w-sm">
                 <ProgressStatusDisplay showAllReports={true} compact={true} />
@@ -490,6 +548,7 @@ const App: React.FC = () => {
         </div>
                 </OfflineModeManager>
             </SystemErrorBoundary>
+            </CreditsProvider>
         </AuthProvider>
     );
 };
