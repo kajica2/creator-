@@ -3,6 +3,8 @@ import { Type } from '@google/genai';
 import { AIStoryResponse, Hashtag, PromptType, RagSource, User, Page } from '../types';
 import { SaveToDriveButton } from './SaveToDriveButton';
 import { getGeminiClient } from '../utils/geminiClient';
+import { aiUtilities, AIPromptTemplates } from '../src/shared/ai/AIUtilitiesLibrary';
+import { platformOptimization } from '../src/shared/platform/PlatformOptimizationLibrary';
 
 interface AIStoryGeneratorProps {
     selectedHashtags: Hashtag[];

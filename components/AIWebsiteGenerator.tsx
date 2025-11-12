@@ -4,6 +4,8 @@ import { AIWebsiteResponse, PromptType, RagSource, User, GeneratedContentStore, 
 import { SaveToDriveButton } from './SaveToDriveButton';
 import { downloadWebsiteAsZip } from '../utils/zipDownload';
 import { getGeminiClient } from '../utils/geminiClient';
+import { aiUtilities, AIPromptTemplates } from '../src/shared/ai/AIUtilitiesLibrary';
+import { platformOptimization } from '../src/shared/platform/PlatformOptimizationLibrary';
 
 interface AIWebsiteGeneratorProps {
     onPromptGenerated: (prompt: { type: PromptType; prompt: string }) => void;

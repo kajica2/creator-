@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { NeuralMelodyPlayer } from './NeuralMelodyPlayer';
 import PianoKeyboard from './PianoKeyboard';
+import { audioProcessing, AudioUtils } from '../shared/audio/AudioProcessingLibrary';
 import {
   NeuralMelodyConfig,
   PlayerState,

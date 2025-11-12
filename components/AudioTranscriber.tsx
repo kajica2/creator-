@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { PromptType, RagSource, User, Page } from '../types';
 import { SaveToDriveButton } from './SaveToDriveButton';
 import { getGeminiClient } from '../utils/geminiClient';
+import { audioProcessing, AudioUtils } from '../src/shared/audio/AudioProcessingLibrary';
 
 interface AudioTranscriberProps {
     onPromptGenerated: (prompt: { type: PromptType; prompt: string }) => void;

@@ -3,6 +3,7 @@ import { Modality } from '@google/genai';
 import { PromptType, RagSource, User, Page } from '../types';
 import { SaveToDriveButton } from './SaveToDriveButton';
 import { getGeminiClient } from '../utils/geminiClient';
+import { imageProcessing, ImageUtils } from '../src/shared/image/ImageProcessingLibrary';
 
 interface ImageEditorProps {
     onPromptGenerated: (prompt: { type: PromptType; prompt: string }) => void;

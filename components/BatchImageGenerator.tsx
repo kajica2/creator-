@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { PromptType, RagSource, User, Page } from '../types';
 import { SaveToDriveButton } from './SaveToDriveButton';
 import { getGeminiClient } from '../utils/geminiClient';
+import { imageProcessing, ImageUtils } from '../src/shared/image/ImageProcessingLibrary';
+import { aiUtilities } from '../src/shared/ai/AIUtilitiesLibrary';
 
 interface BatchImageGeneratorProps {
     onPromptGenerated: (prompt: { type: PromptType; prompt: string }) => void;

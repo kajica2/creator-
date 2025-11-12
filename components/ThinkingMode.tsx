@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PromptType, RagSource, User, Page } from '../types';
 import { SaveToDriveButton } from './SaveToDriveButton';
 import { getGeminiClient } from '../utils/geminiClient';
+import { aiUtilities, AIPromptTemplates } from '../src/shared/ai/AIUtilitiesLibrary';
 
 interface ThinkingModeProps {
     onPromptGenerated: (prompt: { type: PromptType; prompt: string }) => void;

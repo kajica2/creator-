@@ -528,3 +528,35 @@ export interface SentryNavigationUsage {
   context?: string;
   createdAt: string;
 }
+
+// Page navigation types
+export type Page =
+  | 'Onboarding'
+  | 'Hashtag Manager'
+  | 'AI Story'
+  | 'AI Lyrics'
+  | 'AI Strategy'
+  | 'AI Skill'
+  | 'AI Mutator'
+  | 'AI Concept'
+  | 'Text-to-Image'
+  | 'Image Edit'
+  | 'Batch Images'
+  | 'Batch Prompts'
+  | 'AI Website'
+  | 'Thinking Mode'
+  | 'Audio Transcriber'
+  | 'Audio Agents'
+  | 'Synaptic Symphony'
+  | 'Sentry Navigation Cloud'
+  | 'Gallery'
+  | 'App Gallery'
+  | 'Google Developer Console'
+  | 'Markdown File Reader'
+  | 'Media Library'
+  | 'Documentation'
+  | 'History'
+  | 'Settings'
+  | 'Subscription'
+  | 'Roadmap'
+  | 'Gamification';

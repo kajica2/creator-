@@ -1,6 +1,9 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { hashtagCategories, readySets } from './data/hashtags';
 import { Hashtag, HashtagSize, PromptHistoryItem, PromptType, RagSource, User, SubscriptionPlan, Page, GeneratedContentStore, UserProgress } from './types';
+import SystemErrorBoundary from './src/components/system/SystemErrorBoundary';
+import OfflineModeManager from './src/components/system/OfflineModeManager';
+import { ProgressStatusDisplay } from './src/components/system/ProgressStatusDisplay';
 import { SelectedTray } from './components/SelectedTray';
 import { AIStoryGenerator } from './components/AIStoryGenerator';
 import { SunoLyricsGenerator } from './components/SunoLyricsGenerator';
@@ -35,6 +38,11 @@ import { SentryNavigationCloud } from './components/SentryNavigationCloud';
 import SynapticSymphony from './projects/synaptic-symphony/SynapticSymphony';
 import { MediaLibrary } from './components/MediaLibrary';
 import { ObsidianSync } from './components/ObsidianSync';
+import { AppGallery } from './src/components/AppGallery';
+import { GoogleDeveloperConsole } from './src/components/GoogleDeveloperConsole';
+import { MarkdownFileReader } from './src/components/MarkdownFileReader';
+import { AuthProvider } from './src/components/AuthProvider';
+import { LoginButton } from './src/components/LoginButton';
 
 const PersonaIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -338,6 +346,12 @@ const App: React.FC = () => {
                 );
             case 'Gallery':
                 return <GalleryComponent />;
+            case 'App Gallery':
+                return <AppGallery />;
+            case 'Google Developer Console':
+                return <GoogleDeveloperConsole />;
+            case 'Markdown File Reader':
+                return <MarkdownFileReader />;
             case 'Media Library':
                 return <MediaLibrary user={user} onOpenBatchImport={() => setIsBatchImportModalOpen(true)} />;
             case 'Documentation':
@@ -350,7 +364,10 @@ const App: React.FC = () => {
     }, [activePage, user, handleAddPromptToHistory, language, aiContext, activeRagSources, handleAttemptGeneration, handleContentGenerated, subscriptionPlan, handleUpgradePlan, handleAddCredits, hashtagCategories, readySets, selectedHashtags, handleHashtagSelect, handleSelectSet, selectedHashtagObjects, generatedContent, promptHistory, handleClearHistory, handleLaunchDemo, handleRequestInvite, handleSkipOnboarding, hasSeenOnboarding, userProgress, setIsBatchImportModalOpen]);
 
     return (
-        <div className="bg-gray-900 text-white min-h-screen font-sans">
+        <AuthProvider>
+            <SystemErrorBoundary>
+                <OfflineModeManager>
+                    <div className="bg-gray-900 text-white min-h-screen font-sans">
             {/* Main Layout Container */}
             <div className="flex h-screen">
                 {/* Sidebar */}
@@ -412,7 +429,7 @@ const App: React.FC = () => {
                                         Media Library
                                    </button>
                                    <LanguageSwitcher currentLanguage={language} onLanguageChange={setLanguage} />
-                                   <Auth user={user} onAuthSuccess={handleAuthSuccess} onSignOut={handleSignOut} />
+                                   <LoginButton />
                                 </div>
                             </div>
                         </div>
@@ -465,7 +482,15 @@ const App: React.FC = () => {
                     setIsUpgradeModalOpen(false);
                 }}
             />
+
+            {/* Global Progress Display */}
+            <div className="fixed bottom-4 right-4 z-40 max-w-sm">
+                <ProgressStatusDisplay showAllReports={true} compact={true} />
+            </div>
         </div>
+                </OfflineModeManager>
+            </SystemErrorBoundary>
+        </AuthProvider>
     );
 };
 

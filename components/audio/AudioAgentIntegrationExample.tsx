@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AgentOrchestrator from '../../api/core/AgentOrchestrator';
+import { audioProcessing, AudioUtils } from '../../src/shared/audio/AudioProcessingLibrary';
+import { AudioComponents } from '../../src/shared/audio/AudioComponents';
 
 interface AudioAgentIntegrationExampleProps {
   userId?: string;
