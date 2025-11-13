@@ -1,6 +1,14 @@
 {
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/.*", "dest": "/index.html" }
+  "redirects": [
+    {
+      "source": "/auth/callback",
+      "destination": "/index.html"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
   ]
 }
