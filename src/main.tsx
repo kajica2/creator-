@@ -4,7 +4,7 @@ import { initializeSentry } from '../config/sentry/sentry.config';
 import { SupabaseMonitor } from './utils/monitoring/supabaseMonitoring';
 import { supabase } from './utils/supabaseClient';
 import { SupabaseAuthProvider } from '../hooks/useSupabaseAuth';
-import App from './App.tsx';
+import { AppRouter } from './router';
 import './index.css';
 
 // Initialize Sentry before anything else
@@ -19,7 +19,7 @@ const monitoredSupabase = SupabaseMonitor.getInstance().wrapSupabaseClient(supab
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <SupabaseAuthProvider>
-      <App />
+      <AppRouter />
     </SupabaseAuthProvider>
   </React.StrictMode>,
 );
