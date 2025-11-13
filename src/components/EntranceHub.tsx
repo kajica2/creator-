@@ -4,6 +4,7 @@ import { supabase } from '../../utils/supabaseClient';
 import { useSupabaseAuth } from '../../hooks/useSupabaseAuth';
 import { DatabaseSetup } from './DatabaseSetup';
 import SupabasePanel from './SupabasePanel';
+import { PersistentFooter } from './PersistentFooter';
 
 export function EntranceHub(): JSX.Element {
   const {
@@ -345,19 +346,20 @@ export function EntranceHub(): JSX.Element {
   }, [signOut, resetMessages]);
 
   return (
-    <section className="mx-auto flex w-full max-w-6xl flex-col gap-10 py-16 px-4 sm:px-6 lg:px-8">
-      <header className="space-y-3 text-center">
-        <p className="inline-flex items-center rounded-full bg-indigo-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-indigo-300">
-          Session Entrances
-        </p>
-        <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          Choose your access lane to the Viral Hashtag & Image AI platform
-        </h1>
-        <p className="mx-auto max-w-3xl text-base text-slate-300">
-          Every entrance logs IP and cookie metadata securely in Supabase. Admins must authenticate and
-          connect Google Drive plus Gemini before gaining full control.
-        </p>
-      </header>
+    <div className="relative min-h-screen pb-16">
+      <section className="mx-auto flex w-full max-w-6xl flex-col gap-10 py-16 px-4 sm:px-6 lg:px-8">
+        <header className="space-y-3 text-center">
+          <p className="inline-flex items-center rounded-full bg-indigo-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-indigo-300">
+            Session Entrances
+          </p>
+          <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            Choose your access lane to the Viral Hashtag & Image AI platform
+          </h1>
+          <p className="mx-auto max-w-3xl text-base text-slate-300">
+            Every entrance logs IP and cookie metadata securely in Supabase. Admins must authenticate and
+            connect Google Drive plus Gemini before gaining full control.
+          </p>
+        </header>
 
       {(statusMessage || errorMessage) && (
         <div
@@ -442,6 +444,8 @@ export function EntranceHub(): JSX.Element {
         )}
       </div>
     </section>
+    <PersistentFooter onNavigate={() => {}} />
+  </div>
   );
 }
 

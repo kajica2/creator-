@@ -1,6 +1,7 @@
 import React, { useState, Suspense } from 'react';
 import { Menu } from 'lucide-react';
 import { Sidebar } from './Sidebar';
+import { PersistentFooter } from './PersistentFooter';
 import { HashtagManager } from './HashtagManager';
 import { AppGallery } from './AppGallery';
 import type { Page } from '../types';
@@ -261,7 +262,7 @@ export function MainApplication({ initialPage = 'Hashtag Manager' }: MainApplica
   };
 
   return (
-    <div className="h-screen flex bg-slate-950 text-slate-50 overflow-hidden">
+    <div className="h-screen flex bg-slate-950 text-slate-50 overflow-hidden pb-16">
       {/* Mobile menu button */}
       <button
         onClick={() => setSidebarOpen(true)}
@@ -287,6 +288,9 @@ export function MainApplication({ initialPage = 'Hashtag Manager' }: MainApplica
           {renderPage()}
         </main>
       </div>
+
+      {/* Persistent Footer */}
+      <PersistentFooter onNavigate={setCurrentPage} />
 
       {/* Mobile overlay */}
       {sidebarOpen && (
