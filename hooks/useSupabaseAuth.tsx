@@ -106,8 +106,8 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
   async function signInWithGoogle() {
     // Use production URL for redirect, fallback to current origin for development
     const redirectTo = import.meta.env.PROD
-      ? 'https://viral-hashtag-image-ai.vercel.app'
-      : window.location.origin;
+      ? 'https://viral-hashtag-image-ai.vercel.app/auth/callback'
+      : `${window.location.origin}/auth/callback`;
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
