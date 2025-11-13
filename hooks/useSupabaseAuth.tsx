@@ -104,7 +104,11 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
   }, []);
 
   async function signInWithGoogle() {
-    const redirectTo = window.location.origin;
+    // Use production URL for redirect, fallback to current origin for development
+    const redirectTo = import.meta.env.PROD
+      ? 'https://viral-hashtag-image-ai.vercel.app'
+      : window.location.origin;
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -175,11 +179,16 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
   }
 
   async function connectGoogleDrive() {
+    // Use production URL for redirect, fallback to current origin for development
+    const baseUrl = import.meta.env.PROD
+      ? 'https://viral-hashtag-image-ai.vercel.app'
+      : window.location.origin;
+
     const { data, error } = await supabase.auth.linkWithOAuth({
       provider: 'google',
       options: {
         scopes: 'openid email https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.readonly',
-        redirectTo: `${window.location.origin}/admin`,
+        redirectTo: `${baseUrl}/admin`,
         queryParams: {
           access_type: 'offline',
           prompt: 'consent',

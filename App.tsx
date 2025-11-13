@@ -545,9 +545,9 @@ const App: React.FC = () => {
             <div className="fixed bottom-4 right-4 z-40 max-w-sm">
                 <ProgressStatusDisplay showAllReports={true} compact={true} />
             </div>
-        </div>
-                </OfflineModeManager>
-            </SystemErrorBoundary>
+                        </div>
+                    </OfflineModeManager>
+                </SystemErrorBoundary>
             </CreditsProvider>
         </AuthProvider>
     );
