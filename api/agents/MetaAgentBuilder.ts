@@ -383,8 +383,8 @@ export default class {{AgentName}} implements AgentHandler {
   }
 
   private async compileAgent(agentPath: string): Promise<void> {
-    // Simple TypeScript compilation
-    const { stdout, stderr } = await execAsync(`npx tsc ${agentPath} --outDir ./dist/agents`);
+    // Simple TypeScript compilation with proper path quoting
+    const { stdout, stderr } = await execAsync(`npx tsc "${agentPath}" --outDir ./dist/agents`);
     if (stderr) {
       console.error('Compilation warnings:', stderr);
     }

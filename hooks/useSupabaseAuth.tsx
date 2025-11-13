@@ -3,11 +3,28 @@ import type { AuthChangeEvent, Session, User as SupabaseUser } from '@supabase/s
 import { supabase } from '../utils/supabaseClient';
 import type { User } from '../types';
 
+interface EmailCredentials {
+  email: string;
+  password: string;
+}
+
+interface MagicLinkPayload {
+  email: string;
+}
+
 interface SupabaseAuthContextValue {
   user: User | null;
   session: Session | null;
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
+  signInWithEmailPassword: (credentials: EmailCredentials) => Promise<void>;
+  signUpWithEmailPassword: (credentials: EmailCredentials) => Promise<void>;
+  sendMagicLink: (payload: MagicLinkPayload) => Promise<void>;
+  connectGoogleDrive: () => Promise<void>;
+  latestProviderTokens: {
+    accessToken: string | null;
+    refreshToken: string | null;
+  };
   signOut: () => Promise<void>;
   refreshSession: () => Promise<void>;
 }
@@ -36,6 +53,8 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const [session, setSession] = useState<Session | null>(null);
   const [supabaseUser, setSupabaseUser] = useState<SupabaseUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [providerAccessToken, setProviderAccessToken] = useState<string | null>(null);
+  const [providerRefreshToken, setProviderRefreshToken] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -50,6 +69,8 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
       }
       setSession(data.session ?? null);
       setSupabaseUser(data.session?.user ?? null);
+      setProviderAccessToken(data.session?.provider_token ?? null);
+      setProviderRefreshToken((data as any)?.session?.provider_refresh_token ?? null);
       setLoading(false);
     };
 
@@ -65,11 +86,15 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
       if (event === 'SIGNED_OUT') {
         setSession(null);
         setSupabaseUser(null);
+        setProviderAccessToken(null);
+        setProviderRefreshToken(null);
         return;
       }
 
       setSession(newSession);
       setSupabaseUser(newSession?.user ?? null);
+      setProviderAccessToken(newSession?.provider_token ?? null);
+      setProviderRefreshToken((newSession as any)?.provider_refresh_token ?? null);
     });
 
     return () => {
@@ -78,7 +103,7 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
     };
   }, []);
 
-  const signInWithGoogle = async () => {
+  async function signInWithGoogle() {
     const redirectTo = window.location.origin;
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -89,19 +114,112 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
     if (error) {
       console.error('Supabase Google sign-in failed:', error.message);
+
+      // Handle specific OAuth provider not enabled error
+      if (error.message?.includes('validation_failed') || error.message?.includes('provider is not enabled')) {
+        const detailedError = new Error(
+          'Google OAuth is not enabled in Supabase. Please:\n' +
+          '1. Go to Supabase Dashboard → Authentication → Settings → Auth Providers\n' +
+          '2. Enable Google OAuth provider\n' +
+          '3. Configure your Google OAuth credentials\n' +
+          '4. Set proper redirect URLs'
+        );
+        detailedError.name = 'OAuthConfigurationError';
+        throw detailedError;
+      }
+
       throw error;
     }
-  };
+  }
 
-  const signOut = async () => {
+  async function signInWithEmailPassword({ email, password }: EmailCredentials) {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      console.error('Supabase email sign-in failed:', error.message);
+      throw error;
+    }
+  }
+
+  async function signUpWithEmailPassword({ email, password }: EmailCredentials) {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/admin`,
+      },
+    });
+
+    if (error) {
+      console.error('Supabase email sign-up failed:', error.message);
+      throw error;
+    }
+  }
+
+  async function sendMagicLink({ email }: MagicLinkPayload) {
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        shouldCreateUser: true,
+        emailRedirectTo: `${window.location.origin}/admin`,
+      },
+    });
+
+    if (error) {
+      console.error('Supabase magic link request failed:', error.message);
+      throw error;
+    }
+  }
+
+  async function connectGoogleDrive() {
+    const { data, error } = await supabase.auth.linkWithOAuth({
+      provider: 'google',
+      options: {
+        scopes: 'openid email https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.readonly',
+        redirectTo: `${window.location.origin}/admin`,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
+      },
+    });
+
+    if (error) {
+      console.error('Supabase Google Drive linking failed:', error.message);
+
+      // Handle specific OAuth provider not enabled error
+      if (error.message?.includes('validation_failed') || error.message?.includes('provider is not enabled')) {
+        const detailedError = new Error(
+          'Google OAuth is not enabled in Supabase. Please:\n' +
+          '1. Go to Supabase Dashboard → Authentication → Settings → Auth Providers\n' +
+          '2. Enable Google OAuth provider\n' +
+          '3. Configure your Google OAuth credentials\n' +
+          '4. Set proper redirect URLs'
+        );
+        detailedError.name = 'OAuthConfigurationError';
+        throw detailedError;
+      }
+
+      throw error;
+    }
+
+    if (data?.url) {
+      window.location.assign(data.url);
+    }
+  }
+
+  async function signOut() {
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.error('Supabase sign-out failed:', error.message);
       throw error;
     }
-  };
+  }
 
-  const refreshSession = async () => {
+  async function refreshSession() {
     const { data, error } = await supabase.auth.refreshSession();
     if (error) {
       console.error('Supabase session refresh failed:', error.message);
@@ -109,16 +227,26 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
     }
     setSession(data.session ?? null);
     setSupabaseUser(data.session?.user ?? null);
-  };
+    setProviderAccessToken(data.session?.provider_token ?? null);
+    setProviderRefreshToken((data as any)?.session?.provider_refresh_token ?? null);
+  }
 
   const value = useMemo<SupabaseAuthContextValue>(() => ({
     user: mapUser(supabaseUser, session),
     session,
     loading,
     signInWithGoogle,
+    signInWithEmailPassword,
+    signUpWithEmailPassword,
+    sendMagicLink,
+    connectGoogleDrive,
+    latestProviderTokens: {
+      accessToken: providerAccessToken,
+      refreshToken: providerRefreshToken,
+    },
     signOut,
     refreshSession,
-  }), [session, supabaseUser, loading]);
+  }), [session, supabaseUser, loading, providerAccessToken, providerRefreshToken]);
 
   return (
     <SupabaseAuthContext.Provider value={value}>

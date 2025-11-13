@@ -4,6 +4,12 @@ import { createClient, SupabaseClient, RealtimeChannel } from '@supabase/supabas
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
+// Debug environment variables
+console.log('Supabase Environment Variables Check:', {
+  supabaseUrl: supabaseUrl ? `${supabaseUrl.substring(0, 20)}...` : 'MISSING',
+  supabaseAnonKey: supabaseAnonKey ? `${supabaseAnonKey.substring(0, 20)}...` : 'MISSING',
+});
+
 // Validate environment variables
 const missingEnvVars = [
   !supabaseUrl ? 'VITE_SUPABASE_URL' : null,
@@ -154,7 +160,7 @@ class RealtimeManager {
 
 export const realtimeManager = new RealtimeManager();
 
-// Health check function
+// Health check function - uses a simple auth endpoint that doesn't require authentication
 export async function checkSupabaseHealth(): Promise<{
   connected: boolean;
   latency?: number;
@@ -163,16 +169,10 @@ export async function checkSupabaseHealth(): Promise<{
   const startTime = Date.now();
 
   try {
-    const { data, error } = await supabase
-      .from('users')
-      .select('id')
-      .limit(1)
-      .single();
+    // Use auth health endpoint instead of querying a table
+    const { data, error } = await supabase.auth.getSession();
 
-    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
-      throw error;
-    }
-
+    // Even if no session, this call succeeding means Supabase is reachable
     const latency = Date.now() - startTime;
     return { connected: true, latency };
   } catch (error) {

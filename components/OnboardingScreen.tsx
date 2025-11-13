@@ -27,9 +27,9 @@ const features = [
 
 const roadmapHighlights = [
   {
-    title: 'Invite-Only Access',
+    title: '🎉 Welcome Bonus - 700 Free Credits!',
     description:
-      'We’re onboarding partners gradually to keep quality high. Request an invite and we’ll reach out with next steps.',
+      'New users get instant credits by uploading an image and sharing their website URL. Start creating amazing content immediately!',
   },
   {
     title: 'Free & Subscription Mix',

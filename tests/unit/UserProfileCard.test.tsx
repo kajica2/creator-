@@ -17,7 +17,7 @@ vi.mock('../../supabase/utils', () => ({
   submitUserRating: vi.fn().mockResolvedValue({}),
 }));
 
-const { fetchUserRatingSummary, submitUserRating } = require('../../supabase/utils');
+import { fetchUserRatingSummary, submitUserRating } from '../../supabase/utils';
 
 describe('UserProfileCard', () => {
   beforeEach(() => {

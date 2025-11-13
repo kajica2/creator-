@@ -46,6 +46,19 @@ export const AIStoryGenerator: React.FC<AIStoryGeneratorProps> = ({ selectedHash
     const [error, setError] = useState<string | null>(null);
     const [storyData, setStoryData] = useState<AIStoryResponse | null>(null);
     const [isCopied, setIsCopied] = useState(false);
+    const [showSampleStory, setShowSampleStory] = useState(false);
+
+    // Sample story data to demonstrate the component
+    const sampleStoryData: AIStoryResponse = {
+        title: "Electric Dreams Come Alive",
+        story: "Lost in the neon glow of midnight inspiration 🌃✨ This track was born in those liminal hours when creativity flows like liquid fire. Every beat tells a story of urban nights and digital dreams.\n\n#electronicmusic #synthwave #musicproducer #studiolife #creativeprocess #newmusic #synthpop #retrowave #musicislife"
+    };
+
+    // Sample hashtag suggestions
+    const sampleHashtags = [
+        "#electronicmusic", "#synthwave", "#techno", "#housemusic", "#EDM",
+        "#musicproducer", "#studiolife", "#beatmaker", "#synthesizer", "#creative"
+    ];
 
     useEffect(() => {
         setStoryHashtags(selectedHashtags.map(h => h.name));
@@ -142,7 +155,20 @@ export const AIStoryGenerator: React.FC<AIStoryGeneratorProps> = ({ selectedHash
         <div className="space-y-6">
             <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4 space-y-4">
                  <div>
-                    <h3 className="font-bold text-gray-300">Hashtags for Your Story ({storyHashtags.length})</h3>
+                    <div className="flex justify-between items-center">
+                        <h3 className="font-bold text-gray-300">Hashtags for Your Story ({storyHashtags.length})</h3>
+                        {storyHashtags.length === 0 && (
+                            <button
+                                onClick={() => {
+                                    setStoryHashtags([...sampleHashtags.slice(0, 5)]);
+                                    setShowSampleStory(true);
+                                }}
+                                className="text-xs bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 px-3 py-1 rounded-full transition-colors"
+                            >
+                                Try Sample
+                            </button>
+                        )}
+                    </div>
                     {storyHashtags.length > 0 ? (
                         <div className="flex flex-wrap gap-1.5 pt-2">
                              {storyHashtags.map(tag => (
@@ -152,7 +178,19 @@ export const AIStoryGenerator: React.FC<AIStoryGeneratorProps> = ({ selectedHash
                             ))}
                         </div>
                     ) : (
-                        <p className="text-sm text-gray-400 pt-2">Select hashtags from the 'Hashtags' or 'Sets' tab to create a story around them.</p>
+                        <div className="pt-2 space-y-3">
+                            <p className="text-sm text-gray-400">Select hashtags from the 'Hashtags' or 'Sets' tab to create a story around them.</p>
+                            <div>
+                                <p className="text-xs text-gray-500 mb-2">💡 Example hashtags you could use:</p>
+                                <div className="flex flex-wrap gap-1.5">
+                                    {sampleHashtags.slice(0, 6).map(tag => (
+                                        <span key={tag} className="text-xs bg-gray-800 text-gray-400 px-2 py-0.5 rounded-md border border-gray-600">
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
                     )}
                 </div>
                  {error && <p className="text-sm text-red-400">{error}</p>}
@@ -172,7 +210,7 @@ export const AIStoryGenerator: React.FC<AIStoryGeneratorProps> = ({ selectedHash
                 </div>
             )}
 
-            {storyData && !isLoading && (
+            {(storyData && !isLoading) && (
                 <div className="space-y-4">
                     <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4 md:p-6 space-y-4 animate-fade-in">
                         <div className="flex justify-between items-start">
@@ -244,6 +282,55 @@ export const AIStoryGenerator: React.FC<AIStoryGeneratorProps> = ({ selectedHash
                                 </button>
                             </div>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Sample Story Preview - shows when no story is generated and user hasn't clicked Try Sample */}
+            {!storyData && !isLoading && !showSampleStory && (
+                <div className="bg-gradient-to-br from-gray-800/30 to-purple-900/10 border border-gray-700/50 rounded-xl p-4 md:p-6 space-y-4">
+                    <div className="flex items-center gap-3">
+                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                        <h3 className="text-lg font-bold text-gray-300">✨ Example Story Output</h3>
+                        <div className="w-2 h-2 bg-pink-400 rounded-full animate-pulse"></div>
+                    </div>
+                    <div className="space-y-3">
+                        <h4 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-400">
+                            {sampleStoryData.title}
+                        </h4>
+                        <p className="text-gray-400 whitespace-pre-wrap text-sm leading-relaxed">
+                            {sampleStoryData.story}
+                        </p>
+                    </div>
+                    <div className="pt-3 border-t border-gray-700/50">
+                        <p className="text-xs text-gray-500">
+                            💡 This is what your AI-generated story could look like. Select hashtags and click "Generate AI Story" to create your own!
+                        </p>
+                    </div>
+                </div>
+            )}
+
+            {/* Sample Story Preview - shows when user clicked Try Sample */}
+            {showSampleStory && !storyData && !isLoading && (
+                <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4 md:p-6 space-y-4 animate-fade-in">
+                    <div className="flex justify-between items-start">
+                        <h2 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-400">{sampleStoryData.title}</h2>
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs bg-green-600/20 text-green-300 px-2 py-1 rounded-full">Sample</span>
+                            <button
+                                onClick={() => navigator.clipboard.writeText(`${sampleStoryData.title}\n\n${sampleStoryData.story}`)}
+                                className="flex items-center space-x-2 bg-gray-700 hover:bg-gray-600 text-white text-xs font-semibold py-1.5 px-3 rounded-full transition-colors"
+                            >
+                                <CopyIcon />
+                                <span>Copy</span>
+                            </button>
+                        </div>
+                    </div>
+                    <p className="text-gray-300 whitespace-pre-wrap">{sampleStoryData.story}</p>
+                    <div className="pt-3 border-t border-gray-700">
+                        <p className="text-xs text-gray-500">
+                            🚀 This is a sample story. Click "Generate AI Story" to create your own personalized content!
+                        </p>
                     </div>
                 </div>
             )}

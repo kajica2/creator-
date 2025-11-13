@@ -560,7 +560,8 @@ export type Page =
   | 'Roadmap'
   | 'Gamification'
   | 'React Projects Gallery'
-  | 'Tools Demo';
+  | 'Tools Demo'
+  | 'Supabase Panel';
 
 // Credits System Types
 export interface CreditTransaction {

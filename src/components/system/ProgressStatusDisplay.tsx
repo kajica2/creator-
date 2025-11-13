@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { progressReporter, ProgressReport, ProgressStep } from '../../shared/system/ProgressStatusReporter';
+import { getQuickDatabaseStatus } from '../../utils/databaseHealthChecker';
 
 interface ProgressStatusDisplayProps {
   reportId?: string;
@@ -16,6 +17,7 @@ export const ProgressStatusDisplay: React.FC<ProgressStatusDisplayProps> = ({
 }) => {
   const [reports, setReports] = useState<Map<string, ProgressReport>>(new Map());
   const [selectedReportId, setSelectedReportId] = useState<string | null>(reportId || null);
+  const [dbStatus, setDbStatus] = useState<{ connected: boolean; tablesOk: boolean; issues: number } | null>(null);
 
   useEffect(() => {
     if (reportId) {
@@ -46,6 +48,24 @@ export const ProgressStatusDisplay: React.FC<ProgressStatusDisplayProps> = ({
       return unsubscribe;
     }
   }, [reportId, showAllReports]);
+
+  // Check database status periodically
+  useEffect(() => {
+    const checkDbStatus = async () => {
+      try {
+        const status = await getQuickDatabaseStatus();
+        setDbStatus(status);
+      } catch (error) {
+        console.warn('Database status check failed:', error);
+        setDbStatus({ connected: false, tablesOk: false, issues: 1 });
+      }
+    };
+
+    checkDbStatus();
+    const interval = setInterval(checkDbStatus, 60000); // Check every minute
+
+    return () => clearInterval(interval);
+  }, []);
 
   const getStatusColor = (status: ProgressStep['status']) => {
     switch (status) {

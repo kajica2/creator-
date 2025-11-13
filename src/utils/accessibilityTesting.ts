@@ -225,6 +225,38 @@ export class AccessibilityTester {
     });
   }
 
+  // Check if an element is focusable
+  private checkFocusable(element: HTMLElement): boolean {
+    // Elements that are naturally focusable
+    const focusableElements = ['input', 'select', 'textarea', 'button', 'a'];
+
+    if (focusableElements.includes(element.tagName.toLowerCase())) {
+      // Check if element is disabled
+      return !element.hasAttribute('disabled');
+    }
+
+    // Check for explicit tabindex
+    const tabIndex = element.getAttribute('tabindex');
+    if (tabIndex !== null) {
+      const tabIndexValue = parseInt(tabIndex);
+      return tabIndexValue >= 0;
+    }
+
+    // Check for interactive roles that should be focusable
+    const role = element.getAttribute('role');
+    const interactiveRoles = ['button', 'link', 'menuitem', 'tab', 'checkbox', 'radio'];
+    if (role && interactiveRoles.includes(role)) {
+      return element.hasAttribute('tabindex') && parseInt(element.getAttribute('tabindex') || '0') >= 0;
+    }
+
+    // Elements with onclick handlers should be focusable
+    if (element.hasAttribute('onclick') || element.hasAttribute('onkeydown')) {
+      return element.hasAttribute('tabindex') && parseInt(element.getAttribute('tabindex') || '0') >= 0;
+    }
+
+    return false;
+  }
+
   // Check heading structure
   private async checkHeadingStructure(): Promise<void> {
     const headings = this.element.querySelectorAll('h1, h2, h3, h4, h5, h6');
@@ -331,7 +363,7 @@ export class AccessibilityTester {
       const isClickable = element.hasAttribute('onclick');
 
       // Check if interactive element is focusable
-      if (!accessibilityTesting.checkFocusable(element as HTMLElement)) {
+      if (!this.checkFocusable(element as HTMLElement)) {
         this.addError({
           id: `keyboard-unfocusable-${index}`,
           severity: 'error',

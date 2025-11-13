@@ -36,6 +36,34 @@ export const HashtagManager: React.FC<HashtagManagerProps> = ({
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSizes, setSelectedSizes] = useState<Set<HashtagSize>>(new Set(Object.values(HashtagSize)));
 
+    // Sample hashtag suggestions for when no data is available
+    const sampleHashtagSets = [
+        {
+            name: "🎵 Electronic Music Producer",
+            hashtags: ["#electronicmusic", "#edm", "#producer", "#studiolife", "#synthesizer", "#techno", "#house", "#beats"]
+        },
+        {
+            name: "🎨 Digital Artist",
+            hashtags: ["#digitalart", "#nftart", "#illustration", "#design", "#creative", "#photoshop", "#procreate", "#artwork"]
+        },
+        {
+            name: "📸 Photography",
+            hashtags: ["#photography", "#photographer", "#photoshoot", "#portrait", "#nature", "#landscape", "#streetphotography", "#canon"]
+        },
+        {
+            name: "💡 Tech & Innovation",
+            hashtags: ["#technology", "#innovation", "#ai", "#startup", "#coding", "#developer", "#future", "#tech"]
+        }
+    ];
+
+    // Popular trending hashtags by category
+    const trendingHashtags = {
+        music: ["#viral", "#trending", "#newmusic", "#spotify", "#applemusic", "#musicvideo"],
+        creative: ["#creative", "#inspiration", "#art", "#design", "#aesthetic", "#vibes"],
+        social: ["#follow", "#like", "#share", "#community", "#connect", "#engage"],
+        lifestyle: ["#lifestyle", "#motivation", "#success", "#growth", "#mindset", "#goals"]
+    };
+
     const handleSizeToggle = (size: HashtagSize) => {
         setSelectedSizes(prev => {
             const newSet = new Set(prev);
@@ -108,7 +136,7 @@ export const HashtagManager: React.FC<HashtagManagerProps> = ({
                         <div className="flex items-center justify-center rounded-lg border border-gray-700 bg-gray-900/60 py-12 text-sm text-gray-400">
                             Loading hashtag catalogue...
                         </div>
-                    ) : (
+                    ) : filteredCategories.length > 0 ? (
                         filteredCategories.map(cat => (
                             <HashtagCategoryComponent
                                 key={cat.category}
@@ -117,6 +145,71 @@ export const HashtagManager: React.FC<HashtagManagerProps> = ({
                                 onHashtagSelect={onHashtagSelect}
                             />
                         ))
+                    ) : (
+                        <div className="space-y-6">
+                            {/* Sample hashtag sets when no data */}
+                            <div className="bg-gradient-to-br from-gray-800/30 to-purple-900/10 border border-gray-700/50 rounded-xl p-4 space-y-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                                    <h3 className="text-lg font-bold text-gray-300">✨ Popular Hashtag Sets</h3>
+                                    <div className="w-2 h-2 bg-pink-400 rounded-full animate-pulse"></div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {sampleHashtagSets.map((set, index) => (
+                                        <div key={index} className="bg-gray-800/50 border border-gray-700 rounded-lg p-4 space-y-3">
+                                            <div className="flex justify-between items-center">
+                                                <h4 className="font-semibold text-gray-300">{set.name}</h4>
+                                                <button
+                                                    onClick={() => onSelectSet(set.hashtags)}
+                                                    className="text-xs bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 px-3 py-1 rounded-full transition-colors"
+                                                >
+                                                    Use Set
+                                                </button>
+                                            </div>
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {set.hashtags.map(tag => (
+                                                    <span
+                                                        key={tag}
+                                                        onClick={() => onHashtagSelect(tag)}
+                                                        className="text-xs bg-gray-700 hover:bg-purple-600/20 text-gray-300 px-2 py-0.5 rounded-md cursor-pointer transition-colors"
+                                                    >
+                                                        {tag}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="pt-3 border-t border-gray-700/50">
+                                    <p className="text-xs text-gray-500 text-center">
+                                        💡 Click individual hashtags to add them, or use "Use Set" to add all hashtags from a collection
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Trending hashtags section */}
+                            <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4 space-y-4">
+                                <h3 className="text-lg font-bold text-gray-300">🔥 Trending Hashtags</h3>
+                                <div className="space-y-3">
+                                    {Object.entries(trendingHashtags).map(([category, tags]) => (
+                                        <div key={category} className="space-y-2">
+                                            <h4 className="text-sm font-semibold text-gray-400 capitalize">{category}</h4>
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {tags.map(tag => (
+                                                    <span
+                                                        key={tag}
+                                                        onClick={() => onHashtagSelect(tag)}
+                                                        className="text-xs bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 px-2 py-0.5 rounded-md cursor-pointer transition-colors"
+                                                    >
+                                                        {tag}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
                     )}
                 </div>
             )}

@@ -23,6 +23,8 @@ View your app in AI Studio: https://ai.studio/apps/drive/1WnQEJuk1lYs_egkuF_GN3-
    SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
    VITE_SUPABASE_URL=your_supabase_project_url
    VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   GOOGLE_CLIENT_ID=176960048944-j40r4l900qsef8aekqbg28fummvfcvj7.apps.googleusercontent.com
+   VITE_GOOGLE_CLIENT_ID=176960048944-j40r4l900qsef8aekqbg28fummvfcvj7.apps.googleusercontent.com
    POSTGRES_URL=postgres_connection_string
    POSTGRES_URL_NON_POOLING=postgres_direct_connection_string
    POSTGRES_PRISMA_URL=postgres_pgbouncer_connection_string

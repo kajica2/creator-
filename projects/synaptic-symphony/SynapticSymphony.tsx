@@ -4,7 +4,6 @@
  */
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import * as Tone from 'tone';
 import AgentOrchestrator from '../../api/core/AgentOrchestrator';
 import AstrologyAgent from '../../api/agents/AstrologyAgent';
 import KaraokeAgent from '../../api/agents/KaraokeAgent';
@@ -193,6 +192,8 @@ export const SynapticSymphony: React.FC = () => {
   };
 
   const initializeAudioContext = async () => {
+    // Lazy load Tone.js only when needed
+    const Tone = await import('tone');
     audioContextRef.current = new AudioContext();
     await Tone.start();
   };

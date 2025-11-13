@@ -16,8 +16,9 @@ https://lhgwnrwwhaalojdpkwuo.supabase.com/auth/v1/authorize?provider=google&redi
 VITE_SUPABASE_URL=https://lhgwnrwwhaalojdpkwuo.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZ3ducndoYWFsb2pkcGt3dW8iLCJyb2xlIjoiYW5vbiIsImlhdCI6MTczNjY1Mzc0NCwiZXhwIjoyMDUyMjI5NzQ0fQ.QADt9z5KG9YFWcDfNIwwF7wqCKD7pGOAkIV8vZmzH_E
 
-# Google OAuth Client ID (placeholder - update with actual client ID)
-VITE_GOOGLE_CLIENT_ID=1041032449676-8k9r3v9m4f2h1q6n7p0s2l5j8d4c6g9e.apps.googleusercontent.com
+# Google OAuth Client ID
+VITE_GOOGLE_CLIENT_ID=176960048944-j40r4l900qsef8aekqbg28fummvfcvj7.apps.googleusercontent.com
+GOOGLE_CLIENT_ID=176960048944-j40r4l900qsef8aekqbg28fummvfcvj7.apps.googleusercontent.com
 ```
 
 ### 2. Created Authentication Components

@@ -124,19 +124,25 @@ export class ConnectionManager {
         return false;
       }
 
-      // Simple connectivity test
+      // Simple connectivity test using Supabase REST API
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-      const response = await fetch(supabaseUrl + '/health', {
-        method: 'GET',
+      // Use a simple HEAD request to the REST endpoint which should always work
+      const response = await fetch(supabaseUrl + '/rest/v1/', {
+        method: 'HEAD',
         signal: controller.signal,
-        cache: 'no-cache'
+        cache: 'no-cache',
+        headers: {
+          'apikey': import.meta.env?.VITE_SUPABASE_ANON_KEY || '',
+          'Content-Type': 'application/json'
+        }
       }).finally(() => {
         clearTimeout(timeoutId);
       });
 
-      const isConnected = response.ok;
+      // Accept both 200 OK and 401 Unauthorized as "connected" since both mean Supabase is reachable
+      const isConnected = response.ok || response.status === 401;
       this.updateSupabaseConnectionState(isConnected);
 
       return isConnected;
@@ -150,7 +156,21 @@ export class ConnectionManager {
    * Get Supabase URL from environment or detect from errors
    */
   private getSupabaseUrl(): string | null {
-    // Try to get from environment
+    // Hardcoded fallback for troubleshooting
+    const hardcodedUrl = 'https://lhgwnrwwhaalojdpkwuo.supabase.co';
+    console.log('ConnectionManager: Using hardcoded URL for troubleshooting:', hardcodedUrl);
+
+    // Try to get from environment (Vite uses import.meta.env)
+    if (typeof window !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL) {
+      const url = import.meta.env.VITE_SUPABASE_URL;
+      console.log('ConnectionManager: Found Supabase URL from import.meta.env:', url);
+      return url;
+    }
+
+    console.log('ConnectionManager: No env var found, using hardcoded URL');
+    return hardcodedUrl;
+
+    // Fallback to process.env for Node environments
     if (typeof process !== 'undefined' && process.env?.VITE_SUPABASE_URL) {
       return process.env.VITE_SUPABASE_URL;
     }
@@ -168,7 +188,7 @@ export class ConnectionManager {
 
     // Look for common Supabase patterns in the page
     const pageContent = document.documentElement.innerHTML;
-    const supabaseMatch = pageContent.match(/https:\/\/([a-z0-9]+)\.supabase\.co/);
+    const supabaseMatch = pageContent.match(/https:\/\/([a-z0-9]+)\.supabase\.com/);
     if (supabaseMatch) {
       return supabaseMatch[0];
     }

@@ -21,12 +21,7 @@ export class PersistentAudioService {
 
   private async initializeService() {
     try {
-      // Initialize Web Audio API
-      this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
-      this.analyser = this.audioContext.createAnalyser()
-      this.analyser.fftSize = 2048
-
-      // Register service worker for background processing
+      // Only register service worker initially, AudioContext created on user interaction
       if ('serviceWorker' in navigator) {
         const registration = await navigator.serviceWorker.register('/sw-audio.js')
         this.serviceWorker = registration.active
@@ -34,11 +29,38 @@ export class PersistentAudioService {
       }
 
       this.isRunning = true
-      this.startBackgroundTasks()
-
-      console.log('🎵 Persistent Audio Service initialized')
+      console.log('🎵 Persistent Audio Service initialized (AudioContext will be created on user interaction)')
     } catch (error) {
       console.error('Failed to initialize audio service:', error)
+    }
+  }
+
+  private async createAudioContextIfNeeded(): Promise<boolean> {
+    if (this.audioContext) {
+      if (this.audioContext.state === 'suspended') {
+        await this.audioContext.resume()
+      }
+      return true
+    }
+
+    try {
+      // Create AudioContext only when needed
+      this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+      this.analyser = this.audioContext.createAnalyser()
+      this.analyser.fftSize = 2048
+
+      // If context is suspended, it needs user interaction to start
+      if (this.audioContext.state === 'suspended') {
+        console.log('AudioContext suspended, waiting for user interaction')
+        return false
+      }
+
+      this.startBackgroundTasks()
+      console.log('🎵 AudioContext created and active')
+      return true
+    } catch (error) {
+      console.error('Failed to create AudioContext:', error)
+      return false
     }
   }
 
@@ -98,8 +120,10 @@ export class PersistentAudioService {
 
   async startLiveRecording(): Promise<MediaStreamAudioDestinationNode | null> {
     try {
-      if (!this.audioContext) {
-        await this.initializeService()
+      // Create AudioContext only when user explicitly starts recording
+      const audioContextReady = await this.createAudioContextIfNeeded()
+      if (!audioContextReady) {
+        throw new Error('AudioContext requires user interaction to start')
       }
 
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
@@ -125,6 +149,12 @@ export class PersistentAudioService {
   }
 
   async processShrutiBoxSamples() {
+    // Only process samples when AudioContext is available (after user interaction)
+    if (!this.audioContext) {
+      console.log('📼 Shruti Box samples will be processed after user interaction')
+      return
+    }
+
     const sampleFiles = [
       'audio/shruti-box-samples/SHRUTI_DRONE_C2.ogg',
       'audio/shruti-box-samples/SHRUTI_MANTRA_A2.ogg',
@@ -269,9 +299,12 @@ export class PersistentAudioService {
 // Global service instance
 export const audioService = PersistentAudioService.getInstance()
 
-// Auto-initialize when module loads
-if (typeof window !== 'undefined') {
-  window.addEventListener('load', () => {
-    audioService.processShrutiBoxSamples()
-  })
+// Public method to initialize audio after user interaction
+export async function initializeAudioWithUserGesture() {
+  const service = PersistentAudioService.getInstance()
+  const success = await service['createAudioContextIfNeeded']()
+  if (success) {
+    await service.processShrutiBoxSamples()
+  }
+  return success
 }

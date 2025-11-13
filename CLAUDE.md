@@ -101,7 +101,8 @@ VITE_STABILITY_API_KEY=your_stability_api_key
 VITE_ELEVENLABS_API_KEY=your_elevenlabs_api_key
 
 # OAuth
-GOOGLE_CLIENT_ID=your_google_oauth_client_id
+GOOGLE_CLIENT_ID=176960048944-j40r4l900qsef8aekqbg28fummvfcvj7.apps.googleusercontent.com
+VITE_GOOGLE_CLIENT_ID=176960048944-j40r4l900qsef8aekqbg28fummvfcvj7.apps.googleusercontent.com
 
 # Monitoring (Optional)
 SENTRY_DSN=your_sentry_dsn

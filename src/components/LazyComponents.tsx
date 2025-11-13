@@ -43,6 +43,11 @@ export const Subscription = lazy(() => import('../../components/Subscription'));
 export const GamificationDashboard = lazy(() => import('../../components/GamificationDashboard'));
 export const PersonaTemplatesPage = lazy(() => import('../../components/PersonaTemplatesPage'));
 
+// Developer tools - lazy loaded
+export const GoogleDeveloperConsole = lazy(() => import('../../components/GoogleDeveloperConsole'));
+export const MarkdownFileReader = lazy(() => import('../../components/MarkdownFileReader'));
+export const SupabasePanel = lazy(() => import('../../components/SupabasePanel'));
+
 // Modal components - lazy loaded (only when needed)
 export const RagSourceManager = lazy(() => import('../../components/RagSourceManager'));
 export const BatchMediaImportModal = lazy(() => import('../../components/BatchMediaImportModal'));
@@ -66,6 +71,9 @@ export const COMPONENT_GROUPS = {
 
   // Load when settings/account sections are accessed
   ACCOUNT: ['Settings', 'Subscription', 'Roadmap', 'Gamification'],
+
+  // Load when developer tools are accessed
+  DEVELOPER: ['Google Developer Console', 'Markdown File Reader', 'Supabase Panel'],
 
   // Load only when explicitly opened
   MODALS: ['RagSourceManager', 'BatchMediaImportModal']
@@ -107,4 +115,10 @@ export const preloadAccount = () => {
   import('../../components/Subscription');
   import('../../components/GamificationDashboard');
   import('../../components/PersonaTemplatesPage');
+};
+
+export const preloadDeveloper = () => {
+  import('../../components/GoogleDeveloperConsole');
+  import('../../components/MarkdownFileReader');
+  import('../../components/SupabasePanel');
 };

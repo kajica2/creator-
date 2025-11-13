@@ -1,50 +1,11 @@
 import path from 'path';
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
-import { sentryVitePlugin } from '@sentry/vite-plugin';
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
 
     const plugins = [react()];
-
-    // Add Sentry plugin only in production or when explicitly enabled
-    if (mode === 'production' || env.VITE_ENABLE_SENTRY_BUILD === 'true') {
-      plugins.push(
-        sentryVitePlugin({
-          org: env.SENTRY_ORG,
-          project: env.SENTRY_PROJECT || 'viral-hashtag-image-ai',
-          authToken: env.SENTRY_AUTH_TOKEN,
-
-          // Source maps configuration
-          sourcemaps: {
-            assets: './dist/**',
-            ignore: ['node_modules/**'],
-            urlPrefix: '~/assets',
-          },
-
-          // Release configuration
-          release: {
-            name: env.SENTRY_RELEASE || `viral-ai-${Date.now()}`,
-            cleanArtifacts: true,
-            setCommits: {
-              auto: true,
-            },
-          },
-
-          // Deploy configuration
-          deploy: {
-            env: mode,
-          },
-
-          // Debug mode for development
-          debug: mode === 'development',
-
-          // Telemetry
-          telemetry: false,
-        })
-      );
-    }
 
     return {
       server: {
@@ -77,9 +38,8 @@ export default defineConfig(({ mode }) => {
               // Vendor chunks
               'vendor-react': ['react', 'react-dom'],
               'vendor-ui': ['@tanstack/react-query'],
-              'vendor-audio': ['tone', '@magenta/music'],
+              // Audio libraries excluded from vendor bundle to prevent autoplay warnings
               'vendor-google': ['@google/genai'],
-              'vendor-sentry': ['@sentry/react', '@sentry/tracing'],
               'vendor-supabase': ['@supabase/supabase-js'],
               'vendor-utils': ['axios', 'file-saver', 'jszip']
             },
@@ -114,8 +74,7 @@ export default defineConfig(({ mode }) => {
 
       define: {
         'process.env.GOOGLE_CLIENT_ID': JSON.stringify(env.GOOGLE_CLIENT_ID),
-        '__SENTRY_DEBUG__': mode === 'development',
-        '__SENTRY_TRACING__': true,
+        __SUPABASE_URL__: JSON.stringify('https://lhgwnrwwhaalojdpkwuo.supabase.co'),
       },
       // Performance optimizations
       optimizeDeps: {
@@ -141,6 +100,14 @@ export default defineConfig(({ mode }) => {
         preprocessorOptions: {
           // Optimize CSS processing
         }
+      },
+      // Test configuration
+      test: {
+        globals: true,
+        environment: 'jsdom',
+        setupFiles: ['./tests/setup.ts'],
+        include: ['tests/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+        exclude: ['tests/navigation-e2e.test.js'] // Exclude E2E tests that need Playwright
       }
     };
 });

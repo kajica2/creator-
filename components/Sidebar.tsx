@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Page } from '../types';
 import { fetchUserRatingSummary, UserRatingSummary } from '../supabase/utils';
+import { supabase } from '../utils/supabaseClient';
 import { useAccessibility, useKeyboardNavigation, useFocusManagement } from '../src/hooks/useAccessibility.tsx';
 import { ARIA_ROLES, ARIA_PROPERTIES, KEYBOARD_KEYS, focusManagement } from '../src/utils/accessibility';
 
@@ -56,9 +57,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePage, onPageChange, isOp
     const [focusedItemIndex, setFocusedItemIndex] = useState(-1);
 
     useEffect(() => {
-        fetchUserRatingSummary('creator-collective')
-            .then(setRatingSummary)
-            .catch(() => setRatingSummary(null));
+        // Only fetch rating summary if user is authenticated
+        const fetchRatingIfAuthenticated = async () => {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session?.user) {
+                    const summary = await fetchUserRatingSummary('creator-collective');
+                    setRatingSummary(summary);
+                }
+            } catch (error) {
+                console.log('Rating summary not available without authentication');
+                setRatingSummary(null);
+            }
+        };
+
+        fetchRatingIfAuthenticated();
     }, []);
 
     // Focus management for sidebar

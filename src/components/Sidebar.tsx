@@ -173,6 +173,13 @@ const navigationSections: NavSection[] = [
         icon: <FileText className="w-5 h-5" />,
         description: 'Read and explore project documentation',
         badge: 'New'
+      },
+      {
+        id: 'Supabase Panel',
+        label: 'Supabase Panel',
+        icon: <Cloud className="w-5 h-5" />,
+        description: 'Complete Supabase database management interface',
+        badge: 'New'
       }
     ]
   },

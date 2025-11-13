@@ -4,6 +4,7 @@ import {
   submitUserRating,
   UserRatingSummary,
 } from '../supabase/utils';
+import { supabase } from '../utils/supabaseClient';
 
 interface UserProfileCardProps {
   displayName: string;
@@ -50,6 +51,22 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
     setLoading(true);
     setError(null);
     try {
+      // Check authentication before making API call
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        setSummary({
+          averageScore: null,
+          totalRatings: 0,
+          fiveStar: 0,
+          fourStar: 0,
+          threeStar: 0,
+          twoStar: 0,
+          oneStar: 0,
+          lastReviewedAt: null,
+        });
+        return;
+      }
+
       const data = await fetchUserRatingSummary(handle);
       setSummary(data);
     } catch (err) {

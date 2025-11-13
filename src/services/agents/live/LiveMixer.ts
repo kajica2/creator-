@@ -46,11 +46,20 @@ export class LiveMixer extends EventEmitter {
    */
   private async setupAudioContext(): Promise<void> {
     try {
-      this.audioContext = new AudioContext({
-        sampleRate: this.config.sampleRate,
-        latencyHint: this.config.latency === 'ultralow' ? 'interactive' :
-                    this.config.latency === 'low' ? 'balanced' : 'playback'
-      });
+      // Only create AudioContext if it doesn't exist and avoid autoplay policy violations
+      if (!this.audioContext) {
+        this.audioContext = new AudioContext({
+          sampleRate: this.config.sampleRate,
+          latencyHint: this.config.latency === 'ultralow' ? 'interactive' :
+                      this.config.latency === 'low' ? 'balanced' : 'playback'
+        });
+
+        // If context is suspended due to autoplay policy, wait for user gesture
+        if (this.audioContext.state === 'suspended') {
+          console.log('AudioContext suspended - waiting for user interaction');
+          return; // Don't setup audio chain yet
+        }
+      }
 
       // Create master audio chain
       this.masterGain = this.audioContext.createGain();
@@ -91,6 +100,24 @@ export class LiveMixer extends EventEmitter {
     } catch (error) {
       this.emit('error', error);
       throw error;
+    }
+  }
+
+  /**
+   * Resume AudioContext after user gesture (required for Chrome autoplay policy)
+   */
+  async resumeAudioContext(): Promise<void> {
+    if (this.audioContext && this.audioContext.state === 'suspended') {
+      try {
+        await this.audioContext.resume();
+        console.log('AudioContext resumed successfully');
+        // Complete audio setup now that context is active
+        if (!this.masterGain) {
+          await this.setupAudioContext();
+        }
+      } catch (error) {
+        console.error('Failed to resume AudioContext:', error);
+      }
     }
   }
 
